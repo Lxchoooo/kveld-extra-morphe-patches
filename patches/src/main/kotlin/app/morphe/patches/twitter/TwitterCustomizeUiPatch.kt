@@ -25,6 +25,7 @@ import app.morphe.patcher.patch.booleanOption
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patches.shared.Constants
 import com.android.tools.smali.dexlib2.Opcode
+import com.android.tools.smali.dexlib2.iface.instruction.NarrowLiteralInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
 import com.android.tools.smali.dexlib2.iface.reference.FieldReference
@@ -59,6 +60,16 @@ private val grokTabFingerprint = Fingerprint(
 private val homeTopBarFingerprint = Fingerprint(
     definingClass = "Lcom/x/home/tabbed/a;",
     name = "i",
+)
+
+private val homeTabBarPagerFingerprint = Fingerprint(
+    definingClass = "Lcom/x/home/tabbed/a;",
+    name = "j",
+)
+
+private val homeTabBarHeaderFingerprint = Fingerprint(
+    definingClass = "Lcom/x/home/tabbed/a;",
+    name = "f",
 )
 
 private val profileTabsFingerprint = Fingerprint(
@@ -228,6 +239,14 @@ val twitterCustomizeUiPatch = bytecodePatch(
         required = false,
     )
 
+    val timelineAddTab by booleanOption(
+        key = "timelineAddTab",
+        default = true,
+        title = "Timeline Add Tab",
+        description = "Hide add tab (+) button in home timeline tab header",
+        required = false,
+    )
+
     val timelineTopBar by booleanOption(
         key = "timelineTopBar",
         default = true,
@@ -343,6 +362,55 @@ val twitterCustomizeUiPatch = bytecodePatch(
             }
         } else {
             println("[Customize UI] Skipped sideBarItems: disabled by patch option.")
+        }
+
+        // timelineAddTab (Hide add tab (+) button in home timeline tab header)
+        if (timelineAddTab ?: true) {
+            val pagerMethod = homeTabBarPagerFingerprint.method
+            val pagerInstructions = pagerMethod.implementation?.instructions?.toList()
+                ?: error("[Customize UI] Method Lcom/x/home/tabbed/a;->j has no instructions.")
+            val pagerConstIdx = pagerInstructions.indexOfFirst { ins ->
+                (ins as? NarrowLiteralInstruction)?.narrowLiteral == -585845020
+            }
+            if (pagerConstIdx > 0) {
+                val ifEqzIdx = pagerInstructions.subList(0, pagerConstIdx).indexOfLast {
+                    it.opcode == Opcode.IF_EQZ
+                }
+                if (ifEqzIdx >= 0 && pagerConstIdx - ifEqzIdx <= 3) {
+                    val reg = (pagerInstructions[ifEqzIdx] as OneRegisterInstruction).registerA
+                    val constIns = if (reg <= 15) "const/4 v$reg, 0x0" else "const/16 v$reg, 0x0"
+                    pagerMethod.addInstructions(ifEqzIdx, constIns)
+                    patched++
+                } else {
+                    error("[Customize UI] Preceding if-eqz branch not found before const group in Lcom/x/home/tabbed/a;->j.")
+                }
+            } else {
+                error("[Customize UI] Target group constant -585845020 not found in Lcom/x/home/tabbed/a;->j.")
+            }
+
+            val headerMethod = homeTabBarHeaderFingerprint.method
+            val headerInstructions = headerMethod.implementation?.instructions?.toList()
+                ?: error("[Customize UI] Method Lcom/x/home/tabbed/a;->f has no instructions.")
+            val headerConstIdx = headerInstructions.indexOfFirst { ins ->
+                (ins as? NarrowLiteralInstruction)?.narrowLiteral == -868946867
+            }
+            if (headerConstIdx > 0) {
+                val ifEqzIdx = headerInstructions.subList(0, headerConstIdx).indexOfLast {
+                    it.opcode == Opcode.IF_EQZ
+                }
+                if (ifEqzIdx >= 0 && headerConstIdx - ifEqzIdx <= 3) {
+                    val reg = (headerInstructions[ifEqzIdx] as OneRegisterInstruction).registerA
+                    val constIns = if (reg <= 15) "const/4 v$reg, 0x0" else "const/16 v$reg, 0x0"
+                    headerMethod.addInstructions(ifEqzIdx, constIns)
+                    patched++
+                } else {
+                    error("[Customize UI] Preceding if-eqz branch not found before const group in Lcom/x/home/tabbed/a;->f.")
+                }
+            } else {
+                error("[Customize UI] Target group constant -868946867 not found in Lcom/x/home/tabbed/a;->f.")
+            }
+        } else {
+            println("[Customize UI] Skipped timelineAddTab: disabled by patch option.")
         }
 
         // 10. timelineTopBar (Hide Connect/Follow button from timeline top bar)
