@@ -114,6 +114,10 @@ private val homeTabBarHeaderFingerprint = Fingerprint(
     name = "f",
 )
 
+private val liveBannerFingerprint = Fingerprint(
+    strings = listOf("x_lite_livestream_pill_enabled"),
+)
+
 context(_: BytecodePatchContext)
 private fun neutralizeFlag(
     fingerprint: Fingerprint,
@@ -346,6 +350,14 @@ val twitterTimelineUiPatch = bytecodePatch(
         default = true,
         title = "Top Bar Extra",
         description = "Toggle additional top bar and header action surfaces",
+        required = false,
+    )
+
+    val hideLiveBanner by booleanOption(
+        key = "hideLiveBanner",
+        default = true,
+        title = "Hide Live Banner",
+        description = "Hides live and broadcast pill at top of home timeline",
         required = false,
     )
 
@@ -985,6 +997,17 @@ val twitterTimelineUiPatch = bytecodePatch(
             println("[Timeline UI] Skipped topBarExtra: top bar extra surfaces are dynamically composed in 12.33; no client feature flag gate.")
         } else {
             println("[Timeline UI] Skipped topBarExtra: disabled by patch option.")
+        }
+
+        // 20. hideLiveBanner
+        if (hideLiveBanner ?: true) {
+            if (neutralizeFlag(liveBannerFingerprint, "x_lite_livestream_pill_enabled", "Timeline UI")) {
+                patched++
+            } else {
+                error("[Timeline UI] Failed to neutralize 'x_lite_livestream_pill_enabled' flag.")
+            }
+        } else {
+            println("[Timeline UI] Skipped hideLiveBanner: disabled by patch option.")
         }
 
         if (patched > 0) {
