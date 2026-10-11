@@ -46,6 +46,8 @@ private val postUrlFingerprint = Fingerprint(
     ),
 )
 
+private val customDomainRegex = Regex("^https?://[A-Za-z0-9.-]+(:[0-9]+)?(/.*)?$")
+
 @Suppress("unused")
 val twitterShareLinksPatch = bytecodePatch(
     name = "Share Links",
@@ -91,6 +93,16 @@ val twitterShareLinksPatch = bytecodePatch(
 
         if (customSharingDomain ?: true) {
             val normalizedDomain = (customDomain ?: "https://fxtwitter.com").trim().trimEnd('/')
+            if (normalizedDomain.isBlank()) {
+                error("[Share Links] Invalid custom domain '$normalizedDomain': domain must not be blank.")
+            }
+            if (normalizedDomain.any { it == '"' || it == '\\' || it.isWhitespace() || it.isISOControl() }) {
+                error("[Share Links] Invalid custom domain '$normalizedDomain': domain contains invalid characters.")
+            }
+            if (!customDomainRegex.matches(normalizedDomain)) {
+                error("[Share Links] Invalid custom domain '$normalizedDomain': domain does not match valid URL format.")
+            }
+
             val statusReplacement = "$normalizedDomain/i/status/"
             val postReplacement = "$normalizedDomain/"
 
