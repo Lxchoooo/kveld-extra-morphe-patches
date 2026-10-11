@@ -53,6 +53,11 @@ private val inlineActionBarItemFingerprint = Fingerprint(
     name = "invoke",
 )
 
+private val grokPostActionFingerprint = Fingerprint(
+    returnType = "Z",
+    strings = listOf("grok_android_analyze_timelines_enabled"),
+)
+
 context(_: BytecodePatchContext)
 private fun neutralizeFlag(
     fingerprint: Fingerprint,
@@ -189,6 +194,14 @@ val twitterHideElementsPatch = bytecodePatch(
         default = true,
         title = "Hide Followed By",
         description = "Hide followed-by social context facepile on timeline posts",
+        required = false,
+    )
+
+    val hideGrokPostAction by booleanOption(
+        key = "hideGrokPostAction",
+        default = true,
+        title = "Hide Grok Post Action",
+        description = "Hide Grok analysis action button in post headers",
         required = false,
     )
 
@@ -361,6 +374,17 @@ val twitterHideElementsPatch = bytecodePatch(
             }
         } else {
             println("[Hide Elements] Skipped hideViewCount: disabled by patch option.")
+        }
+
+        // 12. hideGrokPostAction
+        if (hideGrokPostAction ?: true) {
+            if (neutralizeFlag(grokPostActionFingerprint, "grok_android_analyze_timelines_enabled", "Hide Elements")) {
+                patched++
+            } else {
+                error("[Hide Elements] Failed to neutralize 'grok_android_analyze_timelines_enabled' flag.")
+            }
+        } else {
+            println("[Hide Elements] Skipped hideGrokPostAction: disabled by patch option.")
         }
 
         if (patched > 0) {
