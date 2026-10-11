@@ -84,7 +84,7 @@
 </details>
 
 <details>
-<summary>Lightroom&nbsp;&nbsp;•&nbsp;&nbsp;<b>4 patches</b></summary>
+<summary>Lightroom&nbsp;&nbsp;•&nbsp;&nbsp;<b>5 patches</b></summary>
 <br>
 
 **Supported versions:**
@@ -97,6 +97,7 @@
 | **Block Telemetry & Trackers** | Neutralizes Google AppMeasurement and Firebase Crashlytics dispatchers, strips advertising permissions, and injects analytics opt-out flags. |  |
 | **Lightroom Background Sync** | Disables WorkManager background sync services, scheduled jobs, and boot receiver. The WorkManager startup initializer is intentionally preserved because removing it prevents application boot. WARNING: Disabling WorkManager can affect background photo uploads, syncing, and exports. |  |
 | **Lightroom Junk Cleaner** | Purges non-functional build metadata, compiler properties, and duplicate license files from the APK root and META-INF. |  |
+| **Sideload Install Support** | Ensures compatibility for sideloaded lab installs by allowing local installer source checks to report success and completing Play Integrity token requests. |  |
 | **Unlock Premium Features** | Enables app features locked behind subscription paywalls by activating the internal Limited-Time Premium Unlock (LTPU) gate. |  |
 
 </details>
