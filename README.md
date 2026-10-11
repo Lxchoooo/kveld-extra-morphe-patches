@@ -65,7 +65,7 @@
 </details>
 
 <details>
-<summary>Instagram&nbsp;&nbsp;•&nbsp;&nbsp;<b>2 patches</b></summary>
+<summary>Instagram&nbsp;&nbsp;•&nbsp;&nbsp;<b>5 patches</b></summary>
 <br>
 
 **Supported versions:**
@@ -77,6 +77,7 @@
 |----------|----------------|-----------|
 | **Block Telemetry & Trackers** | Neutralizes Facebook Analytics2, DataTransport, FDID/PhoneId providers, and strips AD_ID permissions. |  |
 | **MLKit Vision Slimmer** | Disable MLKit component discovery and registrars. WARNING: this breaks in-app QR and barcode scanning. |  |
+| **Block Crash & Diagnostics** | Neutralizes crash-dump uploaders, Lacrima detector broadcasts, debug diagnostics, carrier preload trackers, and lead-ads entrypoints. |  |
 
 </details>
 
