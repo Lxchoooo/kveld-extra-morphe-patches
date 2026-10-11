@@ -193,7 +193,7 @@ private fun neutralizeFlag(
 val twitterTimelineUiPatch = bytecodePatch(
     name = "Timeline UI",
     description = "Timeline surfaces: posts, threads, banners, recommendations and video entry points",
-    default = false,
+    default = true,
 ) {
     compatibleWith(Constants.COMPATIBILITY_TWITTER)
 
@@ -493,13 +493,14 @@ val twitterTimelineUiPatch = bytecodePatch(
                 }
             }
 
-            val followReg = (initInstructions[followIputIndex] as? TwoRegisterInstruction)?.registerA
-                ?: error("[Timeline UI] Failed to resolve follow register in constructor.")
             val subscribeReg = (initInstructions[subscribeIputIndex] as? TwoRegisterInstruction)?.registerA
                 ?: error("[Timeline UI] Failed to resolve subscribe register in constructor.")
 
+            // followButtonState intentionally left untouched: zeroing the object
+            // field to null crashes post-detail init with an NPE (getClass on null)
+            // on flows that reuse the state (e.g. DM-shared tweets). Suppression
+            // is achieved via the boolean flags below.
             val targets = mutableListOf(
-                followIputIndex to followReg,
                 subscribeIputIndex to subscribeReg,
             )
 
