@@ -55,7 +55,7 @@ private object RequestIntegrityTokenFingerprint : Fingerprint(
 @Suppress("unused")
 val lightroomSideloadSupportPatch = bytecodePatch(
     name = "Sideload Install Support",
-    description = "Ensures compatibility for sideloaded lab installs by allowing local installer source checks to report success and completing Play Integrity token requests.",
+    description = "Ensures compatibility for sideloaded lab installs by allowing local installer source checks to report success and completing Play Integrity token requests. Required for sideloaded lab installs: without it the app routes to the Play Store.",
     default = true,
 ) {
     compatibleWith(Constants.COMPATIBILITY_LRMOBILE)

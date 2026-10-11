@@ -24,10 +24,11 @@ private object IsLTPUActiveFingerprint : Fingerprint(
 @Suppress("unused")
 val lightroomUnlockPremiumPatch = bytecodePatch(
     name = "Unlock Premium Features",
-    description = "Enables app features locked behind subscription paywalls by activating the internal Limited-Time Premium Unlock (LTPU) gate.",
+    description = "Enables app features locked behind subscription paywalls by activating the internal Limited-Time Premium Unlock (LTPU) gate. Requires Sideload Install Support (applied automatically as dependency).",
     default = true,
 ) {
     compatibleWith(Constants.COMPATIBILITY_LRMOBILE)
+    dependsOn(lightroomSideloadSupportPatch)
 
     execute {
         var patched = 0
