@@ -64,9 +64,14 @@ val twitterShareLinksPatch = bytecodePatch(
         required = false,
     )
 
-    val customDomain by stringOption(
-        key = "customDomain",
+    val sharingDomain by stringOption(
+        key = "sharingDomain",
         default = "https://fxtwitter.com",
+        values = mapOf(
+            "FixTweet (fxtwitter.com)" to "https://fxtwitter.com",
+            "VXTwitter (vxtwitter.com)" to "https://vxtwitter.com",
+            "FixUpX (fixupx.com)" to "https://fixupx.com",
+        ),
         title = "Custom Sharing Domain",
         description = "Domain replacing x.com when sharing post links, e.g. https://fxtwitter.com",
         required = false,
@@ -92,7 +97,7 @@ val twitterShareLinksPatch = bytecodePatch(
         var patched = 0
 
         if (customSharingDomain ?: true) {
-            val normalizedDomain = (customDomain ?: "https://fxtwitter.com").trim().trimEnd('/')
+            val normalizedDomain = (sharingDomain ?: "https://fxtwitter.com").trim().trimEnd('/')
             if (normalizedDomain.isBlank()) {
                 error("[Share Links] Invalid custom domain '$normalizedDomain': domain must not be blank.")
             }
