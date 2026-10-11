@@ -21,6 +21,7 @@ package app.morphe.patches.twitter
 import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.patch.BytecodePatchContext
+import app.morphe.patcher.patch.booleanOption
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patches.shared.Constants
 import com.android.tools.smali.dexlib2.Opcode
@@ -35,6 +36,11 @@ private val composerUpsellFingerprint = Fingerprint(
 
 private val homeNavOfferFingerprint = Fingerprint(
     strings = listOf("subscriptions_upsells_premium_home_nav_offer_enabled"),
+)
+
+private val profileGetVerifiedFingerprint = Fingerprint(
+    returnType = "Z",
+    strings = listOf("subscriptions_is_blue_verified_review_status_profile_enabled"),
 )
 
 context(_: BytecodePatchContext)
@@ -120,8 +126,30 @@ val twitterRemovePremiumUpsellPatch = bytecodePatch(
 ) {
     compatibleWith(Constants.COMPATIBILITY_TWITTER)
 
+    val hideProfileGetVerified by booleanOption(
+        key = "hideProfileGetVerified",
+        default = true,
+        title = "Hide Profile Get Verified",
+        description = "Hide Get Verified upsell pill on user profile",
+        required = false,
+    )
+
     execute {
         var patched = 0
+
+        if (hideProfileGetVerified ?: true) {
+            val method = profileGetVerifiedFingerprint.method
+            method.addInstructions(
+                0,
+                """
+                    const/4 v0, 0x0
+                    return v0
+                """.trimIndent(),
+            )
+            patched++
+        } else {
+            println("[Remove Premium Upsell] Skipped hideProfileGetVerified: disabled by patch option.")
+        }
 
         if (neutralizeFlag(composerUpsellFingerprint, "subscriptions_upsells_premium_home_nav_enabled", "Remove Premium Upsell")) {
             patched++

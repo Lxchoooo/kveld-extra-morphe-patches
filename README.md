@@ -191,7 +191,7 @@
 | **No Shortened URL** | Expands t.co shortened URLs, removing the click-tracking intermediary |  |
 | **Pause Search Suggestions** | Stops persisting search suggestions locally without breaking search |  |
 | **Remove Ads** | Removes promoted posts, trends and ads from timeline |  |
-| **Remove Premium Upsell** | Removes premium upsell surfaces |  |
+| **Remove Premium Upsell** | Removes premium upsell surfaces | • Hide Profile Get Verified |
 | **Share Links** | Custom sharing domain, handle custom links and legacy share links | • Custom Sharing Domain<br>• Custom Sharing Domain<br>• Handle Custom Links<br>• Legacy Share Links |
 | **Show Sensitive Media** | Displays sensitive media directly without requiring tap to reveal |  |
 | **X MLKit Vision Slimmer** | Disables MLKit component discovery and registrars. WARNING: this breaks in-app QR and barcode scanning. |  |
