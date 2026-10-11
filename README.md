@@ -178,9 +178,9 @@
 | **Block Telemetry & Trackers** | Neutralizes Google AppMeasurement and Firebase Performance Trace dispatchers, and strips advertising identifiers. |  |
 | **Block Update Screen** | Blocks the 'This app is out of date' screen and suppresses in-app update prompts on launch |  |
 | **Control Video Auto Scroll** | Prevents automatic scrolling to the next video in immersive view |  |
-| **Customize UI** | Toggle navigation and timeline UI elements | • Inline Action Bar<br>• Reply Sorting<br>• Profile Tabs<br>• Timeline Add Tab<br>• Timeline Top Bar<br>• Top Bar Extra |
+| **Customize UI** | Toggle navigation and timeline UI elements | • Profile Tabs |
 | **Drawer Items** | Hide individual items in the navigation drawer | • Hide Profile<br>• Hide Premium<br>• Hide Communities<br>• Hide Bookmarks<br>• Hide Lists<br>• Hide Spaces<br>• Hide Creator Studio<br>• Hide Get Grok<br>• Hide Help Center |
-| **Hide Elements** | Hide badges, buttons, metrics and served UI elements | • Hide Bookmark<br>• Hide Community Badges<br>• Hide Community Notes<br>• Hide Followed By<br>• Hide Grok Post Action<br>• Hide Hidden Replies<br>• Hide Immersive Player<br>• Hide Post Metrics<br>• Hide Profile Grok Button<br>• Hide View Count |
+| **Hide Elements** | Hide badges, buttons, metrics and served UI elements | • Hide Community Badges<br>• Hide Grok Post Action<br>• Hide Profile Grok Button |
 | **Navigation UI** | Bottom navigation, FAB, tabs and bars | • Hide Badges<br>• Hide FAB<br>• Hide FAB Menu<br>• Navigation Bar<br>• Grok Tab<br>• Explore Tabs<br>• Notification Tabs<br>• Search Suggestions<br>• Search Tab Items<br>• Side Bar Items |
 | **No Shortened URL** | Expands t.co shortened URLs, removing the click-tracking intermediary |  |
 | **Pause Search Suggestions** | Stops persisting search suggestions locally without breaking search |  |
@@ -188,7 +188,7 @@
 | **Remove Premium Upsell** | Removes premium upsell surfaces | • Hide Profile Get Verified |
 | **Share Links** | Custom sharing domain, handle custom links and legacy share links | • Custom Sharing Domain<br>• Custom Sharing Domain<br>• Handle Custom Links<br>• Legacy Share Links |
 | **Show Sensitive Media** | Displays sensitive media directly without requiring tap to reveal |  |
-| **Timeline UI** | Timeline surfaces: posts, threads, banners, recommendations and video entry points | • Hide Banner<br>• Hide Promote Button<br>• Hide Nudge Button<br>• Hide Recommendation Items<br>• Hide Discover More<br>• Hide Recommended Users<br>• Hide Live Threads |
+| **Timeline UI** | Timeline surfaces: posts, threads, banners, recommendations and video entry points | • Hide Banner<br>• Hide Promote Button<br>• Hide Nudge Button<br>• Hide Recommendation Items<br>• Hide Discover More<br>• Hide Recommended Users<br>• Hide Live Threads<br>• Hide Bookmark<br>• Hide Community Notes<br>• Hide Followed By<br>• Hide Hidden Replies<br>• Hide Immersive Player<br>• Hide Post Metrics<br>• Hide View Count<br>• Inline Action Bar<br>• Reply Sorting<br>• Timeline Add Tab<br>• Timeline Top Bar<br>• Top Bar Extra |
 | **X MLKit Vision Slimmer** | Disables MLKit component discovery and registrars. WARNING: this breaks in-app QR and barcode scanning. |  |
 
 </details>

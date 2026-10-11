@@ -20,9 +20,6 @@ package app.morphe.patches.twitter
 
 import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
-import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
-import app.morphe.patcher.extensions.InstructionExtensions.removeInstruction
-import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.morphe.patcher.patch.BytecodePatchContext
 import app.morphe.patcher.patch.booleanOption
 import app.morphe.patcher.patch.bytecodePatch
@@ -30,20 +27,8 @@ import app.morphe.patches.shared.Constants
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
-import com.android.tools.smali.dexlib2.iface.instruction.RegisterRangeInstruction
-import com.android.tools.smali.dexlib2.iface.reference.FieldReference
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 import com.android.tools.smali.dexlib2.iface.reference.StringReference
-import com.android.tools.smali.dexlib2.util.ReferenceUtil
-
-private val communityNotesFingerprint = Fingerprint(
-    strings = listOf("birdwatch_consumption_enabled"),
-)
-
-private val inlineActionBarItemFingerprint = Fingerprint(
-    definingClass = "Lcom/x/inlineactionbar/d;",
-    name = "invoke",
-)
 
 private val grokPostActionFingerprint = Fingerprint(
     returnType = "Z",
@@ -143,35 +128,11 @@ val twitterHideElementsPatch = bytecodePatch(
 ) {
     compatibleWith(Constants.COMPATIBILITY_TWITTER)
 
-    val hideBookmark by booleanOption(
-        key = "hideBookmark",
-        default = true,
-        title = "Hide Bookmark",
-        description = "Hide bookmark action button in post timeline",
-        required = false,
-    )
-
     val hideCommunityBadges by booleanOption(
         key = "hideCommunityBadges",
         default = true,
         title = "Hide Community Badges",
         description = "Hide community badge indicators across user and post labels",
-        required = false,
-    )
-
-    val hideCommunityNotes by booleanOption(
-        key = "hideCommunityNotes",
-        default = true,
-        title = "Hide Community Notes",
-        description = "Hide community notes and birdwatch contributions on posts",
-        required = false,
-    )
-
-    val hideFollowedBy by booleanOption(
-        key = "hideFollowedBy",
-        default = true,
-        title = "Hide Followed By",
-        description = "Hide followed-by social context facepile on timeline posts",
         required = false,
     )
 
@@ -183,30 +144,6 @@ val twitterHideElementsPatch = bytecodePatch(
         required = false,
     )
 
-    val hideHiddenReplies by booleanOption(
-        key = "hideHiddenReplies",
-        default = true,
-        title = "Hide Hidden Replies",
-        description = "Hide hidden and moderated replies banner entrypoint in conversation threads",
-        required = false,
-    )
-
-    val hideImmersivePlayer by booleanOption(
-        key = "hideImmersivePlayer",
-        default = true,
-        title = "Hide Immersive Player",
-        description = "Hide immersive swipe-up video player surfaces",
-        required = false,
-    )
-
-    val hidePostMetrics by booleanOption(
-        key = "hidePostMetrics",
-        default = true,
-        title = "Hide Post Metrics",
-        description = "Hide like, repost, and reply count metrics on timeline posts",
-        required = false,
-    )
-
     val hideProfileGrokButton by booleanOption(
         key = "hideProfileGrokButton",
         default = true,
@@ -215,122 +152,14 @@ val twitterHideElementsPatch = bytecodePatch(
         required = false,
     )
 
-    val hideViewCount by booleanOption(
-        key = "hideViewCount",
-        default = true,
-        title = "Hide View Count",
-        description = "Hide post view count metrics on timeline and post detail",
-        required = false,
-    )
-
     execute {
         var patched = 0
-
-        // 2. hideBookmark (Piko: Bookmark)
-        if (hideBookmark ?: true) {
-            println("[Hide Elements] Skipped hideBookmark: bookmark action in timeline is served via URT action entries in 12.33; no client feature flag gate.")
-        } else {
-            println("[Hide Elements] Skipped hideBookmark: disabled by patch option.")
-        }
 
         // 3. hideCommunityBadges (Piko: Community Badges)
         if (hideCommunityBadges ?: true) {
             println("[Hide Elements] Skipped hideCommunityBadges: community badges are served via URT metadata in 12.33; no client feature flag gate.")
         } else {
             println("[Hide Elements] Skipped hideCommunityBadges: disabled by patch option.")
-        }
-
-        // 4. hideCommunityNotes (Piko: Community Notes)
-        if (hideCommunityNotes ?: true) {
-            if (neutralizeFlag(communityNotesFingerprint, "birdwatch_consumption_enabled", "Hide Elements")) {
-                patched++
-            } else {
-                error("[Hide Elements] Failed to neutralize 'birdwatch_consumption_enabled' flag.")
-            }
-        } else {
-            println("[Hide Elements] Skipped hideCommunityNotes: disabled by patch option.")
-        }
-
-        // 7. hideFollowedBy (Piko: Followed By)
-        if (hideFollowedBy ?: true) {
-            println("[Hide Elements] Skipped hideFollowedBy: followed-by social context is served via URT timeline models in 12.33; no client feature flag gate.")
-        } else {
-            println("[Hide Elements] Skipped hideFollowedBy: disabled by patch option.")
-        }
-
-        // 8. hideHiddenReplies (Piko: Hidden Replies)
-        if (hideHiddenReplies ?: true) {
-            println("[Hide Elements] Skipped hideHiddenReplies: hidden replies entrypoint is served via URT conversation models in 12.33; no client feature flag gate.")
-        } else {
-            println("[Hide Elements] Skipped hideHiddenReplies: disabled by patch option.")
-        }
-
-        // 9. hideImmersivePlayer (Piko: Immersive Player)
-        if (hideImmersivePlayer ?: true) {
-            println("[Hide Elements] Skipped hideImmersivePlayer: immersive video viewer entrypoint is bound to media click dispatch in 12.33; no client feature flag gate.")
-        } else {
-            println("[Hide Elements] Skipped hideImmersivePlayer: disabled by patch option.")
-        }
-
-        // 10. hidePostMetrics (Piko: Post Metrics)
-        if (hidePostMetrics ?: true) {
-            val method = inlineActionBarItemFingerprint.method
-            val instructions = method.implementation?.instructions?.toList()
-                ?: error("[Hide Elements] Method Lcom/x/inlineactionbar/d;->invoke has no instructions.")
-            val countedPillIndex = instructions.indexOfFirst { ins ->
-                ins.opcode == Opcode.SGET_OBJECT &&
-                    ((ins as? ReferenceInstruction)?.reference as? FieldReference)?.name == "CountedPill"
-            }
-            if (countedPillIndex >= 0) {
-                val countedPillIns = instructions[countedPillIndex] as OneRegisterInstruction
-                val targetReg = countedPillIns.registerA
-                method.replaceInstruction(
-                    countedPillIndex,
-                    "sget-object v$targetReg, Lcom/x/inlineactionbar/d1;->Countless:Lcom/x/inlineactionbar/d1;",
-                )
-                patched++
-            } else {
-                error("[Hide Elements] Failed to find CountedPill instruction in Lcom/x/inlineactionbar/d;->invoke.")
-            }
-        } else {
-            println("[Hide Elements] Skipped hidePostMetrics: disabled by patch option.")
-        }
-
-        // 11. hideViewCount (Piko: View Count)
-        if (hideViewCount ?: true) {
-            val method = inlineActionBarItemFingerprint.method
-            val instructions = method.implementation?.instructions?.toList()
-                ?: error("[Hide Elements] Method Lcom/x/inlineactionbar/d;->invoke has no instructions.")
-            val invokeIndex = instructions.indexOfFirst { ins ->
-                ins.opcode == Opcode.INVOKE_STATIC_RANGE &&
-                    ((ins as? ReferenceInstruction)?.reference as? MethodReference)?.name == "j"
-            }
-            if (invokeIndex >= 0) {
-                val invokeIns = instructions[invokeIndex]
-                val rangeIns = invokeIns as RegisterRangeInstruction
-                val startReg = rangeIns.startRegister
-                val endReg = startReg + rangeIns.registerCount - 1
-                val methodRef = (invokeIns as ReferenceInstruction).reference as MethodReference
-                val methodDescriptor = ReferenceUtil.getMethodDescriptor(methodRef)
-
-                method.removeInstruction(invokeIndex)
-                method.addInstructionsWithLabels(
-                    invokeIndex,
-                    """
-                        iget-object v3, v$startReg, Lcom/x/models/l4;->a:Lcom/x/models/w5;
-                        sget-object v4, Lcom/x/models/w5;->ViewCount:Lcom/x/models/w5;
-                        if-eq v3, v4, :skip_view_count
-                        invoke-static/range {v$startReg .. v$endReg}, $methodDescriptor
-                        :skip_view_count
-                        nop
-                    """.trimIndent(),
-                )
-                patched++
-            } else {
-                error("[Hide Elements] Failed to find Lcom/google/android/gms/dynamite/d;->j invoke in Lcom/x/inlineactionbar/d;->invoke.")
-            }
-        } else {
-            println("[Hide Elements] Skipped hideViewCount: disabled by patch option.")
         }
 
         // 12. hideGrokPostAction

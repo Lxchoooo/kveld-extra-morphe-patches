@@ -21,14 +21,22 @@ package app.morphe.patches.twitter
 import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
+import app.morphe.patcher.extensions.InstructionExtensions.removeInstruction
+import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
+import app.morphe.patcher.patch.BytecodePatchContext
 import app.morphe.patcher.patch.booleanOption
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patches.shared.Constants
 import com.android.tools.smali.dexlib2.Opcode
+import com.android.tools.smali.dexlib2.iface.instruction.NarrowLiteralInstruction
+import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
+import com.android.tools.smali.dexlib2.iface.instruction.RegisterRangeInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.TwoRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.reference.FieldReference
+import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 import com.android.tools.smali.dexlib2.iface.reference.StringReference
+import com.android.tools.smali.dexlib2.util.ReferenceUtil
 
 private val urtShowInstructionsStateFingerprint = Fingerprint(
     strings = listOf("UrtShowInstructionsState(showInstructions="),
@@ -77,6 +85,109 @@ private val profileFollowRecommendationResponseFingerprint = Fingerprint(
 private val fleetlineApiResponseFingerprint = Fingerprint(
     strings = listOf("FleetlineApiResponse(threads="),
 )
+
+private val communityNotesFingerprint = Fingerprint(
+    strings = listOf("birdwatch_consumption_enabled"),
+)
+
+private val inlineActionBarItemFingerprint = Fingerprint(
+    definingClass = "Lcom/x/inlineactionbar/d;",
+    name = "invoke",
+)
+
+private val inlineActionsFingerprint = Fingerprint(
+    strings = listOf("android_ntab_display_options_inline_actions_enabled"),
+)
+
+private val homeTopBarFingerprint = Fingerprint(
+    definingClass = "Lcom/x/home/tabbed/a;",
+    name = "i",
+)
+
+private val homeTabBarPagerFingerprint = Fingerprint(
+    definingClass = "Lcom/x/home/tabbed/a;",
+    name = "j",
+)
+
+private val homeTabBarHeaderFingerprint = Fingerprint(
+    definingClass = "Lcom/x/home/tabbed/a;",
+    name = "f",
+)
+
+context(_: BytecodePatchContext)
+private fun neutralizeFlag(
+    fingerprint: Fingerprint,
+    flagKey: String,
+    patchName: String,
+): Boolean {
+    val method = fingerprint.method
+    val instructions = method.implementation?.instructions?.toList() ?: return false
+    val stringIndex = instructions.indexOfFirst { ins ->
+        (ins as? ReferenceInstruction)?.reference?.let { ref ->
+            (ref as? StringReference)?.string == flagKey
+        } == true
+    }
+    if (stringIndex < 0) {
+        println("[$patchName] Flag string '$flagKey' not found in instructions.")
+        return false
+    }
+
+    val invokeIndex = (stringIndex + 1 until minOf(instructions.size, stringIndex + 15)).firstOrNull { i ->
+        instructions[i].opcode.name.startsWith("invoke-")
+    }
+    if (invokeIndex == null || invokeIndex + 1 >= instructions.size) {
+        println("[$patchName] No invoke instruction found after flag '$flagKey'.")
+        return false
+    }
+
+    val resultIns = instructions[invokeIndex + 1]
+    when (resultIns.opcode) {
+        Opcode.MOVE_RESULT -> {
+            val reg = (resultIns as OneRegisterInstruction).registerA
+            val constIns = if (reg <= 15) "const/4 v$reg, 0x0" else "const/16 v$reg, 0x0"
+            method.addInstructions(invokeIndex + 2, constIns)
+            return true
+        }
+        Opcode.MOVE_RESULT_OBJECT -> {
+            val reg = (resultIns as OneRegisterInstruction).registerA
+            method.addInstructions(
+                invokeIndex + 2,
+                "sget-object v$reg, Ljava/lang/Boolean;->FALSE:Ljava/lang/Boolean;",
+            )
+
+            val updatedInstructions = method.implementation?.instructions?.toList() ?: emptyList()
+            val booleanValueInvoke = (invokeIndex + 2 until minOf(updatedInstructions.size, invokeIndex + 10)).firstOrNull { i ->
+                val ins = updatedInstructions[i]
+                ins.opcode.name.startsWith("invoke-") &&
+                    ((ins as? ReferenceInstruction)?.reference as? MethodReference)?.name == "booleanValue"
+            }
+            if (booleanValueInvoke != null && booleanValueInvoke + 1 < updatedInstructions.size &&
+                updatedInstructions[booleanValueInvoke + 1].opcode == Opcode.MOVE_RESULT
+            ) {
+                val boolReg = (updatedInstructions[booleanValueInvoke + 1] as OneRegisterInstruction).registerA
+                val constIns = if (boolReg <= 15) "const/4 v$boolReg, 0x0" else "const/16 v$boolReg, 0x0"
+                method.addInstructions(booleanValueInvoke + 2, constIns)
+            }
+            return true
+        }
+        else -> {
+            val branchIndex = (invokeIndex until minOf(instructions.size, invokeIndex + 5)).firstOrNull { i ->
+                instructions[i].opcode.name.startsWith("if-")
+            }
+            if (branchIndex != null) {
+                val branchIns = instructions[branchIndex]
+                val reg = (branchIns as? OneRegisterInstruction)?.registerA
+                if (reg != null) {
+                    val constIns = if (reg <= 15) "const/4 v$reg, 0x0" else "const/16 v$reg, 0x0"
+                    method.addInstructions(branchIndex, constIns)
+                    return true
+                }
+            }
+            println("[$patchName] Unexpected instruction '${resultIns.opcode}' after invoke for flag '$flagKey'.")
+            return false
+        }
+    }
+}
 
 @Suppress("unused")
 val twitterTimelineUiPatch = bytecodePatch(
@@ -142,9 +253,106 @@ val twitterTimelineUiPatch = bytecodePatch(
         required = false,
     )
 
+    val hideBookmark by booleanOption(
+        key = "hideBookmark",
+        default = true,
+        title = "Hide Bookmark",
+        description = "Hide bookmark action button in post timeline",
+        required = false,
+    )
+
+    val hideCommunityNotes by booleanOption(
+        key = "hideCommunityNotes",
+        default = true,
+        title = "Hide Community Notes",
+        description = "Hide community notes and birdwatch contributions on posts",
+        required = false,
+    )
+
+    val hideFollowedBy by booleanOption(
+        key = "hideFollowedBy",
+        default = true,
+        title = "Hide Followed By",
+        description = "Hide followed-by social context facepile on timeline posts",
+        required = false,
+    )
+
+    val hideHiddenReplies by booleanOption(
+        key = "hideHiddenReplies",
+        default = true,
+        title = "Hide Hidden Replies",
+        description = "Hide hidden and moderated replies banner entrypoint in conversation threads",
+        required = false,
+    )
+
+    val hideImmersivePlayer by booleanOption(
+        key = "hideImmersivePlayer",
+        default = true,
+        title = "Hide Immersive Player",
+        description = "Hide immersive swipe-up video player surfaces",
+        required = false,
+    )
+
+    val hidePostMetrics by booleanOption(
+        key = "hidePostMetrics",
+        default = true,
+        title = "Hide Post Metrics",
+        description = "Hide like, repost, and reply count metrics on timeline posts",
+        required = false,
+    )
+
+    val hideViewCount by booleanOption(
+        key = "hideViewCount",
+        default = true,
+        title = "Hide View Count",
+        description = "Hide post view count metrics on timeline and post detail",
+        required = false,
+    )
+
+    val inlineActionBar by booleanOption(
+        key = "inlineActionBar",
+        default = true,
+        title = "Inline Action Bar",
+        description = "Toggle inline action buttons across notification timeline",
+        required = false,
+    )
+
+    val replySorting by booleanOption(
+        key = "replySorting",
+        default = true,
+        title = "Reply Sorting",
+        description = "Customize default reply sorting behavior in conversation threads",
+        required = false,
+    )
+
+    val timelineAddTab by booleanOption(
+        key = "timelineAddTab",
+        default = true,
+        title = "Timeline Add Tab",
+        description = "Hide add tab (+) button in home timeline tab header",
+        required = false,
+    )
+
+    val timelineTopBar by booleanOption(
+        key = "timelineTopBar",
+        default = true,
+        title = "Timeline Top Bar",
+        description = "Toggle top bar elements in home and custom timelines",
+        required = false,
+    )
+
+    val topBarExtra by booleanOption(
+        key = "topBarExtra",
+        default = true,
+        title = "Top Bar Extra",
+        description = "Toggle additional top bar and header action surfaces",
+        required = false,
+    )
+
     execute {
         var patched = 0
 
+        // 1. hideBanner
         if (hideBanner ?: true) {
             val stateMethod = urtShowInstructionsStateFingerprint.method
             val stateClassDescriptor = stateMethod.definingClass
@@ -183,6 +391,7 @@ val twitterTimelineUiPatch = bytecodePatch(
             println("[Timeline UI] Skipped: Hide Banner disabled.")
         }
 
+        // 2. hidePromoteButton
         if (hidePromoteButton ?: true) {
             quickPromoteEligibilityFingerprint.method.addInstructions(
                 0,
@@ -196,6 +405,7 @@ val twitterTimelineUiPatch = bytecodePatch(
             println("[Timeline UI] Skipped: Hide Promote Button disabled.")
         }
 
+        // 3. hideNudgeButton
         if (hideNudgeButton ?: true) {
             val stateMethod = focalPostStateFingerprint.method
             val stateClassDescriptor = stateMethod.definingClass
@@ -311,6 +521,7 @@ val twitterTimelineUiPatch = bytecodePatch(
             println("[Timeline UI] Skipped: Hide Nudge Button disabled.")
         }
 
+        // 4. hideRecommendationItems
         if (hideRecommendationItems ?: true) {
             urtItemPresenterFingerprint.method.addInstructionsWithLabels(
                 0,
@@ -375,6 +586,7 @@ val twitterTimelineUiPatch = bytecodePatch(
             println("[Timeline UI] Skipped: Hide Recommendation Items disabled.")
         }
 
+        // 5. hideDiscoverMore
         if (hideDiscoverMore ?: true) {
             val suppressionSmali = """
                 move-object/from16 v0, p2
@@ -421,6 +633,7 @@ val twitterTimelineUiPatch = bytecodePatch(
             println("[Timeline UI] Skipped: Hide Discover More disabled.")
         }
 
+        // 6. hideRecommendedUsers
         if (hideRecommendedUsers ?: true) {
             val stateMethod = profileFollowRecommendationResponseFingerprint.method
             val stateClassDescriptor = stateMethod.definingClass
@@ -493,6 +706,7 @@ val twitterTimelineUiPatch = bytecodePatch(
             println("[Timeline UI] Skipped: Hide Recommended Users disabled.")
         }
 
+        // 7. hideLiveThreads
         if (hideLiveThreads ?: true) {
             val stateMethod = fleetlineApiResponseFingerprint.method
             val stateClassDescriptor = stateMethod.definingClass
@@ -566,6 +780,210 @@ val twitterTimelineUiPatch = bytecodePatch(
             patched += threadsPatched
         } else {
             println("[Timeline UI] Skipped: Hide Live Threads disabled.")
+        }
+
+        // 8. hideBookmark
+        if (hideBookmark ?: true) {
+            println("[Timeline UI] Skipped hideBookmark: bookmark action in timeline is served via URT action entries in 12.33; no client feature flag gate.")
+        } else {
+            println("[Timeline UI] Skipped hideBookmark: disabled by patch option.")
+        }
+
+        // 9. hideCommunityNotes
+        if (hideCommunityNotes ?: true) {
+            if (neutralizeFlag(communityNotesFingerprint, "birdwatch_consumption_enabled", "Timeline UI")) {
+                patched++
+            } else {
+                error("[Timeline UI] Failed to neutralize 'birdwatch_consumption_enabled' flag.")
+            }
+        } else {
+            println("[Timeline UI] Skipped hideCommunityNotes: disabled by patch option.")
+        }
+
+        // 10. hideFollowedBy
+        if (hideFollowedBy ?: true) {
+            println("[Timeline UI] Skipped hideFollowedBy: followed-by social context is served via URT timeline models in 12.33; no client feature flag gate.")
+        } else {
+            println("[Timeline UI] Skipped hideFollowedBy: disabled by patch option.")
+        }
+
+        // 11. hideHiddenReplies
+        if (hideHiddenReplies ?: true) {
+            println("[Timeline UI] Skipped hideHiddenReplies: hidden replies entrypoint is served via URT conversation models in 12.33; no client feature flag gate.")
+        } else {
+            println("[Timeline UI] Skipped hideHiddenReplies: disabled by patch option.")
+        }
+
+        // 12. hideImmersivePlayer
+        if (hideImmersivePlayer ?: true) {
+            println("[Timeline UI] Skipped hideImmersivePlayer: immersive video viewer entrypoint is bound to media click dispatch in 12.33; no client feature flag gate.")
+        } else {
+            println("[Timeline UI] Skipped hideImmersivePlayer: disabled by patch option.")
+        }
+
+        // 13. hidePostMetrics
+        if (hidePostMetrics ?: true) {
+            val method = inlineActionBarItemFingerprint.method
+            val instructions = method.implementation?.instructions?.toList()
+                ?: error("[Timeline UI] Method Lcom/x/inlineactionbar/d;->invoke has no instructions.")
+            val countedPillIndex = instructions.indexOfFirst { ins ->
+                ins.opcode == Opcode.SGET_OBJECT &&
+                    ((ins as? ReferenceInstruction)?.reference as? FieldReference)?.name == "CountedPill"
+            }
+            if (countedPillIndex >= 0) {
+                val countedPillIns = instructions[countedPillIndex] as OneRegisterInstruction
+                val targetReg = countedPillIns.registerA
+                method.replaceInstruction(
+                    countedPillIndex,
+                    "sget-object v$targetReg, Lcom/x/inlineactionbar/d1;->Countless:Lcom/x/inlineactionbar/d1;",
+                )
+                patched++
+            } else {
+                error("[Timeline UI] Failed to find CountedPill instruction in Lcom/x/inlineactionbar/d;->invoke.")
+            }
+        } else {
+            println("[Timeline UI] Skipped hidePostMetrics: disabled by patch option.")
+        }
+
+        // 14. hideViewCount
+        if (hideViewCount ?: true) {
+            val method = inlineActionBarItemFingerprint.method
+            val instructions = method.implementation?.instructions?.toList()
+                ?: error("[Timeline UI] Method Lcom/x/inlineactionbar/d;->invoke has no instructions.")
+            val invokeIndex = instructions.indexOfFirst { ins ->
+                ins.opcode == Opcode.INVOKE_STATIC_RANGE &&
+                    ((ins as? ReferenceInstruction)?.reference as? MethodReference)?.name == "j"
+            }
+            if (invokeIndex >= 0) {
+                val invokeIns = instructions[invokeIndex]
+                val rangeIns = invokeIns as RegisterRangeInstruction
+                val startReg = rangeIns.startRegister
+                val endReg = startReg + rangeIns.registerCount - 1
+                val methodRef = (invokeIns as ReferenceInstruction).reference as MethodReference
+                val methodDescriptor = ReferenceUtil.getMethodDescriptor(methodRef)
+
+                method.removeInstruction(invokeIndex)
+                method.addInstructionsWithLabels(
+                    invokeIndex,
+                    """
+                        iget-object v3, v$startReg, Lcom/x/models/l4;->a:Lcom/x/models/w5;
+                        sget-object v4, Lcom/x/models/w5;->ViewCount:Lcom/x/models/w5;
+                        if-eq v3, v4, :skip_view_count
+                        invoke-static/range {v$startReg .. v$endReg}, $methodDescriptor
+                        :skip_view_count
+                        nop
+                    """.trimIndent(),
+                )
+                patched++
+            } else {
+                error("[Timeline UI] Failed to find Lcom/google/android/gms/dynamite/d;->j invoke in Lcom/x/inlineactionbar/d;->invoke.")
+            }
+        } else {
+            println("[Timeline UI] Skipped hideViewCount: disabled by patch option.")
+        }
+
+        // 15. inlineActionBar
+        if (inlineActionBar ?: true) {
+            if (neutralizeFlag(inlineActionsFingerprint, "android_ntab_display_options_inline_actions_enabled", "Timeline UI")) {
+                patched++
+            } else {
+                error("[Timeline UI] Failed to neutralize 'android_ntab_display_options_inline_actions_enabled' flag.")
+            }
+        } else {
+            println("[Timeline UI] Skipped inlineActionBar: disabled by patch option.")
+        }
+
+        // 16. replySorting
+        if (replySorting ?: true) {
+            println("[Timeline UI] Skipped replySorting: default conversation reply sorting is server-driven in 12.33 URT; no client feature flag gate.")
+        } else {
+            println("[Timeline UI] Skipped replySorting: disabled by patch option.")
+        }
+
+        // 17. timelineAddTab
+        if (timelineAddTab ?: true) {
+            val pagerMethod = homeTabBarPagerFingerprint.method
+            val pagerInstructions = pagerMethod.implementation?.instructions?.toList()
+                ?: error("[Timeline UI] Method Lcom/x/home/tabbed/a;->j has no instructions.")
+            val pagerConstIdx = pagerInstructions.indexOfFirst { ins ->
+                (ins as? NarrowLiteralInstruction)?.narrowLiteral == -585845020
+            }
+            if (pagerConstIdx > 0) {
+                val ifEqzIdx = pagerInstructions.subList(0, pagerConstIdx).indexOfLast {
+                    it.opcode == Opcode.IF_EQZ
+                }
+                if (ifEqzIdx >= 0 && pagerConstIdx - ifEqzIdx <= 3) {
+                    val reg = (pagerInstructions[ifEqzIdx] as OneRegisterInstruction).registerA
+                    val constIns = if (reg <= 15) "const/4 v$reg, 0x0" else "const/16 v$reg, 0x0"
+                    pagerMethod.addInstructions(ifEqzIdx, constIns)
+                    patched++
+                } else {
+                    error("[Timeline UI] Preceding if-eqz branch not found before const group in Lcom/x/home/tabbed/a;->j.")
+                }
+            } else {
+                error("[Timeline UI] Target group constant -585845020 not found in Lcom/x/home/tabbed/a;->j.")
+            }
+
+            val headerMethod = homeTabBarHeaderFingerprint.method
+            val headerInstructions = headerMethod.implementation?.instructions?.toList()
+                ?: error("[Timeline UI] Method Lcom/x/home/tabbed/a;->f has no instructions.")
+            val headerConstIdx = headerInstructions.indexOfFirst { ins ->
+                (ins as? NarrowLiteralInstruction)?.narrowLiteral == -868946867
+            }
+            if (headerConstIdx > 0) {
+                val ifEqzIdx = headerInstructions.subList(0, headerConstIdx).indexOfLast {
+                    it.opcode == Opcode.IF_EQZ
+                }
+                if (ifEqzIdx >= 0 && headerConstIdx - ifEqzIdx <= 3) {
+                    val reg = (headerInstructions[ifEqzIdx] as OneRegisterInstruction).registerA
+                    val constIns = if (reg <= 15) "const/4 v$reg, 0x0" else "const/16 v$reg, 0x0"
+                    headerMethod.addInstructions(ifEqzIdx, constIns)
+                    patched++
+                } else {
+                    error("[Timeline UI] Preceding if-eqz branch not found before const group in Lcom/x/home/tabbed/a;->f.")
+                }
+            } else {
+                error("[Timeline UI] Target group constant -868946867 not found in Lcom/x/home/tabbed/a;->f.")
+            }
+        } else {
+            println("[Timeline UI] Skipped timelineAddTab: disabled by patch option.")
+        }
+
+        // 18. timelineTopBar
+        if (timelineTopBar ?: true) {
+            val method = homeTopBarFingerprint.method
+            val instructions = method.implementation?.instructions?.toList()
+                ?: error("[Timeline UI] Method Lcom/x/home/tabbed/a;->i has no instructions.")
+            val followButtonFieldIdx = instructions.indexOfFirst { ins ->
+                ins.opcode == Opcode.SGET_OBJECT &&
+                    ((ins as? ReferenceInstruction)?.reference as? FieldReference)?.let {
+                        it.definingClass == "Lcom/x/home/tabbed/a;" && it.name == "d"
+                    } == true
+            }
+            if (followButtonFieldIdx > 0) {
+                val ifEqzIdx = instructions.subList(0, followButtonFieldIdx).indexOfLast {
+                    it.opcode == Opcode.IF_EQZ
+                }
+                if (ifEqzIdx >= 0) {
+                    val reg = (instructions[ifEqzIdx] as OneRegisterInstruction).registerA
+                    val constIns = if (reg <= 15) "const/4 v$reg, 0x0" else "const/16 v$reg, 0x0"
+                    method.addInstructions(ifEqzIdx, constIns)
+                    patched++
+                } else {
+                    error("[Timeline UI] Preceding if-eqz branch not found before follow button field in Lcom/x/home/tabbed/a;->i.")
+                }
+            } else {
+                error("[Timeline UI] Follow button field Lcom/x/home/tabbed/a;->d not found in Lcom/x/home/tabbed/a;->i.")
+            }
+        } else {
+            println("[Timeline UI] Skipped timelineTopBar: disabled by patch option.")
+        }
+
+        // 19. topBarExtra
+        if (topBarExtra ?: true) {
+            println("[Timeline UI] Skipped topBarExtra: top bar extra surfaces are dynamically composed in 12.33; no client feature flag gate.")
+        } else {
+            println("[Timeline UI] Skipped topBarExtra: disabled by patch option.")
         }
 
         if (patched > 0) {
