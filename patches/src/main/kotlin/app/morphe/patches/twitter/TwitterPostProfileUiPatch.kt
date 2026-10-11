@@ -30,6 +30,21 @@ import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 import com.android.tools.smali.dexlib2.iface.reference.StringReference
 
+private val grokPostActionFingerprint = Fingerprint(
+    returnType = "Z",
+    strings = listOf("grok_android_analyze_timelines_enabled"),
+)
+
+private val profileGrokImagineFingerprint = Fingerprint(
+    returnType = "Ljava/lang/Object;",
+    strings = listOf("grok_android_imagine_cta_profile_enabled"),
+)
+
+private val profileGrokHeaderInitFingerprint = Fingerprint(
+    name = "<init>",
+    strings = listOf("grok_android_imagine_cta_profile_enabled"),
+)
+
 private val profileTabsFingerprint = Fingerprint(
     strings = listOf("x_lite_profile_connect_tabs_enabled"),
 )
@@ -110,12 +125,36 @@ private fun neutralizeFlag(
 }
 
 @Suppress("unused")
-val twitterCustomizeUiPatch = bytecodePatch(
-    name = "Customize UI",
-    description = "Toggle navigation and timeline UI elements",
+val twitterPostProfileUiPatch = bytecodePatch(
+    name = "Post & Profile UI",
+    description = "Post actions, profile header and Grok surfaces",
     default = false,
 ) {
     compatibleWith(Constants.COMPATIBILITY_TWITTER)
+
+    val hideCommunityBadges by booleanOption(
+        key = "hideCommunityBadges",
+        default = true,
+        title = "Hide Community Badges",
+        description = "Hide community badge indicators across user and post labels",
+        required = false,
+    )
+
+    val hideGrokPostAction by booleanOption(
+        key = "hideGrokPostAction",
+        default = true,
+        title = "Hide Grok Post Action",
+        description = "Hide Grok analysis action button in post headers",
+        required = false,
+    )
+
+    val hideProfileGrokButton by booleanOption(
+        key = "hideProfileGrokButton",
+        default = true,
+        title = "Hide Profile Grok Button",
+        description = "Hide Grok Imagine action button on profile header banner",
+        required = false,
+    )
 
     val profileTabs by booleanOption(
         key = "profileTabs",
@@ -128,21 +167,56 @@ val twitterCustomizeUiPatch = bytecodePatch(
     execute {
         var patched = 0
 
-        // 6. profileTabs (Piko: profile tabs)
-        if (profileTabs ?: true) {
-            if (neutralizeFlag(profileTabsFingerprint, "x_lite_profile_connect_tabs_enabled", "Customize UI")) {
+        // hideCommunityBadges
+        if (hideCommunityBadges ?: true) {
+            println("[Post & Profile UI] Skipped hideCommunityBadges: community badges are served via URT metadata in 12.33; no client feature flag gate.")
+        } else {
+            println("[Post & Profile UI] Skipped hideCommunityBadges: disabled by patch option.")
+        }
+
+        // hideGrokPostAction
+        if (hideGrokPostAction ?: true) {
+            if (neutralizeFlag(grokPostActionFingerprint, "grok_android_analyze_timelines_enabled", "Post & Profile UI")) {
                 patched++
             } else {
-                error("[Customize UI] Failed to neutralize 'x_lite_profile_connect_tabs_enabled' flag.")
+                error("[Post & Profile UI] Failed to neutralize 'grok_android_analyze_timelines_enabled' flag.")
             }
         } else {
-            println("[Customize UI] Skipped profileTabs: disabled by patch option.")
+            println("[Post & Profile UI] Skipped hideGrokPostAction: disabled by patch option.")
+        }
+
+        // hideProfileGrokButton
+        if (hideProfileGrokButton ?: true) {
+            var ok = false
+            if (neutralizeFlag(profileGrokImagineFingerprint, "grok_android_imagine_cta_profile_enabled", "Post & Profile UI")) {
+                patched++
+                ok = true
+            }
+            if (neutralizeFlag(profileGrokHeaderInitFingerprint, "grok_android_imagine_cta_profile_enabled", "Post & Profile UI")) {
+                patched++
+            }
+            if (!ok) {
+                error("[Post & Profile UI] Failed to neutralize 'grok_android_imagine_cta_profile_enabled' flag.")
+            }
+        } else {
+            println("[Post & Profile UI] Skipped hideProfileGrokButton: disabled by patch option.")
+        }
+
+        // profileTabs
+        if (profileTabs ?: true) {
+            if (neutralizeFlag(profileTabsFingerprint, "x_lite_profile_connect_tabs_enabled", "Post & Profile UI")) {
+                patched++
+            } else {
+                error("[Post & Profile UI] Failed to neutralize 'x_lite_profile_connect_tabs_enabled' flag.")
+            }
+        } else {
+            println("[Post & Profile UI] Skipped profileTabs: disabled by patch option.")
         }
 
         if (patched > 0) {
-            println("[Customize UI] Applied $patched hooks -> UI navigation and timeline elements customized.")
+            println("[Post & Profile UI] Applied $patched hooks -> post and profile UI customized.")
         } else {
-            println("[Customize UI] Applied 0 hooks -> options skipped or disabled.")
+            println("[Post & Profile UI] Applied 0 hooks -> options skipped or disabled.")
         }
     }
 }

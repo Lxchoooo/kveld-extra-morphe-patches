@@ -178,12 +178,11 @@
 | **Block Telemetry & Trackers** | Neutralizes Google AppMeasurement and Firebase Performance Trace dispatchers, and strips advertising identifiers. |  |
 | **Block Update Screen** | Blocks the 'This app is out of date' screen and suppresses in-app update prompts on launch |  |
 | **Control Video Auto Scroll** | Prevents automatic scrolling to the next video in immersive view |  |
-| **Customize UI** | Toggle navigation and timeline UI elements | • Profile Tabs |
 | **Drawer Items** | Hide individual items in the navigation drawer | • Hide Profile<br>• Hide Premium<br>• Hide Communities<br>• Hide Bookmarks<br>• Hide Lists<br>• Hide Spaces<br>• Hide Creator Studio<br>• Hide Get Grok<br>• Hide Help Center |
-| **Hide Elements** | Hide badges, buttons, metrics and served UI elements | • Hide Community Badges<br>• Hide Grok Post Action<br>• Hide Profile Grok Button |
 | **Navigation UI** | Bottom navigation, FAB, tabs and bars | • Hide Badges<br>• Hide FAB<br>• Hide FAB Menu<br>• Navigation Bar<br>• Grok Tab<br>• Explore Tabs<br>• Notification Tabs<br>• Search Suggestions<br>• Search Tab Items<br>• Side Bar Items |
 | **No Shortened URL** | Expands t.co shortened URLs, removing the click-tracking intermediary |  |
 | **Pause Search Suggestions** | Stops persisting search suggestions locally without breaking search |  |
+| **Post & Profile UI** | Post actions, profile header and Grok surfaces | • Hide Community Badges<br>• Hide Grok Post Action<br>• Hide Profile Grok Button<br>• Profile Tabs |
 | **Remove Ads** | Removes promoted posts, trends and ads from timeline |  |
 | **Remove Premium Upsell** | Removes premium upsell surfaces | • Hide Profile Get Verified |
 | **Share Links** | Custom sharing domain, handle custom links and legacy share links | • Custom Sharing Domain<br>• Custom Sharing Domain<br>• Handle Custom Links<br>• Legacy Share Links |
