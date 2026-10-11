@@ -873,7 +873,11 @@ fun main(args: Array<String>) {
                             .filter { it.name.endsWith(".apk", ignoreCase = true) && it.name != baseEntry?.name }
                             .toList()
                         splitApkEntries.parallelStream().forEach { splitEntry ->
-                            val rawSplitFile = File(tempDir, splitEntry.name)
+                            val splitBasename = File(splitEntry.name).name
+                            if (splitEntry.name.contains("..") || splitEntry.name.startsWith("/") || splitEntry.name.startsWith("\\") || splitEntry.name != splitBasename) {
+                                error("Potential path traversal detected in split entry name: ${splitEntry.name}")
+                            }
+                            val rawSplitFile = File(tempDir, splitBasename)
                             apkmZip.getInputStream(splitEntry).use { input ->
                                 rawSplitFile.outputStream().buffered().use { output -> input.copyTo(output) }
                             }
