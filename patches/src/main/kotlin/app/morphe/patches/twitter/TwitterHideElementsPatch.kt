@@ -20,6 +20,9 @@ package app.morphe.patches.twitter
 
 import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
+import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
+import app.morphe.patcher.extensions.InstructionExtensions.removeInstruction
+import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.morphe.patcher.patch.BytecodePatchContext
 import app.morphe.patcher.patch.booleanOption
 import app.morphe.patcher.patch.bytecodePatch
@@ -27,6 +30,7 @@ import app.morphe.patches.shared.Constants
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
+import com.android.tools.smali.dexlib2.iface.reference.FieldReference
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 import com.android.tools.smali.dexlib2.iface.reference.StringReference
 
@@ -40,6 +44,11 @@ private val communityNotesFingerprint = Fingerprint(
 
 private val fabMenuFingerprint = Fingerprint(
     strings = listOf("android_compose_fab_expansion_enabled"),
+)
+
+private val inlineActionBarItemFingerprint = Fingerprint(
+    definingClass = "Lcom/x/inlineactionbar/d;",
+    name = "invoke",
 )
 
 context(_: BytecodePatchContext)
@@ -293,14 +302,54 @@ val twitterHideElementsPatch = bytecodePatch(
 
         // 10. hidePostMetrics (Piko: Post Metrics)
         if (hidePostMetrics ?: true) {
-            println("[Hide Elements] Skipped hidePostMetrics: post engagement metrics are served via URT response models in 12.33; no client feature flag gate.")
+            val method = inlineActionBarItemFingerprint.method
+            val instructions = method.implementation?.instructions?.toList()
+                ?: error("[Hide Elements] Method Lcom/x/inlineactionbar/d;->invoke has no instructions.")
+            val countedPillIndex = instructions.indexOfFirst { ins ->
+                ins.opcode == Opcode.SGET_OBJECT &&
+                    ((ins as? ReferenceInstruction)?.reference as? FieldReference)?.name == "CountedPill"
+            }
+            if (countedPillIndex >= 0) {
+                method.replaceInstruction(
+                    countedPillIndex,
+                    "sget-object v13, Lcom/x/inlineactionbar/d1;->Countless:Lcom/x/inlineactionbar/d1;",
+                )
+                patched++
+            } else {
+                error("[Hide Elements] Failed to find CountedPill instruction in Lcom/x/inlineactionbar/d;->invoke.")
+            }
         } else {
             println("[Hide Elements] Skipped hidePostMetrics: disabled by patch option.")
         }
 
         // 11. hideViewCount (Piko: View Count)
         if (hideViewCount ?: true) {
-            println("[Hide Elements] Skipped hideViewCount: view count metrics are served via URT action models in 12.33; no client feature flag gate.")
+            val method = inlineActionBarItemFingerprint.method
+            val instructions = method.implementation?.instructions?.toList()
+                ?: error("[Hide Elements] Method Lcom/x/inlineactionbar/d;->invoke has no instructions.")
+            val invokeIndex = instructions.indexOfFirst { ins ->
+                ins.opcode == Opcode.INVOKE_STATIC_RANGE &&
+                    ((ins as? ReferenceInstruction)?.reference as? MethodReference)?.name == "j"
+            }
+            if (invokeIndex >= 0) {
+                method.removeInstruction(invokeIndex)
+                method.addInstructionsWithLabels(
+                    invokeIndex,
+                    """
+                        iget-object v3, v7, Lcom/x/models/l4;->a:Lcom/x/models/w5;
+                        sget-object v4, Lcom/x/models/w5;->ViewCount:Lcom/x/models/w5;
+                        if-eq v3, v4, :render_action
+                        goto :skip_view_count
+                        :render_action
+                        invoke-static/range {v7 .. v23}, Lcom/google/android/gms/dynamite/d;->j(Lcom/x/models/l4;Lcom/x/inlineactionbar/a1;JFLdev/chrisbanes/haze/v0;Landroidx/compose/ui/graphics/z;JJZLandroidx/compose/foundation/layout/z2;Lkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)V
+                        :skip_view_count
+                        nop
+                    """.trimIndent(),
+                )
+                patched++
+            } else {
+                error("[Hide Elements] Failed to find Lcom/google/android/gms/dynamite/d;->j invoke in Lcom/x/inlineactionbar/d;->invoke.")
+            }
         } else {
             println("[Hide Elements] Skipped hideViewCount: disabled by patch option.")
         }
