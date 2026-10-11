@@ -165,7 +165,7 @@
 </details>
 
 <details>
-<summary>X&nbsp;&nbsp;•&nbsp;&nbsp;<b>19 patches</b></summary>
+<summary>X&nbsp;&nbsp;•&nbsp;&nbsp;<b>20 patches</b></summary>
 <br>
 
 **Supported versions:**
@@ -179,6 +179,7 @@
 | **Block Update Screen** | Blocks the 'This app is out of date' screen and suppresses in-app update prompts on launch |  |
 | **Control Video Auto Scroll** | Prevents automatic scrolling to the next video in immersive view |  |
 | **Customize UI** | Toggle navigation and timeline UI elements | • Inline Action Bar<br>• Navigation Bar<br>• Reply Sorting<br>• Explore Tabs<br>• Notification Tabs<br>• Profile Tabs<br>• Search Suggestions<br>• Search Tab Items<br>• Side Bar Items<br>• Timeline Top Bar<br>• Top Bar Extra |
+| **Drawer Items** | Hide individual items in the navigation drawer | • Hide Bookmarks<br>• Hide Communities<br>• Hide Creator Studio<br>• Hide Get Grok<br>• Hide Help Center<br>• Hide Lists<br>• Hide Premium<br>• Hide Profile<br>• Hide Spaces |
 | **Hide Banner** | Hides new post banner |  |
 | **Hide Discover More** | Hides Discover more recommendations in tweet reply threads |  |
 | **Hide Elements** | Hide badges, buttons, metrics and served UI elements | • Hide Badges<br>• Hide Bookmark<br>• Hide Community Badges<br>• Hide Community Notes<br>• Hide FAB<br>• Hide FAB Menu<br>• Hide Followed By<br>• Hide Hidden Replies<br>• Hide Immersive Player<br>• Hide Post Metrics<br>• Hide View Count |
