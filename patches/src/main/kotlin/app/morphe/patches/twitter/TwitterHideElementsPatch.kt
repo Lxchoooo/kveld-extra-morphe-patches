@@ -30,9 +30,11 @@ import app.morphe.patches.shared.Constants
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
+import com.android.tools.smali.dexlib2.iface.instruction.RegisterRangeInstruction
 import com.android.tools.smali.dexlib2.iface.reference.FieldReference
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 import com.android.tools.smali.dexlib2.iface.reference.StringReference
+import com.android.tools.smali.dexlib2.util.ReferenceUtil
 
 private val badgesFingerprint = Fingerprint(
     strings = listOf("grok_android_tab_badge_enabled"),
@@ -310,9 +312,11 @@ val twitterHideElementsPatch = bytecodePatch(
                     ((ins as? ReferenceInstruction)?.reference as? FieldReference)?.name == "CountedPill"
             }
             if (countedPillIndex >= 0) {
+                val countedPillIns = instructions[countedPillIndex] as OneRegisterInstruction
+                val targetReg = countedPillIns.registerA
                 method.replaceInstruction(
                     countedPillIndex,
-                    "sget-object v13, Lcom/x/inlineactionbar/d1;->Countless:Lcom/x/inlineactionbar/d1;",
+                    "sget-object v$targetReg, Lcom/x/inlineactionbar/d1;->Countless:Lcom/x/inlineactionbar/d1;",
                 )
                 patched++
             } else {
@@ -332,16 +336,21 @@ val twitterHideElementsPatch = bytecodePatch(
                     ((ins as? ReferenceInstruction)?.reference as? MethodReference)?.name == "j"
             }
             if (invokeIndex >= 0) {
+                val invokeIns = instructions[invokeIndex]
+                val rangeIns = invokeIns as RegisterRangeInstruction
+                val startReg = rangeIns.startRegister
+                val endReg = startReg + rangeIns.registerCount - 1
+                val methodRef = (invokeIns as ReferenceInstruction).reference as MethodReference
+                val methodDescriptor = ReferenceUtil.getMethodDescriptor(methodRef)
+
                 method.removeInstruction(invokeIndex)
                 method.addInstructionsWithLabels(
                     invokeIndex,
                     """
-                        iget-object v3, v7, Lcom/x/models/l4;->a:Lcom/x/models/w5;
+                        iget-object v3, v$startReg, Lcom/x/models/l4;->a:Lcom/x/models/w5;
                         sget-object v4, Lcom/x/models/w5;->ViewCount:Lcom/x/models/w5;
-                        if-eq v3, v4, :render_action
-                        goto :skip_view_count
-                        :render_action
-                        invoke-static/range {v7 .. v23}, Lcom/google/android/gms/dynamite/d;->j(Lcom/x/models/l4;Lcom/x/inlineactionbar/a1;JFLdev/chrisbanes/haze/v0;Landroidx/compose/ui/graphics/z;JJZLandroidx/compose/foundation/layout/z2;Lkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)V
+                        if-eq v3, v4, :skip_view_count
+                        invoke-static/range {v$startReg .. v$endReg}, $methodDescriptor
                         :skip_view_count
                         nop
                     """.trimIndent(),
