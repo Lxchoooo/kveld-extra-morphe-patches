@@ -493,13 +493,10 @@ val twitterTimelineUiPatch = bytecodePatch(
                 }
             }
 
-            val followReg = (initInstructions[followIputIndex] as? TwoRegisterInstruction)?.registerA
-                ?: error("[Timeline UI] Failed to resolve follow register in constructor.")
             val subscribeReg = (initInstructions[subscribeIputIndex] as? TwoRegisterInstruction)?.registerA
                 ?: error("[Timeline UI] Failed to resolve subscribe register in constructor.")
 
             val targets = mutableListOf(
-                followIputIndex to followReg,
                 subscribeIputIndex to subscribeReg,
             )
 
