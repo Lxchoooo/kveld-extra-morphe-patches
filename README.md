@@ -189,7 +189,7 @@
 | **Remove Premium Upsell** | Removes premium upsell surfaces | • Hide Profile Get Verified |
 | **Share Links** | Custom sharing domain, handle custom links and legacy share links | • Custom Sharing Domain<br>• Custom Sharing Domain<br>• Handle Custom Links<br>• Legacy Share Links |
 | **Show Sensitive Media** | Displays sensitive media directly without requiring tap to reveal |  |
-| **Timeline UI** | Timeline surfaces: posts, threads, banners, recommendations and video entry points | • Hide Banner<br>• Hide Promote Button<br>• Hide Nudge Button<br>• Hide Recommendation Items<br>• Hide Discover More<br>• Hide Recommended Users<br>• Hide Live Threads<br>• Hide Bookmark<br>• Hide Community Notes<br>• Hide Followed By<br>• Hide Hidden Replies<br>• Hide Immersive Player<br>• Hide Post Metrics<br>• Hide View Count<br>• Inline Action Bar<br>• Reply Sorting<br>• Timeline Add Tab<br>• Timeline Top Bar<br>• Top Bar Extra |
+| **Timeline UI** | Timeline surfaces: posts, threads, banners, recommendations and video entry points | • Hide Banner<br>• Hide Promote Button<br>• Hide Nudge Button<br>• Hide Recommendation Items<br>• Hide Discover More<br>• Hide Recommended Users<br>• Hide Live Threads<br>• Hide Bookmark<br>• Hide Community Notes<br>• Hide Followed By<br>• Hide Hidden Replies<br>• Hide Immersive Player<br>• Hide Post Metrics<br>• Hide View Count<br>• Inline Action Bar<br>• Reply Sorting<br>• Timeline Add Tab<br>• Timeline Top Bar<br>• Top Bar Extra<br>• Hide Live Banner |
 | **X MLKit Vision Slimmer** | Disables MLKit component discovery and registrars. WARNING: this breaks in-app QR and barcode scanning. |  |
 
 </details>

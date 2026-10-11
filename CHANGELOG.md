@@ -1,3 +1,9 @@
+## [1.11.0](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.10.0...v1.11.0) (2026-10-11)
+
+### New Features
+
+* **twitter:** add hide live banner option in timeline UI ([cdce0c6](https://github.com/kveld9/kveld-extra-morphe-patches/commit/cdce0c631f9222d6bf033d9d014f477bbf839c92))
+
 ## [1.10.0](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.9.0...v1.10.0) (2026-10-11)
 
 ### Bug Fixes
