@@ -143,6 +143,7 @@ private fun pruneArAssets(getFn: (String) -> File): Pair<Int, Long> {
 }
 
 internal fun formatBytes(bytes: Long): String {
+    if (bytes < 1024) return "$bytes bytes"
     return if (bytes >= 1024 * 1024) {
         String.format(java.util.Locale.US, "%.2f MB", bytes.toDouble() / (1024 * 1024))
     } else {
