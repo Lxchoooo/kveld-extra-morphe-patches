@@ -177,7 +177,7 @@ val twitterDrawerPatch = bytecodePatch(
         if (hideCommunities ?: true) {
             val label = "check_q_${qChecks.size}"
             qChecks.add("""
-                const v2, 2131231702
+                const v2, 2131231666
                 if-ne v1, v2, :$label
                 return-void
                 :$label
@@ -186,7 +186,7 @@ val twitterDrawerPatch = bytecodePatch(
         if (hideBookmarks ?: true) {
             val label = "check_q_${qChecks.size}"
             qChecks.add("""
-                const v2, 2131231612
+                const v2, 2131231531
                 if-ne v1, v2, :$label
                 return-void
                 :$label
@@ -195,7 +195,7 @@ val twitterDrawerPatch = bytecodePatch(
         if (hideLists ?: true) {
             val label = "check_q_${qChecks.size}"
             qChecks.add("""
-                const v2, 2131231939
+                const v2, 2131231902
                 if-ne v1, v2, :$label
                 return-void
                 :$label
@@ -204,7 +204,7 @@ val twitterDrawerPatch = bytecodePatch(
         if (hideSpaces ?: true) {
             val label = "check_q_${qChecks.size}"
             qChecks.add("""
-                const v2, 2131232170
+                const v2, 2131232265
                 if-ne v1, v2, :$label
                 return-void
                 :$label
@@ -213,7 +213,7 @@ val twitterDrawerPatch = bytecodePatch(
         if (hideCreatorStudio ?: true) {
             val label = "check_q_${qChecks.size}"
             qChecks.add("""
-                const v2, 2131232055
+                const v2, 2131232183
                 if-ne v1, v2, :$label
                 return-void
                 :$label
