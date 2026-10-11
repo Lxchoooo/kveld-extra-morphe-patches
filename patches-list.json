@@ -1,7 +1,61 @@
 {
   "NOTE": "Do NOT manually edit this file. This file is automatically updated when semantic release (release.yml) runs. Manually editing this file can break your releases and break third party tools that use this file.",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "patches": [
+    {
+      "name": "AR Effects Slimmer",
+      "description": "Strips ARCore native binaries (libarcore_sdk_c.so, libarcore_sdk_jni.so) and AR effect/face tracking asset models. WARNING: Disables camera AR filters, 3D face effects, and body/face tracking.",
+      "default": false,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "com.instagram.android",
+          "name": "Instagram",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#E1306C",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "447.0.0.55.81",
+              "versionCodes": null,
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Block Crash & Diagnostics",
+      "description": "Neutralizes crash-dump uploaders, Lacrima detector broadcasts, debug diagnostics, carrier preload trackers, and lead-ads entrypoints.",
+      "default": false,
+      "dependencies": [
+        "ResourcePatch"
+      ],
+      "compatiblePackages": [
+        {
+          "packageName": "com.instagram.android",
+          "name": "Instagram",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#E1306C",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "447.0.0.55.81",
+              "versionCodes": null,
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
     {
       "name": "Block Telemetry & Trackers",
       "description": "Neutralizes Google AppMeasurement event dispatchers.",
@@ -209,6 +263,58 @@
       "options": []
     },
     {
+      "name": "Block Update Screen",
+      "description": "Blocks the 'This app is out of date' screen and suppresses in-app update prompts on launch",
+      "default": true,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "com.twitter.android",
+          "name": "X",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#000000",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "12.33.0-prod.01",
+              "versionCodes": null,
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Breakpad Crash Reporter Slimmer",
+      "description": "Zeroes Google Breakpad native crash reporter binaries (libbreakpad.so, libbreakpad_cpp_helper.so) in-situ. WARNING: Native crash reporting is silenced. If the host application loads these libraries unconditionally without exception guards, startup crashes could occur.",
+      "default": false,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "com.instagram.android",
+          "name": "Instagram",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#E1306C",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "447.0.0.55.81",
+              "versionCodes": null,
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
       "name": "Bypass Code Transparency",
       "description": "Skips the code-transparency failure dialog and reports local verification success, unblocking sideloaded installs.",
       "default": true,
@@ -276,6 +382,32 @@
           "targets": [
             {
               "version": "19.7.0",
+              "versionCodes": null,
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Control Video Auto Scroll",
+      "description": "Prevents automatic scrolling to the next video in immersive view",
+      "default": false,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "com.twitter.android",
+          "name": "X",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#000000",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "12.33.0-prod.01",
               "versionCodes": null,
               "isExperimental": false,
               "minSdk": null,
@@ -373,6 +505,132 @@
         }
       ],
       "options": []
+    },
+    {
+      "name": "Customize UI",
+      "description": "Toggle navigation and timeline UI elements",
+      "default": false,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "com.twitter.android",
+          "name": "X",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#000000",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "12.33.0-prod.01",
+              "versionCodes": null,
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": [
+        {
+          "key": "inlineActionBar",
+          "title": "Inline Action Bar",
+          "description": "Toggle inline action buttons across notification timeline",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
+          "values": null
+        },
+        {
+          "key": "navigationBar",
+          "title": "Navigation Bar",
+          "description": "Toggle persistent bottom navigation bar behavior",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
+          "values": null
+        },
+        {
+          "key": "replySorting",
+          "title": "Reply Sorting",
+          "description": "Customize default reply sorting behavior in conversation threads",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
+          "values": null
+        },
+        {
+          "key": "exploreTabs",
+          "title": "Explore Tabs",
+          "description": "Toggle rich explore tab surfaces",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
+          "values": null
+        },
+        {
+          "key": "notificationTabs",
+          "title": "Notification Tabs",
+          "description": "Toggle notification timeline tab items",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
+          "values": null
+        },
+        {
+          "key": "profileTabs",
+          "title": "Profile Tabs",
+          "description": "Toggle extra connect and media tabs on user profiles",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
+          "values": null
+        },
+        {
+          "key": "searchSuggestions",
+          "title": "Search Suggestions",
+          "description": "Toggle search typeahead and local suggestion persistence",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
+          "values": null
+        },
+        {
+          "key": "searchTabItems",
+          "title": "Search Tab Items",
+          "description": "Toggle rich search tab items and surfaces",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
+          "values": null
+        },
+        {
+          "key": "sideBarItems",
+          "title": "Side Bar Items",
+          "description": "Toggle drawer sidebar items including Grok assistant entry",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
+          "values": null
+        },
+        {
+          "key": "timelineTopBar",
+          "title": "Timeline Top Bar",
+          "description": "Toggle top bar elements in home and custom timelines",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
+          "values": null
+        },
+        {
+          "key": "topBarExtra",
+          "title": "Top Bar Extra",
+          "description": "Toggle additional top bar and header action surfaces",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
+          "values": null
+        }
+      ]
     },
     {
       "name": "Disable Login Requirement",
@@ -489,6 +747,158 @@
         }
       ],
       "options": []
+    },
+    {
+      "name": "Hide Discover More",
+      "description": "Hides Discover more recommendations in tweet reply threads",
+      "default": true,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "com.twitter.android",
+          "name": "X",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#000000",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "12.33.0-prod.01",
+              "versionCodes": null,
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Hide Elements",
+      "description": "Hide badges, buttons, metrics and served UI elements",
+      "default": false,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "com.twitter.android",
+          "name": "X",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#000000",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "12.33.0-prod.01",
+              "versionCodes": null,
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": [
+        {
+          "key": "hideBadges",
+          "title": "Hide Badges",
+          "description": "Hide badges and unread indicator counters from navigation bar icons",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
+          "values": null
+        },
+        {
+          "key": "hideBookmark",
+          "title": "Hide Bookmark",
+          "description": "Hide bookmark action button in post timeline",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
+          "values": null
+        },
+        {
+          "key": "hideCommunityBadges",
+          "title": "Hide Community Badges",
+          "description": "Hide community badge indicators across user and post labels",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
+          "values": null
+        },
+        {
+          "key": "hideCommunityNotes",
+          "title": "Hide Community Notes",
+          "description": "Hide community notes and birdwatch contributions on posts",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
+          "values": null
+        },
+        {
+          "key": "hideFab",
+          "title": "Hide FAB",
+          "description": "Hide primary floating action button in timeline",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
+          "values": null
+        },
+        {
+          "key": "hideFabMenu",
+          "title": "Hide FAB Menu",
+          "description": "Hide secondary action expansion menu on floating action button",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
+          "values": null
+        },
+        {
+          "key": "hideFollowedBy",
+          "title": "Hide Followed By",
+          "description": "Hide followed-by social context facepile on timeline posts",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
+          "values": null
+        },
+        {
+          "key": "hideHiddenReplies",
+          "title": "Hide Hidden Replies",
+          "description": "Hide hidden and moderated replies banner entrypoint in conversation threads",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
+          "values": null
+        },
+        {
+          "key": "hideImmersivePlayer",
+          "title": "Hide Immersive Player",
+          "description": "Hide immersive swipe-up video player surfaces",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
+          "values": null
+        },
+        {
+          "key": "hidePostMetrics",
+          "title": "Hide Post Metrics",
+          "description": "Hide like, repost, and reply count metrics on timeline posts",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
+          "values": null
+        },
+        {
+          "key": "hideViewCount",
+          "title": "Hide View Count",
+          "description": "Hide post view count metrics on timeline and post detail",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
+          "values": null
+        }
+      ]
     },
     {
       "name": "Hide Live Threads",
@@ -1131,6 +1541,95 @@
           "values": null
         }
       ]
+    },
+    {
+      "name": "Share Links",
+      "description": "Custom sharing domain, handle custom links and legacy share links",
+      "default": false,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "com.twitter.android",
+          "name": "X",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#000000",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "12.33.0-prod.01",
+              "versionCodes": null,
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": [
+        {
+          "key": "customSharingDomain",
+          "title": "Custom Sharing Domain",
+          "description": "Substitutes twitter.com/x.com with custom domain when sharing post links",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
+          "values": null
+        },
+        {
+          "key": "customDomain",
+          "title": "Custom Sharing Domain",
+          "description": "Domain replacing x.com when sharing post links, e.g. https://fxtwitter.com",
+          "required": false,
+          "type": "kotlin.String",
+          "default": "https://fxtwitter.com",
+          "values": null
+        },
+        {
+          "key": "handleCustomLinks",
+          "title": "Handle Custom Links",
+          "description": "Enables in-app handling of alternative Twitter domains (vxtwitter.com, fxtwitter.com, fixupx.com)",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
+          "values": null
+        },
+        {
+          "key": "legacyShareLinks",
+          "title": "Legacy Share Links",
+          "description": "Restores post author username in shared links instead of the modern generic /i/status/ format",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
+          "values": null
+        }
+      ]
+    },
+    {
+      "name": "Show Sensitive Media",
+      "description": "Displays sensitive media directly without requiring tap to reveal",
+      "default": false,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "com.twitter.android",
+          "name": "X",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#000000",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "12.33.0-prod.01",
+              "versionCodes": null,
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
     },
     {
       "name": "Suppress Paywalls",

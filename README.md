@@ -45,6 +45,25 @@
 
 <!-- PATCHES_START -->
 <details>
+<summary>Instagram&nbsp;&nbsp;•&nbsp;&nbsp;<b>5 patches</b></summary>
+<br>
+
+**Supported versions:**
+
+| 447.0.0.55.81 |
+| :---: |
+
+| Patch | Description | Options |
+|----------|----------------|-----------|
+| **AR Effects Slimmer** | Strips ARCore native binaries (libarcore_sdk_c.so, libarcore_sdk_jni.so) and AR effect/face tracking asset models. WARNING: Disables camera AR filters, 3D face effects, and body/face tracking. |  |
+| **Block Crash & Diagnostics** | Neutralizes crash-dump uploaders, Lacrima detector broadcasts, debug diagnostics, carrier preload trackers, and lead-ads entrypoints. |  |
+| **Block Telemetry & Trackers** | Neutralizes Facebook Analytics2, DataTransport, FDID/PhoneId providers, and strips AD_ID permissions. |  |
+| **Breakpad Crash Reporter Slimmer** | Zeroes Google Breakpad native crash reporter binaries (libbreakpad.so, libbreakpad_cpp_helper.so) in-situ. WARNING: Native crash reporting is silenced. If the host application loads these libraries unconditionally without exception guards, startup crashes could occur. |  |
+| **MLKit Vision Slimmer** | Disable MLKit component discovery and registrars. WARNING: this breaks in-app QR and barcode scanning. |  |
+
+</details>
+
+<details>
 <summary>CapCut&nbsp;&nbsp;•&nbsp;&nbsp;<b>6 patches</b></summary>
 <br>
 
@@ -61,25 +80,6 @@
 | **Native Bloat Slimmer** | Strips non-essential companion native libraries by zeroing bytes in-situ. Always zeroes AppLovin ad crash reporter. WARNING: Stripping speech recognition and synthesis engines (libspeech*.so) disables voice recognition, voiceover captions, and speech-to-text features. | • Trim Speech Engines (Breaks Voice Features) |
 | **Screen Density Slimmer** | Strips unselected screen density assets and purges non-phone UI mode qualifiers. Launcher icons, nodpi/anydpi, and single-density orphans are always preserved. | • Target screen density |
 | **Unlock Premium** | Forces CapCut VIP gates to return true (SubscribeImpl, PayVipImpl, UserVipInfo, UserDetailInfo, VipUserServiceImpl, SubscribeCloudImpl). Cloud-gated assets may still fail. |  |
-
-</details>
-
-<details>
-<summary>Instagram&nbsp;&nbsp;•&nbsp;&nbsp;<b>5 patches</b></summary>
-<br>
-
-**Supported versions:**
-
-| 447.0.0.55.81 |
-| :---: |
-
-| Patch | Description | Options |
-|----------|----------------|-----------|
-| **Block Telemetry & Trackers** | Neutralizes Facebook Analytics2, DataTransport, FDID/PhoneId providers, and strips AD_ID permissions. |  |
-| **MLKit Vision Slimmer** | Disable MLKit component discovery and registrars. WARNING: this breaks in-app QR and barcode scanning. |  |
-| **Block Crash & Diagnostics** | Neutralizes crash-dump uploaders, Lacrima detector broadcasts, debug diagnostics, carrier preload trackers, and lead-ads entrypoints. |  |
-| **AR Effects Slimmer** | Strips ARCore native binaries (libarcore_sdk_c.so, libarcore_sdk_jni.so) and AR effect/face tracking asset models. WARNING: Disables camera AR filters, 3D face effects, and body/face tracking. |  |
-| **Breakpad Crash Reporter Slimmer** | Zeroes Google Breakpad native crash reporter binaries (libbreakpad.so, libbreakpad_cpp_helper.so) in-situ. WARNING: Native crash reporting is silenced. If the host application loads these libraries unconditionally without exception guards, startup crashes could occur. |  |
 
 </details>
 
@@ -165,7 +165,7 @@
 </details>
 
 <details>
-<summary>X&nbsp;&nbsp;•&nbsp;&nbsp;<b>12 patches</b></summary>
+<summary>X&nbsp;&nbsp;•&nbsp;&nbsp;<b>19 patches</b></summary>
 <br>
 
 **Supported versions:**
@@ -176,7 +176,12 @@
 | Patch | Description | Options |
 |----------|----------------|-----------|
 | **Block Telemetry & Trackers** | Neutralizes Google AppMeasurement and Firebase Performance Trace dispatchers, and strips advertising identifiers. |  |
+| **Block Update Screen** | Blocks the 'This app is out of date' screen and suppresses in-app update prompts on launch |  |
+| **Control Video Auto Scroll** | Prevents automatic scrolling to the next video in immersive view |  |
+| **Customize UI** | Toggle navigation and timeline UI elements | • Inline Action Bar<br>• Navigation Bar<br>• Reply Sorting<br>• Explore Tabs<br>• Notification Tabs<br>• Profile Tabs<br>• Search Suggestions<br>• Search Tab Items<br>• Side Bar Items<br>• Timeline Top Bar<br>• Top Bar Extra |
 | **Hide Banner** | Hides new post banner |  |
+| **Hide Discover More** | Hides Discover more recommendations in tweet reply threads |  |
+| **Hide Elements** | Hide badges, buttons, metrics and served UI elements | • Hide Badges<br>• Hide Bookmark<br>• Hide Community Badges<br>• Hide Community Notes<br>• Hide FAB<br>• Hide FAB Menu<br>• Hide Followed By<br>• Hide Hidden Replies<br>• Hide Immersive Player<br>• Hide Post Metrics<br>• Hide View Count |
 | **Hide Live Threads** | Hides live threads |  |
 | **Hide Nudge Button** | Hides follow/subscribe/follow back buttons on posts |  |
 | **Hide Promote Button** | Hides promote button under self posts |  |
@@ -186,6 +191,8 @@
 | **Pause Search Suggestions** | Stops persisting search suggestions locally without breaking search |  |
 | **Remove Ads** | Removes promoted posts, trends and ads from timeline |  |
 | **Remove Premium Upsell** | Removes premium upsell surfaces |  |
+| **Share Links** | Custom sharing domain, handle custom links and legacy share links | • Custom Sharing Domain<br>• Custom Sharing Domain<br>• Handle Custom Links<br>• Legacy Share Links |
+| **Show Sensitive Media** | Displays sensitive media directly without requiring tap to reveal |  |
 | **X MLKit Vision Slimmer** | Disables MLKit component discovery and registrars. WARNING: this breaks in-app QR and barcode scanning. |  |
 
 </details>

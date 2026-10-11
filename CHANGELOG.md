@@ -1,3 +1,27 @@
+## [1.7.0](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.6.0...v1.7.0) (2026-10-11)
+
+### Bug Fixes
+
+* **deps:** resolve fixable Dependabot alerts via lockfile update ([3e9c2d1](https://github.com/kveld9/kveld-extra-morphe-patches/commit/3e9c2d1221b4590c5c1d82ba48d31cebdbd306c5))
+* **instagram:** correct AR asset byte accounting in Instagram guide ([6ea22d1](https://github.com/kveld9/kveld-extra-morphe-patches/commit/6ea22d1298f01b22aa7fb7f42d63c67fdd834e0b))
+* **instagram:** report sub-KB savings in exact bytes in slimmer telemetry ([0a3f9c8](https://github.com/kveld9/kveld-extra-morphe-patches/commit/0a3f9c870879cee058cdf41eee9ab39856ae4842))
+* **instagram:** use neutral completion message in crash-diagnostics parent patch ([ff4ce9b](https://github.com/kveld9/kveld-extra-morphe-patches/commit/ff4ce9bc6d82b1b2b9b6371744996f5eaf9f1908))
+* **twitter:** suppress promoted items across all timeline surfaces in Remove Ads ([4579ce7](https://github.com/kveld9/kveld-extra-morphe-patches/commit/4579ce72055f95fc6e251d90a6ec00474a9623f1))
+* **twitter:** validate custom domain before Smali interpolation ([ee26cac](https://github.com/kveld9/kveld-extra-morphe-patches/commit/ee26cac17e4210833154fb07dc7f0637700f109b))
+
+### New Features
+
+* **instagram:** add opt-in AR effects slimmer ([e2a0c3d](https://github.com/kveld9/kveld-extra-morphe-patches/commit/e2a0c3d66d5997504e9e5338ec4ba06c2786b891))
+* **instagram:** add opt-in Breakpad native slimmer ([2769304](https://github.com/kveld9/kveld-extra-morphe-patches/commit/27693047e19a0c8d9fa94ddbd3d528f8fa7cf216))
+* **instagram:** block crash diagnostics via manifest purge ([ec6004b](https://github.com/kveld9/kveld-extra-morphe-patches/commit/ec6004bea4b980d517aa5f9c109966aed5a1268e))
+* **twitter:** add block update screen patch ([cd08edc](https://github.com/kveld9/kveld-extra-morphe-patches/commit/cd08edc4abc81d67ee7680cd8c4b4cc6a2891094))
+* **twitter:** add control video auto scroll patch ([f41848d](https://github.com/kveld9/kveld-extra-morphe-patches/commit/f41848d60950bea77310650af25533e9adf5ef74))
+* **twitter:** add customize UI patch with navigation toggles ([068de49](https://github.com/kveld9/kveld-extra-morphe-patches/commit/068de49119914f5d217ba51c01be102f31eadfc6))
+* **twitter:** add hide discover more patch for reply threads ([1d2c430](https://github.com/kveld9/kveld-extra-morphe-patches/commit/1d2c430898c90c40836a60267ee9603a31a3293d))
+* **twitter:** add hide elements patch with served-UI toggles ([f4e4f48](https://github.com/kveld9/kveld-extra-morphe-patches/commit/f4e4f488dad0e2ee6ccf7d40847eda18934896a8))
+* **twitter:** add share links patch with custom domain option ([187fd8b](https://github.com/kveld9/kveld-extra-morphe-patches/commit/187fd8bb50a6aad90d2cdb6096a85152b6d11b97))
+* **twitter:** add show sensitive media patch ([b4a7ebd](https://github.com/kveld9/kveld-extra-morphe-patches/commit/b4a7ebd44a75a6cf5e7665eb8b1722b62c7da815))
+
 ## [1.6.0](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.5.0...v1.6.0) (2026-10-10)
 
 ### Bug Fixes
