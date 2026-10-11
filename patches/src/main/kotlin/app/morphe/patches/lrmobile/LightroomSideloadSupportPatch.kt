@@ -63,31 +63,47 @@ val lightroomSideloadSupportPatch = bytecodePatch(
     execute {
         var patched = 0
 
-        // 1. Force local installer source check to succeed
-        PerformLocalInstallerCheckFingerprint.method.replaceWithReturnBoolean(true)
-        patched++
-
-        // 2. Force local check status flag to always report passed
-        IsLocalCheckPassedFingerprint.method.replaceWithReturnBoolean(true)
-        patched++
-
-        // 3. Neutralize signature verification check
-        VerifyIntegrityFingerprint.method.replaceWithReturnVoid()
-        patched++
-
-        // 4. Dismiss license error activity immediately if invoked
-        LicenseActivityOnStartFingerprint.method.apply {
-            clearTryBlocks()
-            implementation?.let { removeInstructions(0, it.instructions.count()) }
-            addInstructions(
-                0,
-                """
-                    invoke-super {p0}, Landroid/app/Activity;->onStart()V
-                    invoke-virtual {p0}, Landroid/app/Activity;->finish()V
-                    return-void
-                """.trimIndent(),
-            )
+        // The PairIP license stack ships only in the Play-bundle input. The
+        // documented Uptodown input is the PairIP-free variant, so gate each
+        // PairIP hook on class presence: absent classes are skipped honestly,
+        // present classes resolve strictly (a real mismatch still fails).
+        if (classDefByOrNull("Lcom/pairip/licensecheck/LicenseClient;") != null) {
+            // 1. Force local installer source check to succeed
+            PerformLocalInstallerCheckFingerprint.method.replaceWithReturnBoolean(true)
             patched++
+
+            // 2. Force local check status flag to always report passed
+            IsLocalCheckPassedFingerprint.method.replaceWithReturnBoolean(true)
+            patched++
+        } else {
+            println("[Sideload Install Support] Skipped: PairIP license classes absent (PairIP-free input).")
+        }
+
+        if (classDefByOrNull("Lcom/pairip/SignatureCheck;") != null) {
+            // 3. Neutralize signature verification check
+            VerifyIntegrityFingerprint.method.replaceWithReturnVoid()
+            patched++
+        } else {
+            println("[Sideload Install Support] Skipped: PairIP signature check absent (PairIP-free input).")
+        }
+
+        if (classDefByOrNull("Lcom/pairip/licensecheck/LicenseActivity;") != null) {
+            // 4. Dismiss license error activity immediately if invoked
+            LicenseActivityOnStartFingerprint.method.apply {
+                clearTryBlocks()
+                implementation?.let { removeInstructions(0, it.instructions.count()) }
+                addInstructions(
+                    0,
+                    """
+                        invoke-super {p0}, Landroid/app/Activity;->onStart()V
+                        invoke-virtual {p0}, Landroid/app/Activity;->finish()V
+                        return-void
+                    """.trimIndent(),
+                )
+                patched++
+            }
+        } else {
+            println("[Sideload Install Support] Skipped: PairIP license activity absent (PairIP-free input).")
         }
 
         // 5. Complete Play Integrity token request immediately on sideloaded/no-GMS environments
@@ -106,6 +122,6 @@ val lightroomSideloadSupportPatch = bytecodePatch(
             patched++
         }
 
-        println("[Sideload Install Support] Applied $patched hooks -> checks report success for sideloaded builds.")
+        println("[Sideload Install Support] Applied $patched hooks -> sideload checks neutralized where present.")
     }
 }
