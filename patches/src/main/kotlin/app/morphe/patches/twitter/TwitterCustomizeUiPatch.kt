@@ -50,6 +50,11 @@ private val sideBarFingerprint = Fingerprint(
     strings = listOf("android_grok_bot_sidebar_enabled"),
 )
 
+private val grokTabFingerprint = Fingerprint(
+    definingClass = "Lcom/x/main/landing/d0;",
+    strings = listOf("android_webview_grok_tab_enabled"),
+)
+
 private val profileTabsFingerprint = Fingerprint(
     strings = listOf("x_lite_profile_connect_tabs_enabled"),
 )
@@ -153,6 +158,14 @@ val twitterCustomizeUiPatch = bytecodePatch(
         required = false,
     )
 
+    val grokTab by booleanOption(
+        key = "grokTab",
+        default = true,
+        title = "Grok Tab",
+        description = "Hide Grok tab from bottom navigation bar",
+        required = false,
+    )
+
     val replySorting by booleanOption(
         key = "replySorting",
         default = true,
@@ -248,6 +261,17 @@ val twitterCustomizeUiPatch = bytecodePatch(
             }
         } else {
             println("[Customize UI] Skipped navigationBar: disabled by patch option.")
+        }
+
+        // grokTab (Hide Grok bottom navigation tab)
+        if (grokTab ?: true) {
+            if (neutralizeFlag(grokTabFingerprint, "android_webview_grok_tab_enabled", "Customize UI")) {
+                patched++
+            } else {
+                error("[Customize UI] Failed to neutralize 'android_webview_grok_tab_enabled' flag.")
+            }
+        } else {
+            println("[Customize UI] Skipped grokTab: disabled by patch option.")
         }
 
         // 3. replySorting (Piko: Customize default reply sorting)

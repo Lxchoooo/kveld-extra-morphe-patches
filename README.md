@@ -178,7 +178,7 @@
 | **Block Telemetry & Trackers** | Neutralizes Google AppMeasurement and Firebase Performance Trace dispatchers, and strips advertising identifiers. |  |
 | **Block Update Screen** | Blocks the 'This app is out of date' screen and suppresses in-app update prompts on launch |  |
 | **Control Video Auto Scroll** | Prevents automatic scrolling to the next video in immersive view |  |
-| **Customize UI** | Toggle navigation and timeline UI elements | • Inline Action Bar<br>• Navigation Bar<br>• Reply Sorting<br>• Explore Tabs<br>• Notification Tabs<br>• Profile Tabs<br>• Search Suggestions<br>• Search Tab Items<br>• Side Bar Items<br>• Timeline Top Bar<br>• Top Bar Extra |
+| **Customize UI** | Toggle navigation and timeline UI elements | • Inline Action Bar<br>• Navigation Bar<br>• Grok Tab<br>• Reply Sorting<br>• Explore Tabs<br>• Notification Tabs<br>• Profile Tabs<br>• Search Suggestions<br>• Search Tab Items<br>• Side Bar Items<br>• Timeline Top Bar<br>• Top Bar Extra |
 | **Drawer Items** | Hide individual items in the navigation drawer | • Hide Bookmarks<br>• Hide Communities<br>• Hide Creator Studio<br>• Hide Get Grok<br>• Hide Help Center<br>• Hide Lists<br>• Hide Premium<br>• Hide Profile<br>• Hide Spaces |
 | **Hide Banner** | Hides new post banner |  |
 | **Hide Discover More** | Hides Discover more recommendations in tweet reply threads |  |
