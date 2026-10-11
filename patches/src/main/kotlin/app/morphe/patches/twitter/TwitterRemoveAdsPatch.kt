@@ -87,15 +87,48 @@ val twitterRemoveAdsPatch = bytecodePatch(
                 move-object v1, v0
                 check-cast v1, Lcom/x/models/timelines/items/z1;
                 iget-object v1, v1, Lcom/x/models/timelines/items/z1;->a:Lcom/x/models/sf;
-                if-eqz v1, :cond_check_sf
-                goto :cond_not_trend
-
-                :cond_check_sf
+                if-eqz v1, :cond_not_trend
                 invoke-virtual {v1}, Lcom/x/models/sf;->b()Lcom/x/models/ef;
                 move-result-object v1
                 if-nez v1, :cond_suppress_ad
 
                 :cond_not_trend
+                instance-of v1, v0, Lcom/x/models/timelines/items/q1;
+                if-nez v1, :cond_check_rtb
+                goto :cond_not_rtb
+
+                :cond_check_rtb
+                move-object v1, v0
+                check-cast v1, Lcom/x/models/timelines/items/q1;
+                iget-object v1, v1, Lcom/x/models/timelines/items/q1;->j:Lcom/x/models/ef;
+                if-nez v1, :cond_suppress_ad
+
+                :cond_not_rtb
+                instance-of v1, v0, Lcom/x/models/timelines/items/c2;
+                if-nez v1, :cond_check_user
+                goto :cond_not_user
+
+                :cond_check_user
+                move-object v1, v0
+                check-cast v1, Lcom/x/models/timelines/items/c2;
+                iget-object v1, v1, Lcom/x/models/timelines/items/c2;->h:Lcom/x/models/ef;
+                if-nez v1, :cond_suppress_ad
+
+                :cond_not_user
+                instance-of v1, v0, Lcom/x/models/timelines/items/n0;
+                if-nez v1, :cond_check_event
+                goto :cond_not_event
+
+                :cond_check_event
+                move-object v1, v0
+                check-cast v1, Lcom/x/models/timelines/items/n0;
+                iget-object v1, v1, Lcom/x/models/timelines/items/n0;->a:Lcom/x/models/l2;
+                if-eqz v1, :cond_not_event
+                invoke-virtual {v1}, Lcom/x/models/l2;->a()Lcom/x/models/ef;
+                move-result-object v1
+                if-nez v1, :cond_suppress_ad
+
+                :cond_not_event
                 invoke-interface {v0}, Lcom/x/models/timelines/items/p0;->c()Ljava/lang/String;
                 move-result-object v1
                 if-eqz v1, :cond_continue
