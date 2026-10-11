@@ -1,3 +1,17 @@
+## [1.8.0](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.7.0...v1.8.0) (2026-10-11)
+
+### Bug Fixes
+
+* **twitter:** correct ViewCount branch logic and derive register operands dynamically ([c673d2d](https://github.com/kveld9/kveld-extra-morphe-patches/commit/c673d2d7e94168dfa3df71736ccc581b64c44baf))
+* **twitter:** implement real bytecode gate for timeline top bar connect button ([fff9ee5](https://github.com/kveld9/kveld-extra-morphe-patches/commit/fff9ee550859825599ea69a8560624745a4bfc45))
+* **twitter:** implement real bytecode gates for post view count and metrics ([bd56316](https://github.com/kveld9/kveld-extra-morphe-patches/commit/bd5631635ed26d38d2312b2c3f21fb839bc52549))
+* **twitter:** intercept postdetail dispatcher in Remove Ads ([228c25f](https://github.com/kveld9/kveld-extra-morphe-patches/commit/228c25fa08ace3c875f467dc6b39aaa7358a41f2))
+
+### New Features
+
+* **twitter:** add Drawer Items patch for granular drawer toggles ([3ce0866](https://github.com/kveld9/kveld-extra-morphe-patches/commit/3ce0866213bd281c9844add4559902d8da30d593))
+* **twitter:** add toggle to hide Grok tab from bottom navigation bar ([a7b8ffc](https://github.com/kveld9/kveld-extra-morphe-patches/commit/a7b8ffc65a4ab19bce3c79c3a7d9d992c6f5e570))
+
 ## [1.7.0](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.6.0...v1.7.0) (2026-10-11)
 
 ### Bug Fixes

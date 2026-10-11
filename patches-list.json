@@ -1,6 +1,6 @@
 {
   "NOTE": "Do NOT manually edit this file. This file is automatically updated when semantic release (release.yml) runs. Manually editing this file can break your releases and break third party tools that use this file.",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "patches": [
     {
       "name": "AR Effects Slimmer",
@@ -550,6 +550,15 @@
           "values": null
         },
         {
+          "key": "grokTab",
+          "title": "Grok Tab",
+          "description": "Hide Grok tab from bottom navigation bar",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
+          "values": null
+        },
+        {
           "key": "replySorting",
           "title": "Reply Sorting",
           "description": "Customize default reply sorting behavior in conversation threads",
@@ -683,6 +692,114 @@
         }
       ],
       "options": []
+    },
+    {
+      "name": "Drawer Items",
+      "description": "Hide individual items in the navigation drawer",
+      "default": false,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "com.twitter.android",
+          "name": "X",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#000000",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "12.33.0-prod.01",
+              "versionCodes": null,
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": [
+        {
+          "key": "hideProfile",
+          "title": "Hide Profile",
+          "description": "Hide Profile entry in navigation drawer",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
+          "values": null
+        },
+        {
+          "key": "hidePremium",
+          "title": "Hide Premium",
+          "description": "Hide Premium subscription entry and discount badges in navigation drawer",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
+          "values": null
+        },
+        {
+          "key": "hideCommunities",
+          "title": "Hide Communities",
+          "description": "Hide Communities entry in navigation drawer",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
+          "values": null
+        },
+        {
+          "key": "hideBookmarks",
+          "title": "Hide Bookmarks",
+          "description": "Hide Bookmarks entry in navigation drawer",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
+          "values": null
+        },
+        {
+          "key": "hideLists",
+          "title": "Hide Lists",
+          "description": "Hide Lists entry in navigation drawer",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
+          "values": null
+        },
+        {
+          "key": "hideSpaces",
+          "title": "Hide Spaces",
+          "description": "Hide Spaces entry in navigation drawer",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
+          "values": null
+        },
+        {
+          "key": "hideCreatorStudio",
+          "title": "Hide Creator Studio",
+          "description": "Hide Creator Studio entry in navigation drawer",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
+          "values": null
+        },
+        {
+          "key": "hideGetGrok",
+          "title": "Hide Get Grok",
+          "description": "Hide Get Grok assistant entry in navigation drawer",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
+          "values": null
+        },
+        {
+          "key": "hideHelpCenter",
+          "title": "Hide Help Center",
+          "description": "Hide Help Center and feedback entries in navigation drawer",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
+          "values": null
+        }
+      ]
     },
     {
       "name": "Fix Google Maps",
