@@ -165,7 +165,7 @@
 </details>
 
 <details>
-<summary>X&nbsp;&nbsp;•&nbsp;&nbsp;<b>14 patches</b></summary>
+<summary>X&nbsp;&nbsp;•&nbsp;&nbsp;<b>15 patches</b></summary>
 <br>
 
 **Supported versions:**
@@ -178,9 +178,10 @@
 | **Block Telemetry & Trackers** | Neutralizes Google AppMeasurement and Firebase Performance Trace dispatchers, and strips advertising identifiers. |  |
 | **Block Update Screen** | Blocks the 'This app is out of date' screen and suppresses in-app update prompts on launch |  |
 | **Control Video Auto Scroll** | Prevents automatic scrolling to the next video in immersive view |  |
-| **Customize UI** | Toggle navigation and timeline UI elements | • Inline Action Bar<br>• Navigation Bar<br>• Grok Tab<br>• Reply Sorting<br>• Explore Tabs<br>• Notification Tabs<br>• Profile Tabs<br>• Search Suggestions<br>• Search Tab Items<br>• Side Bar Items<br>• Timeline Add Tab<br>• Timeline Top Bar<br>• Top Bar Extra |
+| **Customize UI** | Toggle navigation and timeline UI elements | • Inline Action Bar<br>• Reply Sorting<br>• Profile Tabs<br>• Timeline Add Tab<br>• Timeline Top Bar<br>• Top Bar Extra |
 | **Drawer Items** | Hide individual items in the navigation drawer | • Hide Profile<br>• Hide Premium<br>• Hide Communities<br>• Hide Bookmarks<br>• Hide Lists<br>• Hide Spaces<br>• Hide Creator Studio<br>• Hide Get Grok<br>• Hide Help Center |
-| **Hide Elements** | Hide badges, buttons, metrics and served UI elements | • Hide Badges<br>• Hide Bookmark<br>• Hide Community Badges<br>• Hide Community Notes<br>• Hide FAB<br>• Hide FAB Menu<br>• Hide Followed By<br>• Hide Grok Post Action<br>• Hide Hidden Replies<br>• Hide Immersive Player<br>• Hide Post Metrics<br>• Hide Profile Grok Button<br>• Hide View Count |
+| **Hide Elements** | Hide badges, buttons, metrics and served UI elements | • Hide Bookmark<br>• Hide Community Badges<br>• Hide Community Notes<br>• Hide Followed By<br>• Hide Grok Post Action<br>• Hide Hidden Replies<br>• Hide Immersive Player<br>• Hide Post Metrics<br>• Hide Profile Grok Button<br>• Hide View Count |
+| **Navigation UI** | Bottom navigation, FAB, tabs and bars | • Hide Badges<br>• Hide FAB<br>• Hide FAB Menu<br>• Navigation Bar<br>• Grok Tab<br>• Explore Tabs<br>• Notification Tabs<br>• Search Suggestions<br>• Search Tab Items<br>• Side Bar Items |
 | **No Shortened URL** | Expands t.co shortened URLs, removing the click-tracking intermediary |  |
 | **Pause Search Suggestions** | Stops persisting search suggestions locally without breaking search |  |
 | **Remove Ads** | Removes promoted posts, trends and ads from timeline |  |

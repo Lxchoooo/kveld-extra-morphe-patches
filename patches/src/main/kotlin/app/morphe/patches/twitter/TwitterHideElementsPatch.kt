@@ -36,16 +36,8 @@ import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 import com.android.tools.smali.dexlib2.iface.reference.StringReference
 import com.android.tools.smali.dexlib2.util.ReferenceUtil
 
-private val badgesFingerprint = Fingerprint(
-    strings = listOf("grok_android_tab_badge_enabled"),
-)
-
 private val communityNotesFingerprint = Fingerprint(
     strings = listOf("birdwatch_consumption_enabled"),
-)
-
-private val fabMenuFingerprint = Fingerprint(
-    strings = listOf("android_compose_fab_expansion_enabled"),
 )
 
 private val inlineActionBarItemFingerprint = Fingerprint(
@@ -151,14 +143,6 @@ val twitterHideElementsPatch = bytecodePatch(
 ) {
     compatibleWith(Constants.COMPATIBILITY_TWITTER)
 
-    val hideBadges by booleanOption(
-        key = "hideBadges",
-        default = true,
-        title = "Hide Badges",
-        description = "Hide badges and unread indicator counters from navigation bar icons",
-        required = false,
-    )
-
     val hideBookmark by booleanOption(
         key = "hideBookmark",
         default = true,
@@ -180,22 +164,6 @@ val twitterHideElementsPatch = bytecodePatch(
         default = true,
         title = "Hide Community Notes",
         description = "Hide community notes and birdwatch contributions on posts",
-        required = false,
-    )
-
-    val hideFab by booleanOption(
-        key = "hideFab",
-        default = true,
-        title = "Hide FAB",
-        description = "Hide primary floating action button in timeline",
-        required = false,
-    )
-
-    val hideFabMenu by booleanOption(
-        key = "hideFabMenu",
-        default = true,
-        title = "Hide FAB Menu",
-        description = "Hide secondary action expansion menu on floating action button",
         required = false,
     )
 
@@ -258,17 +226,6 @@ val twitterHideElementsPatch = bytecodePatch(
     execute {
         var patched = 0
 
-        // 1. hideBadges (Piko: Badges)
-        if (hideBadges ?: true) {
-            if (neutralizeFlag(badgesFingerprint, "grok_android_tab_badge_enabled", "Hide Elements")) {
-                patched++
-            } else {
-                error("[Hide Elements] Failed to neutralize 'grok_android_tab_badge_enabled' flag.")
-            }
-        } else {
-            println("[Hide Elements] Skipped hideBadges: disabled by patch option.")
-        }
-
         // 2. hideBookmark (Piko: Bookmark)
         if (hideBookmark ?: true) {
             println("[Hide Elements] Skipped hideBookmark: bookmark action in timeline is served via URT action entries in 12.33; no client feature flag gate.")
@@ -292,24 +249,6 @@ val twitterHideElementsPatch = bytecodePatch(
             }
         } else {
             println("[Hide Elements] Skipped hideCommunityNotes: disabled by patch option.")
-        }
-
-        // 5. hideFab (Piko: FAB)
-        if (hideFab ?: true) {
-            println("[Hide Elements] Skipped hideFab: primary compose FAB scaffold is embedded in root Compose UI in 12.33; no client feature flag gate.")
-        } else {
-            println("[Hide Elements] Skipped hideFab: disabled by patch option.")
-        }
-
-        // 6. hideFabMenu (Piko: FAB Menu)
-        if (hideFabMenu ?: true) {
-            if (neutralizeFlag(fabMenuFingerprint, "android_compose_fab_expansion_enabled", "Hide Elements")) {
-                patched++
-            } else {
-                error("[Hide Elements] Failed to neutralize 'android_compose_fab_expansion_enabled' flag.")
-            }
-        } else {
-            println("[Hide Elements] Skipped hideFabMenu: disabled by patch option.")
         }
 
         // 7. hideFollowedBy (Piko: Followed By)

@@ -32,29 +32,8 @@ import com.android.tools.smali.dexlib2.iface.reference.FieldReference
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 import com.android.tools.smali.dexlib2.iface.reference.StringReference
 
-private val exploreTabsFingerprint = Fingerprint(
-    strings = listOf("android_rich_tabs_explore_tab_enabled"),
-)
-
-private val searchTabsFingerprint = Fingerprint(
-    strings = listOf("android_rich_tabs_search_tab_enabled"),
-)
-
 private val inlineActionsFingerprint = Fingerprint(
     strings = listOf("android_ntab_display_options_inline_actions_enabled"),
-)
-
-private val bottomNavFingerprint = Fingerprint(
-    strings = listOf("android_x_lite_persistent_bottom_nav_enabled"),
-)
-
-private val sideBarFingerprint = Fingerprint(
-    strings = listOf("android_grok_bot_sidebar_enabled"),
-)
-
-private val grokTabFingerprint = Fingerprint(
-    definingClass = "Lcom/x/main/landing/d0;",
-    strings = listOf("android_webview_grok_tab_enabled"),
 )
 
 private val homeTopBarFingerprint = Fingerprint(
@@ -167,22 +146,6 @@ val twitterCustomizeUiPatch = bytecodePatch(
         required = false,
     )
 
-    val navigationBar by booleanOption(
-        key = "navigationBar",
-        default = true,
-        title = "Navigation Bar",
-        description = "Toggle persistent bottom navigation bar behavior",
-        required = false,
-    )
-
-    val grokTab by booleanOption(
-        key = "grokTab",
-        default = true,
-        title = "Grok Tab",
-        description = "Hide Grok tab from bottom navigation bar",
-        required = false,
-    )
-
     val replySorting by booleanOption(
         key = "replySorting",
         default = true,
@@ -191,51 +154,11 @@ val twitterCustomizeUiPatch = bytecodePatch(
         required = false,
     )
 
-    val exploreTabs by booleanOption(
-        key = "exploreTabs",
-        default = true,
-        title = "Explore Tabs",
-        description = "Toggle rich explore tab surfaces",
-        required = false,
-    )
-
-    val notificationTabs by booleanOption(
-        key = "notificationTabs",
-        default = true,
-        title = "Notification Tabs",
-        description = "Toggle notification timeline tab items",
-        required = false,
-    )
-
     val profileTabs by booleanOption(
         key = "profileTabs",
         default = true,
         title = "Profile Tabs",
         description = "Toggle extra connect and media tabs on user profiles",
-        required = false,
-    )
-
-    val searchSuggestions by booleanOption(
-        key = "searchSuggestions",
-        default = true,
-        title = "Search Suggestions",
-        description = "Toggle search typeahead and local suggestion persistence",
-        required = false,
-    )
-
-    val searchTabItems by booleanOption(
-        key = "searchTabItems",
-        default = true,
-        title = "Search Tab Items",
-        description = "Toggle rich search tab items and surfaces",
-        required = false,
-    )
-
-    val sideBarItems by booleanOption(
-        key = "sideBarItems",
-        default = true,
-        title = "Side Bar Items",
-        description = "Toggle drawer sidebar items including Grok assistant entry",
         required = false,
     )
 
@@ -277,51 +200,11 @@ val twitterCustomizeUiPatch = bytecodePatch(
             println("[Customize UI] Skipped inlineActionBar: disabled by patch option.")
         }
 
-        // 2. navigationBar (Piko: Navigation Bar)
-        if (navigationBar ?: true) {
-            if (neutralizeFlag(bottomNavFingerprint, "android_x_lite_persistent_bottom_nav_enabled", "Customize UI")) {
-                patched++
-            } else {
-                error("[Customize UI] Failed to neutralize 'android_x_lite_persistent_bottom_nav_enabled' flag.")
-            }
-        } else {
-            println("[Customize UI] Skipped navigationBar: disabled by patch option.")
-        }
-
-        // grokTab (Hide Grok bottom navigation tab)
-        if (grokTab ?: true) {
-            if (neutralizeFlag(grokTabFingerprint, "android_webview_grok_tab_enabled", "Customize UI")) {
-                patched++
-            } else {
-                error("[Customize UI] Failed to neutralize 'android_webview_grok_tab_enabled' flag.")
-            }
-        } else {
-            println("[Customize UI] Skipped grokTab: disabled by patch option.")
-        }
-
         // 3. replySorting (Piko: Customize default reply sorting)
         if (replySorting ?: true) {
             println("[Customize UI] Skipped replySorting: default conversation reply sorting is server-driven in 12.33 URT; no client feature flag gate.")
         } else {
             println("[Customize UI] Skipped replySorting: disabled by patch option.")
-        }
-
-        // 4. exploreTabs (Piko: explore tabs)
-        if (exploreTabs ?: true) {
-            if (neutralizeFlag(exploreTabsFingerprint, "android_rich_tabs_explore_tab_enabled", "Customize UI")) {
-                patched++
-            } else {
-                error("[Customize UI] Failed to neutralize 'android_rich_tabs_explore_tab_enabled' flag.")
-            }
-        } else {
-            println("[Customize UI] Skipped exploreTabs: disabled by patch option.")
-        }
-
-        // 5. notificationTabs (Piko: notification tabs)
-        if (notificationTabs ?: true) {
-            println("[Customize UI] Skipped notificationTabs: notification tab hierarchy is served via URT in 12.33; no client feature flag gate.")
-        } else {
-            println("[Customize UI] Skipped notificationTabs: disabled by patch option.")
         }
 
         // 6. profileTabs (Piko: profile tabs)
@@ -333,35 +216,6 @@ val twitterCustomizeUiPatch = bytecodePatch(
             }
         } else {
             println("[Customize UI] Skipped profileTabs: disabled by patch option.")
-        }
-
-        // 7. searchSuggestions (Piko: search suggestions)
-        if (searchSuggestions ?: true) {
-            println("[Customize UI] Skipped searchSuggestions: search suggestions persistence is handled by dedicated Pause Search Suggestions patch; no UI toggle gate.")
-        } else {
-            println("[Customize UI] Skipped searchSuggestions: disabled by patch option.")
-        }
-
-        // 8. searchTabItems (Piko: search tab items)
-        if (searchTabItems ?: true) {
-            if (neutralizeFlag(searchTabsFingerprint, "android_rich_tabs_search_tab_enabled", "Customize UI")) {
-                patched++
-            } else {
-                error("[Customize UI] Failed to neutralize 'android_rich_tabs_search_tab_enabled' flag.")
-            }
-        } else {
-            println("[Customize UI] Skipped searchTabItems: disabled by patch option.")
-        }
-
-        // 9. sideBarItems (Piko: side bar items)
-        if (sideBarItems ?: true) {
-            if (neutralizeFlag(sideBarFingerprint, "android_grok_bot_sidebar_enabled", "Customize UI")) {
-                patched++
-            } else {
-                error("[Customize UI] Failed to neutralize 'android_grok_bot_sidebar_enabled' flag.")
-            }
-        } else {
-            println("[Customize UI] Skipped sideBarItems: disabled by patch option.")
         }
 
         // timelineAddTab (Hide add tab (+) button in home timeline tab header)
