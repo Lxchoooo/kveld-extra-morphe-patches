@@ -35,6 +35,17 @@ private val urtItemPresenterFingerprint = Fingerprint(
     ),
 )
 
+private val postDetailPresenterFingerprint = Fingerprint(
+    definingClass = "Lcom/x/postdetail/c0;",
+    name = "r",
+    returnType = "Lcom/x/presenter/a;",
+    parameters = listOf(
+        "I",
+        "Lcom/x/models/timelines/items/p0;",
+        "Lcom/x/urt/t0;",
+    ),
+)
+
 @Suppress("unused")
 val twitterHideDiscoverMorePatch = bytecodePatch(
     name = "Hide Discover More",
@@ -46,39 +57,41 @@ val twitterHideDiscoverMorePatch = bytecodePatch(
     execute {
         var patched = 0
 
-        urtItemPresenterFingerprint.method.addInstructionsWithLabels(
-            0,
-            """
-                move-object/from16 v0, p2
-                if-nez v0, :cond_check_item
-                goto :cond_continue
+        val suppressionSmali = """
+            move-object/from16 v0, p2
+            if-nez v0, :cond_check_item
+            goto :cond_continue
 
-                :cond_check_item
-                invoke-interface {v0}, Lcom/x/models/timelines/items/p0;->c()Ljava/lang/String;
-                move-result-object v1
-                if-eqz v1, :cond_continue
+            :cond_check_item
+            invoke-interface {v0}, Lcom/x/models/timelines/items/p0;->c()Ljava/lang/String;
+            move-result-object v1
+            if-eqz v1, :cond_continue
 
-                :cond_check_entry_id
-                const-string v2, "discover"
-                invoke-virtual {v1, v2}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
-                move-result v2
-                if-nez v2, :cond_suppress_discover
+            :cond_check_entry_id
+            const-string v2, "discover"
+            invoke-virtual {v1, v2}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
+            move-result v2
+            if-nez v2, :cond_suppress_discover
 
-                const-string v2, "Discover"
-                invoke-virtual {v1, v2}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
-                move-result v2
-                if-nez v2, :cond_suppress_discover
+            const-string v2, "Discover"
+            invoke-virtual {v1, v2}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
+            move-result v2
+            if-nez v2, :cond_suppress_discover
 
-                goto :cond_continue
+            goto :cond_continue
 
-                :cond_suppress_discover
-                sget-object v0, Lcom/x/urt/b0;->a:Lcom/x/urt/b0;
-                return-object v0
+            :cond_suppress_discover
+            sget-object v0, Lcom/x/urt/b0;->a:Lcom/x/urt/b0;
+            return-object v0
 
-                :cond_continue
-                nop
-            """.trimIndent(),
-        )
+            :cond_continue
+            nop
+        """.trimIndent()
+
+        urtItemPresenterFingerprint.method.addInstructionsWithLabels(0, suppressionSmali)
+        patched++
+
+        postDetailPresenterFingerprint.method.addInstructionsWithLabels(0, suppressionSmali)
         patched++
 
         if (patched == 0) {
