@@ -37,6 +37,17 @@ private val urtItemPresenterFingerprint = Fingerprint(
     ),
 )
 
+private val postDetailPresenterFingerprint = Fingerprint(
+    definingClass = "Lcom/x/postdetail/c0;",
+    name = "r",
+    returnType = "Lcom/x/presenter/a;",
+    parameters = listOf(
+        "I",
+        "Lcom/x/models/timelines/items/p0;",
+        "Lcom/x/urt/t0;",
+    ),
+)
+
 private val googleMobileAdsInitFingerprint = Fingerprint(
     strings = listOf("DefaultMobileAdsInitializer"),
 )
@@ -150,7 +161,99 @@ val twitterRemoveAdsPatch = bytecodePatch(
         )
         patched++
 
-        // 2. Short-circuit Google Mobile Ads SDK initialization
+        // 2. Intercept thread reply items before presenter dispatch in com.x.postdetail.c0.r
+        postDetailPresenterFingerprint.method.addInstructionsWithLabels(
+            0,
+            """
+                move-object/from16 v0, p2
+                if-nez v0, :cond_check_item
+                goto :cond_continue
+
+                :cond_check_item
+                instance-of v1, v0, Lcom/x/models/timelines/items/k1;
+                if-nez v1, :cond_check_post
+                goto :cond_not_post
+
+                :cond_check_post
+                move-object v1, v0
+                check-cast v1, Lcom/x/models/timelines/items/k1;
+                invoke-virtual {v1}, Lcom/x/models/timelines/items/k1;->y()Lcom/x/models/ef;
+                move-result-object v1
+                if-nez v1, :cond_suppress_ad
+
+                :cond_not_post
+                instance-of v1, v0, Lcom/x/models/timelines/items/z1;
+                if-nez v1, :cond_check_trend
+                goto :cond_not_trend
+
+                :cond_check_trend
+                move-object v1, v0
+                check-cast v1, Lcom/x/models/timelines/items/z1;
+                iget-object v1, v1, Lcom/x/models/timelines/items/z1;->a:Lcom/x/models/sf;
+                if-eqz v1, :cond_not_trend
+                invoke-virtual {v1}, Lcom/x/models/sf;->b()Lcom/x/models/ef;
+                move-result-object v1
+                if-nez v1, :cond_suppress_ad
+
+                :cond_not_trend
+                instance-of v1, v0, Lcom/x/models/timelines/items/q1;
+                if-nez v1, :cond_check_rtb
+                goto :cond_not_rtb
+
+                :cond_check_rtb
+                move-object v1, v0
+                check-cast v1, Lcom/x/models/timelines/items/q1;
+                iget-object v1, v1, Lcom/x/models/timelines/items/q1;->j:Lcom/x/models/ef;
+                if-nez v1, :cond_suppress_ad
+
+                :cond_not_rtb
+                instance-of v1, v0, Lcom/x/models/timelines/items/c2;
+                if-nez v1, :cond_check_user
+                goto :cond_not_user
+
+                :cond_check_user
+                move-object v1, v0
+                check-cast v1, Lcom/x/models/timelines/items/c2;
+                iget-object v1, v1, Lcom/x/models/timelines/items/c2;->h:Lcom/x/models/ef;
+                if-nez v1, :cond_suppress_ad
+
+                :cond_not_user
+                instance-of v1, v0, Lcom/x/models/timelines/items/n0;
+                if-nez v1, :cond_check_event
+                goto :cond_not_event
+
+                :cond_check_event
+                move-object v1, v0
+                check-cast v1, Lcom/x/models/timelines/items/n0;
+                iget-object v1, v1, Lcom/x/models/timelines/items/n0;->a:Lcom/x/models/l2;
+                if-eqz v1, :cond_not_event
+                invoke-virtual {v1}, Lcom/x/models/l2;->a()Lcom/x/models/ef;
+                move-result-object v1
+                if-nez v1, :cond_suppress_ad
+
+                :cond_not_event
+                invoke-interface {v0}, Lcom/x/models/timelines/items/p0;->c()Ljava/lang/String;
+                move-result-object v1
+                if-eqz v1, :cond_continue
+
+                :cond_check_entry_id
+                const-string v2, "promoted"
+                invoke-virtual {v1, v2}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
+                move-result v1
+                if-nez v1, :cond_suppress_ad
+                goto :cond_continue
+
+                :cond_suppress_ad
+                sget-object v0, Lcom/x/urt/b0;->a:Lcom/x/urt/b0;
+                return-object v0
+
+                :cond_continue
+                nop
+            """.trimIndent(),
+        )
+        patched++
+
+        // 3. Short-circuit Google Mobile Ads SDK initialization
         googleMobileAdsInitFingerprint.method.addInstructions(
             0,
             """
@@ -160,7 +263,7 @@ val twitterRemoveAdsPatch = bytecodePatch(
         )
         patched++
 
-        // 3. Suppress QuickPromote booster composable surface
+        // 4. Suppress QuickPromote booster composable surface
         quickPromoteTrayFingerprint.method.addInstructions(
             0,
             "return-void",
