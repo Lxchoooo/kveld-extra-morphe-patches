@@ -1,6 +1,6 @@
 {
   "NOTE": "Do NOT manually edit this file. This file is automatically updated when semantic release (release.yml) runs. Manually editing this file can break your releases and break third party tools that use this file.",
-  "version": "1.8.0",
+  "version": "1.9.0",
   "patches": [
     {
       "name": "AR Effects Slimmer",
@@ -622,6 +622,15 @@
           "values": null
         },
         {
+          "key": "timelineAddTab",
+          "title": "Timeline Add Tab",
+          "description": "Hide add tab (+) button in home timeline tab header",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
+          "values": null
+        },
+        {
           "key": "timelineTopBar",
           "title": "Timeline Top Bar",
           "description": "Toggle top bar elements in home and custom timelines",
@@ -980,6 +989,15 @@
           "values": null
         },
         {
+          "key": "hideGrokPostAction",
+          "title": "Hide Grok Post Action",
+          "description": "Hide Grok analysis action button in post headers",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
+          "values": null
+        },
+        {
           "key": "hideHiddenReplies",
           "title": "Hide Hidden Replies",
           "description": "Hide hidden and moderated replies banner entrypoint in conversation threads",
@@ -1001,6 +1019,15 @@
           "key": "hidePostMetrics",
           "title": "Hide Post Metrics",
           "description": "Hide like, repost, and reply count metrics on timeline posts",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
+          "values": null
+        },
+        {
+          "key": "hideProfileGrokButton",
+          "title": "Hide Profile Grok Button",
+          "description": "Hide Grok Imagine action button on profile header banner",
           "required": false,
           "type": "kotlin.Boolean",
           "default": true,
@@ -1559,7 +1586,17 @@
           ]
         }
       ],
-      "options": []
+      "options": [
+        {
+          "key": "hideProfileGetVerified",
+          "title": "Hide Profile Get Verified",
+          "description": "Hide Get Verified upsell pill on user profile",
+          "required": false,
+          "type": "kotlin.Boolean",
+          "default": true,
+          "values": null
+        }
+      ]
     },
     {
       "name": "Remove Shared User ID",
@@ -1694,13 +1731,17 @@
           "values": null
         },
         {
-          "key": "customDomain",
+          "key": "sharingDomain",
           "title": "Custom Sharing Domain",
           "description": "Domain replacing x.com when sharing post links, e.g. https://fxtwitter.com",
           "required": false,
           "type": "kotlin.String",
           "default": "https://fxtwitter.com",
-          "values": null
+          "values": {
+            "FixTweet (fxtwitter.com)": "https://fxtwitter.com",
+            "VXTwitter (vxtwitter.com)": "https://vxtwitter.com",
+            "FixUpX (fixupx.com)": "https://fixupx.com"
+          }
         },
         {
           "key": "handleCustomLinks",
