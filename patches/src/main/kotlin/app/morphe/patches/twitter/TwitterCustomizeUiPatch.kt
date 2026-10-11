@@ -27,6 +27,7 @@ import app.morphe.patches.shared.Constants
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
+import com.android.tools.smali.dexlib2.iface.reference.FieldReference
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 import com.android.tools.smali.dexlib2.iface.reference.StringReference
 
@@ -53,6 +54,11 @@ private val sideBarFingerprint = Fingerprint(
 private val grokTabFingerprint = Fingerprint(
     definingClass = "Lcom/x/main/landing/d0;",
     strings = listOf("android_webview_grok_tab_enabled"),
+)
+
+private val homeTopBarFingerprint = Fingerprint(
+    definingClass = "Lcom/x/home/tabbed/a;",
+    name = "i",
 )
 
 private val profileTabsFingerprint = Fingerprint(
@@ -339,9 +345,32 @@ val twitterCustomizeUiPatch = bytecodePatch(
             println("[Customize UI] Skipped sideBarItems: disabled by patch option.")
         }
 
-        // 10. timelineTopBar (Piko: timeline top bar)
+        // 10. timelineTopBar (Hide Connect/Follow button from timeline top bar)
         if (timelineTopBar ?: true) {
-            println("[Customize UI] Skipped timelineTopBar: timeline top bar is managed by root Compose scaffold in 12.33; no client feature flag gate.")
+            val method = homeTopBarFingerprint.method
+            val instructions = method.implementation?.instructions?.toList()
+                ?: error("[Customize UI] Method Lcom/x/home/tabbed/a;->i has no instructions.")
+            val followButtonFieldIdx = instructions.indexOfFirst { ins ->
+                ins.opcode == Opcode.SGET_OBJECT &&
+                    ((ins as? ReferenceInstruction)?.reference as? FieldReference)?.let {
+                        it.definingClass == "Lcom/x/home/tabbed/a;" && it.name == "d"
+                    } == true
+            }
+            if (followButtonFieldIdx > 0) {
+                val ifEqzIdx = instructions.subList(0, followButtonFieldIdx).indexOfLast {
+                    it.opcode == Opcode.IF_EQZ
+                }
+                if (ifEqzIdx >= 0) {
+                    val reg = (instructions[ifEqzIdx] as OneRegisterInstruction).registerA
+                    val constIns = if (reg <= 15) "const/4 v$reg, 0x0" else "const/16 v$reg, 0x0"
+                    method.addInstructions(ifEqzIdx, constIns)
+                    patched++
+                } else {
+                    error("[Customize UI] Preceding if-eqz branch not found before follow button field in Lcom/x/home/tabbed/a;->i.")
+                }
+            } else {
+                error("[Customize UI] Follow button field Lcom/x/home/tabbed/a;->d not found in Lcom/x/home/tabbed/a;->i.")
+            }
         } else {
             println("[Customize UI] Skipped timelineTopBar: disabled by patch option.")
         }
