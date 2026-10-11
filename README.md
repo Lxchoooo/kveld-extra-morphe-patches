@@ -182,7 +182,7 @@
 | **Drawer Items** | Hide individual items in the navigation drawer | • Hide Profile<br>• Hide Premium<br>• Hide Communities<br>• Hide Bookmarks<br>• Hide Lists<br>• Hide Spaces<br>• Hide Creator Studio<br>• Hide Get Grok<br>• Hide Help Center |
 | **Hide Banner** | Hides new post banner |  |
 | **Hide Discover More** | Hides Discover more recommendations in tweet reply threads |  |
-| **Hide Elements** | Hide badges, buttons, metrics and served UI elements | • Hide Badges<br>• Hide Bookmark<br>• Hide Community Badges<br>• Hide Community Notes<br>• Hide FAB<br>• Hide FAB Menu<br>• Hide Followed By<br>• Hide Grok Post Action<br>• Hide Hidden Replies<br>• Hide Immersive Player<br>• Hide Post Metrics<br>• Hide View Count |
+| **Hide Elements** | Hide badges, buttons, metrics and served UI elements | • Hide Badges<br>• Hide Bookmark<br>• Hide Community Badges<br>• Hide Community Notes<br>• Hide FAB<br>• Hide FAB Menu<br>• Hide Followed By<br>• Hide Grok Post Action<br>• Hide Hidden Replies<br>• Hide Immersive Player<br>• Hide Post Metrics<br>• Hide Profile Grok Button<br>• Hide View Count |
 | **Hide Live Threads** | Hides live threads |  |
 | **Hide Nudge Button** | Hides follow/subscribe/follow back buttons on posts |  |
 | **Hide Promote Button** | Hides promote button under self posts |  |

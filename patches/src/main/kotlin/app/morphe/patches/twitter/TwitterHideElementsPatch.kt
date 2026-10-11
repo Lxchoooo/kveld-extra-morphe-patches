@@ -58,6 +58,16 @@ private val grokPostActionFingerprint = Fingerprint(
     strings = listOf("grok_android_analyze_timelines_enabled"),
 )
 
+private val profileGrokImagineFingerprint = Fingerprint(
+    returnType = "Ljava/lang/Object;",
+    strings = listOf("grok_android_imagine_cta_profile_enabled"),
+)
+
+private val profileGrokHeaderInitFingerprint = Fingerprint(
+    name = "<init>",
+    strings = listOf("grok_android_imagine_cta_profile_enabled"),
+)
+
 context(_: BytecodePatchContext)
 private fun neutralizeFlag(
     fingerprint: Fingerprint,
@@ -229,6 +239,14 @@ val twitterHideElementsPatch = bytecodePatch(
         required = false,
     )
 
+    val hideProfileGrokButton by booleanOption(
+        key = "hideProfileGrokButton",
+        default = true,
+        title = "Hide Profile Grok Button",
+        description = "Hide Grok Imagine action button on profile header banner",
+        required = false,
+    )
+
     val hideViewCount by booleanOption(
         key = "hideViewCount",
         default = true,
@@ -385,6 +403,23 @@ val twitterHideElementsPatch = bytecodePatch(
             }
         } else {
             println("[Hide Elements] Skipped hideGrokPostAction: disabled by patch option.")
+        }
+
+        // 13. hideProfileGrokButton
+        if (hideProfileGrokButton ?: true) {
+            var ok = false
+            if (neutralizeFlag(profileGrokImagineFingerprint, "grok_android_imagine_cta_profile_enabled", "Hide Elements")) {
+                patched++
+                ok = true
+            }
+            if (neutralizeFlag(profileGrokHeaderInitFingerprint, "grok_android_imagine_cta_profile_enabled", "Hide Elements")) {
+                patched++
+            }
+            if (!ok) {
+                error("[Hide Elements] Failed to neutralize 'grok_android_imagine_cta_profile_enabled' flag.")
+            }
+        } else {
+            println("[Hide Elements] Skipped hideProfileGrokButton: disabled by patch option.")
         }
 
         if (patched > 0) {
