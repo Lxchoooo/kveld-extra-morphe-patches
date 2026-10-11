@@ -67,6 +67,6 @@ val instagramCrashDiagnosticsBlockPatch = bytecodePatch(
     dependsOn(instagramCrashDiagnosticsResourcePatch)
 
     execute {
-        println("[Instagram Crash & Diagnostics] Verified manifest entrypoints disabled.")
+        println("[Instagram Crash & Diagnostics] Crash and diagnostics patch execution completed.")
     }
 }
