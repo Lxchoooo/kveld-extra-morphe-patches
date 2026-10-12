@@ -7,6 +7,7 @@ import app.morphe.patcher.patch.resourcePatch
 import app.morphe.patcher.patch.stringOption
 import app.morphe.patches.shared.Constants.COMPATIBILITY_MOOVIT
 import app.morphe.patches.shared.setApplicationMetaData
+import app.morphe.patches.shared.sharedExtensionPatch
 import org.w3c.dom.Element
 
 private val mapsApiKeyOption = stringOption(
@@ -71,11 +72,9 @@ val moovitFixGoogleMapsPatch = bytecodePatch(
     default = true,
 ) {
     compatibleWith(COMPATIBILITY_MOOVIT)
-    dependsOn(moovitMapsApiKeyResourcePatch)
+    dependsOn(moovitMapsApiKeyResourcePatch, sharedExtensionPatch)
 
     mapsApiKeyOption()
-
-    extendWith("extensions/extension.mpe")
 
     execute {
         moovitApplicationOnCreateFingerprint.method.addInstructions(
