@@ -64,7 +64,7 @@
 </details>
 
 <details>
-<summary>CapCut&nbsp;&nbsp;•&nbsp;&nbsp;<b>6 patches</b></summary>
+<summary>CapCut&nbsp;&nbsp;•&nbsp;&nbsp;<b>7 patches</b></summary>
 <br>
 
 **Supported versions:**
@@ -76,6 +76,7 @@
 |----------|----------------|-----------|
 | **Block Telemetry & Trackers** | Neutralizes Google AppMeasurement event dispatchers. |  |
 | **Bypass Effects Region Restriction** | Fixes effects, transitions, and templates failing to load (ByteDance Shark WAF block) by spoofing device_platform to 'windows' and resetting deviceId in effect requests. |  |
+| **Bypass GeoBlock Region Restriction** | Forces CapCut GeoBlock config lists (cert, dock, entrance, page, scheme) to empty so region-blocked surfaces stay enabled. Server-refused content may still fail to load. |  |
 | **Locale Slimmer** | Strips unselected language string tables, resources, and asset JSON files from the APK. Base fallback and English are always preserved. | • Locales to keep |
 | **Native Bloat Slimmer** | Strips non-essential companion native libraries by zeroing bytes in-situ. Always zeroes AppLovin ad crash reporter. WARNING: Stripping speech recognition and synthesis engines (libspeech*.so) disables voice recognition, voiceover captions, and speech-to-text features. | • Trim Speech Engines (Breaks Voice Features) |
 | **Screen Density Slimmer** | Strips unselected screen density assets and purges non-phone UI mode qualifiers. Launcher icons, nodpi/anydpi, and single-density orphans are always preserved. | • Target screen density |
