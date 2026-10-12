@@ -174,20 +174,12 @@ val twitterPostProfileUiPatch = bytecodePatch(
         if (hideProfileGrokButton ?: true) {
             var ok = false
 
-            // 1. Force Imagine state provider to return Boolean.FALSE directly
-            val imagineMethod = profileGrokImagineFingerprint.method
-            imagineMethod.addInstructions(
-                0,
-                """
-                    sget-object v0, Ljava/lang/Boolean;->FALSE:Ljava/lang/Boolean;
-                    return-object v0
-                """.trimIndent(),
-            )
-            patched++
-            ok = true
-
+            // 1. Neutralize the Imagine flag evaluation inside the tabbed
+            // content dispatcher (do NOT early-return the whole method: it
+            // resolves profile header, upsell and repository objects).
             if (neutralizeFlag(profileGrokImagineFingerprint, "grok_android_imagine_cta_profile_enabled", "Post & Profile UI")) {
                 patched++
+                ok = true
             }
 
             // 2. In header init, neutralize the flag
