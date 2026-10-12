@@ -27,7 +27,6 @@ import app.morphe.patches.shared.Constants
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
-import com.android.tools.smali.dexlib2.iface.instruction.TwoRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 import com.android.tools.smali.dexlib2.iface.reference.StringReference
 
@@ -191,50 +190,10 @@ val twitterPostProfileUiPatch = bytecodePatch(
                 patched++
             }
 
-            // 2. In header init, neutralize flag and suppress View/state fields
-            val headerInitMethod = profileGrokHeaderInitFingerprint.method
+            // 2. In header init, neutralize the flag
             if (neutralizeFlag(profileGrokHeaderInitFingerprint, "grok_android_imagine_cta_profile_enabled", "Post & Profile UI")) {
                 patched++
                 ok = true
-            }
-
-            val initInstructions = headerInitMethod.implementation?.instructions?.toList() ?: emptyList()
-            val flagStrIdx = initInstructions.indexOfFirst { ins ->
-                (ins as? ReferenceInstruction)?.reference?.let { ref ->
-                    (ref as? StringReference)?.string == "grok_android_imagine_cta_profile_enabled"
-                } == true
-            }
-            if (flagStrIdx >= 0) {
-                val iputBools = initInstructions.subList(flagStrIdx, minOf(initInstructions.size, flagStrIdx + 20))
-                    .mapIndexedNotNull { offset, ins ->
-                        if (ins.opcode == Opcode.IPUT_BOOLEAN) (flagStrIdx + offset) to ins else null
-                    }
-                for ((idx, ins) in iputBools.reversed()) {
-                    val reg = (ins as? TwoRegisterInstruction)?.registerA ?: continue
-                    val constIns = if (reg <= 15) "const/4 v$reg, 0x0" else "const/16 v$reg, 0x0"
-                    headerInitMethod.addInstructions(idx, constIns)
-                    patched++
-                }
-
-                val setVisCalls = initInstructions.subList(flagStrIdx, minOf(initInstructions.size, flagStrIdx + 30))
-                    .mapIndexedNotNull { offset, ins ->
-                        if (ins.opcode.name.startsWith("invoke-") &&
-                            ((ins as? ReferenceInstruction)?.reference as? MethodReference)?.name == "setVisibility"
-                        ) {
-                            (flagStrIdx + offset) to ins
-                        } else null
-                    }
-                for ((idx, ins) in setVisCalls.reversed()) {
-                    val paramReg = when (ins) {
-                        is TwoRegisterInstruction -> ins.registerB
-                        else -> null
-                    }
-                    if (paramReg != null) {
-                        val constIns = if (paramReg <= 15) "const/4 v$paramReg, 0x8" else "const/16 v$paramReg, 0x8"
-                        headerInitMethod.addInstructions(idx, constIns)
-                        patched++
-                    }
-                }
             }
 
             if (!ok) {
