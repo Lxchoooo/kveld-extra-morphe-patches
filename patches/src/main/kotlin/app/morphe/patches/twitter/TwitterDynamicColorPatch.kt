@@ -83,7 +83,7 @@ val twitterDynamicColorPatch = bytecodePatch(
         val case3End = instructions.size
 
         // Case 1: Lights-Out (black backgrounds, dynamic primary accent and unread container)
-        // Uses scratch v0 for accent, and v2 for unread container (v2 is dead throughout Case 1)
+        // Uses scratch pair v0/v1 for accent, and v8/v9 for unread container (both pairs verified dead)
         for (i in case1Start until case2Start) {
             val ins = instructions[i]
             if (ins.opcode == Opcode.SGET_WIDE) {
@@ -110,10 +110,10 @@ val twitterDynamicColorPatch = bytecodePatch(
                             val reg = (subIns as OneRegisterInstruction).registerA
                             val smali = """
                                 invoke-static {}, Lcom/kveld9/morphe/extra/extension/TwitterMonetHelper;->accentContainer()I
-                                move-result v2
-                                invoke-static {v2}, Landroidx/compose/ui/graphics/n0;->c(I)J
-                                move-result-wide v2
-                                move-wide/from16 v$reg, v2
+                                move-result v8
+                                invoke-static {v8}, Landroidx/compose/ui/graphics/n0;->c(I)J
+                                move-result-wide v8
+                                move-wide/from16 v$reg, v8
                             """.trimIndent()
                             insertions.add(Triple(j + 1, smali, 1))
                             break
