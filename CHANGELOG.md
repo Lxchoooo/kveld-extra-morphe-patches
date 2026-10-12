@@ -1,3 +1,18 @@
+## [1.11.2](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.11.1...v1.11.2) (2026-10-12)
+
+### Bug Fixes
+
+* **moovit:** route extension merge through sharedExtensionPatch ([86756fa](https://github.com/kveld9/kveld-extra-morphe-patches/commit/86756faf9a69c52bbd6b6960cdd122368b29a032))
+* **twitter:** eliminate bare getClass null checks after Firebase Perf getInstance ([4d98ca5](https://github.com/kveld9/kveld-extra-morphe-patches/commit/4d98ca52ae2f1fd31f3dac96ef19cfc013192628))
+
+### Code Refactoring
+
+* **twitter:** drop dead profile header field and visibility loops ([7ee42db](https://github.com/kveld9/kveld-extra-morphe-patches/commit/7ee42db3cc034797fca50c63e8f53e2628ab8ea1))
+* **twitter:** drop placebo DM composer toggles ([6fb1a16](https://github.com/kveld9/kveld-extra-morphe-patches/commit/6fb1a16ca2e33d53831d7b0c556853299217d5b8))
+* **twitter:** drop placebo navigation toggles ([dc8cba8](https://github.com/kveld9/kveld-extra-morphe-patches/commit/dc8cba81b8a38de586add47740ad36df123ff83a))
+* **twitter:** drop placebo profile toggle ([a22294d](https://github.com/kveld9/kveld-extra-morphe-patches/commit/a22294d1fd632c374c931180929951d2c9af033f))
+* **twitter:** drop placebo timeline toggles ([8895db7](https://github.com/kveld9/kveld-extra-morphe-patches/commit/8895db7bf067ccb5d2e274027ac670c7f40fd361))
+
 ## [1.11.1](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.11.0...v1.11.1) (2026-10-12)
 
 ### Bug Fixes
