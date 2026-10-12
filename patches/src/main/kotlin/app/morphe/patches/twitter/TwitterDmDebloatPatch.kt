@@ -157,22 +157,6 @@ val twitterDmDebloatPatch = bytecodePatch(
         required = false,
     )
 
-    val hideDmAttachButton by booleanOption(
-        key = "hideDmAttachButton",
-        default = true,
-        title = "Hide DM Attach Button",
-        description = "Hide media attachment (+) button in direct message composer",
-        required = false,
-    )
-
-    val hideDmVoiceButton by booleanOption(
-        key = "hideDmVoiceButton",
-        default = true,
-        title = "Hide DM Voice Button",
-        description = "Hide voice note / microphone button in direct message composer",
-        required = false,
-    )
-
     execute {
         var patched = 0
 
@@ -189,20 +173,6 @@ val twitterDmDebloatPatch = bytecodePatch(
             }
         } else {
             println("[DM Debloat] Skipped call buttons: hideDmAudioCall and hideDmVideoCall disabled by patch options.")
-        }
-
-        // 3. hideDmAttachButton
-        if (hideDmAttachButton ?: true) {
-            println("[DM Debloat] Skipped hideDmAttachButton: composer attach action (+) is statically rendered via Jetpack Compose in 12.33; no client feature flag gate.")
-        } else {
-            println("[DM Debloat] Skipped hideDmAttachButton: disabled by patch option.")
-        }
-
-        // 4. hideDmVoiceButton
-        if (hideDmVoiceButton ?: true) {
-            println("[DM Debloat] Skipped hideDmVoiceButton: composer voice note button is statically rendered via Jetpack Compose in 12.33; no client feature flag gate.")
-        } else {
-            println("[DM Debloat] Skipped hideDmVoiceButton: disabled by patch option.")
         }
 
         if (patched > 0) {
