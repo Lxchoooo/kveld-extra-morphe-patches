@@ -1,3 +1,9 @@
+## [1.12.0](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.11.2...v1.12.0) (2026-10-12)
+
+### New Features
+
+* **twitter:** add Dynamic Color patch with Compose-anchored Monet palette ([28bd24e](https://github.com/kveld9/kveld-extra-morphe-patches/commit/28bd24e649e9af50b818122899517232ff8c1c51))
+
 ## [1.11.2](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.11.1...v1.11.2) (2026-10-12)
 
 ### Bug Fixes
