@@ -1,3 +1,9 @@
+## [1.12.1](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.12.0...v1.12.1) (2026-10-12)
+
+### Bug Fixes
+
+* **twitter:** use dead wide pair v8/v9 as scratch in Dynamic Color lights-out hook ([c03b6b1](https://github.com/kveld9/kveld-extra-morphe-patches/commit/c03b6b1acec3732caf933406a9035670c4ec0d36))
+
 ## [1.12.0](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.11.2...v1.12.0) (2026-10-12)
 
 ### New Features
