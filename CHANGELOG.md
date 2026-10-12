@@ -1,3 +1,9 @@
+## [1.12.3](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.12.2...v1.12.3) (2026-10-12)
+
+### Bug Fixes
+
+* **twitter:** re-anchor Dynamic Color to M3 ColorScheme slots in theme/d ([565363b](https://github.com/kveld9/kveld-extra-morphe-patches/commit/565363bf1cb991753af37387b8cbddde8f8fe656))
+
 ## [1.12.2](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.12.1...v1.12.2) (2026-10-12)
 
 ### Bug Fixes
