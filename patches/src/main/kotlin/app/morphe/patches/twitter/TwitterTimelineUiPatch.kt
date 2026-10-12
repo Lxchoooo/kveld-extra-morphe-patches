@@ -257,43 +257,11 @@ val twitterTimelineUiPatch = bytecodePatch(
         required = false,
     )
 
-    val hideBookmark by booleanOption(
-        key = "hideBookmark",
-        default = true,
-        title = "Hide Bookmark",
-        description = "Hide bookmark action button in post timeline",
-        required = false,
-    )
-
     val hideCommunityNotes by booleanOption(
         key = "hideCommunityNotes",
         default = true,
         title = "Hide Community Notes",
         description = "Hide community notes and birdwatch contributions on posts",
-        required = false,
-    )
-
-    val hideFollowedBy by booleanOption(
-        key = "hideFollowedBy",
-        default = true,
-        title = "Hide Followed By",
-        description = "Hide followed-by social context facepile on timeline posts",
-        required = false,
-    )
-
-    val hideHiddenReplies by booleanOption(
-        key = "hideHiddenReplies",
-        default = true,
-        title = "Hide Hidden Replies",
-        description = "Hide hidden and moderated replies banner entrypoint in conversation threads",
-        required = false,
-    )
-
-    val hideImmersivePlayer by booleanOption(
-        key = "hideImmersivePlayer",
-        default = true,
-        title = "Hide Immersive Player",
-        description = "Hide immersive swipe-up video player surfaces",
         required = false,
     )
 
@@ -321,14 +289,6 @@ val twitterTimelineUiPatch = bytecodePatch(
         required = false,
     )
 
-    val replySorting by booleanOption(
-        key = "replySorting",
-        default = true,
-        title = "Reply Sorting",
-        description = "Customize default reply sorting behavior in conversation threads",
-        required = false,
-    )
-
     val timelineAddTab by booleanOption(
         key = "timelineAddTab",
         default = true,
@@ -342,14 +302,6 @@ val twitterTimelineUiPatch = bytecodePatch(
         default = true,
         title = "Timeline Top Bar",
         description = "Toggle top bar elements in home and custom timelines",
-        required = false,
-    )
-
-    val topBarExtra by booleanOption(
-        key = "topBarExtra",
-        default = true,
-        title = "Top Bar Extra",
-        description = "Toggle additional top bar and header action surfaces",
         required = false,
     )
 
@@ -795,13 +747,6 @@ val twitterTimelineUiPatch = bytecodePatch(
             println("[Timeline UI] Skipped: Hide Live Threads disabled.")
         }
 
-        // 8. hideBookmark
-        if (hideBookmark ?: true) {
-            println("[Timeline UI] Skipped hideBookmark: bookmark action in timeline is served via URT action entries in 12.33; no client feature flag gate.")
-        } else {
-            println("[Timeline UI] Skipped hideBookmark: disabled by patch option.")
-        }
-
         // 9. hideCommunityNotes
         if (hideCommunityNotes ?: true) {
             if (neutralizeFlag(communityNotesFingerprint, "birdwatch_consumption_enabled", "Timeline UI")) {
@@ -811,27 +756,6 @@ val twitterTimelineUiPatch = bytecodePatch(
             }
         } else {
             println("[Timeline UI] Skipped hideCommunityNotes: disabled by patch option.")
-        }
-
-        // 10. hideFollowedBy
-        if (hideFollowedBy ?: true) {
-            println("[Timeline UI] Skipped hideFollowedBy: followed-by social context is served via URT timeline models in 12.33; no client feature flag gate.")
-        } else {
-            println("[Timeline UI] Skipped hideFollowedBy: disabled by patch option.")
-        }
-
-        // 11. hideHiddenReplies
-        if (hideHiddenReplies ?: true) {
-            println("[Timeline UI] Skipped hideHiddenReplies: hidden replies entrypoint is served via URT conversation models in 12.33; no client feature flag gate.")
-        } else {
-            println("[Timeline UI] Skipped hideHiddenReplies: disabled by patch option.")
-        }
-
-        // 12. hideImmersivePlayer
-        if (hideImmersivePlayer ?: true) {
-            println("[Timeline UI] Skipped hideImmersivePlayer: immersive video viewer entrypoint is bound to media click dispatch in 12.33; no client feature flag gate.")
-        } else {
-            println("[Timeline UI] Skipped hideImmersivePlayer: disabled by patch option.")
         }
 
         // 13. hidePostMetrics
@@ -904,13 +828,6 @@ val twitterTimelineUiPatch = bytecodePatch(
             }
         } else {
             println("[Timeline UI] Skipped inlineActionBar: disabled by patch option.")
-        }
-
-        // 16. replySorting
-        if (replySorting ?: true) {
-            println("[Timeline UI] Skipped replySorting: default conversation reply sorting is server-driven in 12.33 URT; no client feature flag gate.")
-        } else {
-            println("[Timeline UI] Skipped replySorting: disabled by patch option.")
         }
 
         // 17. timelineAddTab
@@ -990,13 +907,6 @@ val twitterTimelineUiPatch = bytecodePatch(
             }
         } else {
             println("[Timeline UI] Skipped timelineTopBar: disabled by patch option.")
-        }
-
-        // 19. topBarExtra
-        if (topBarExtra ?: true) {
-            println("[Timeline UI] Skipped topBarExtra: top bar extra surfaces are dynamically composed in 12.33; no client feature flag gate.")
-        } else {
-            println("[Timeline UI] Skipped topBarExtra: disabled by patch option.")
         }
 
         // 20. hideLiveBanner
