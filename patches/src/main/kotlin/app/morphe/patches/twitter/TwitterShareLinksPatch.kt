@@ -59,7 +59,7 @@ val twitterShareLinksPatch = bytecodePatch(
     val customSharingDomain by booleanOption(
         key = "customSharingDomain",
         default = true,
-        title = "Custom Sharing Domain",
+        title = "Enable Custom Domain",
         description = "Substitutes twitter.com/x.com with custom domain when sharing post links",
         required = false,
     )
