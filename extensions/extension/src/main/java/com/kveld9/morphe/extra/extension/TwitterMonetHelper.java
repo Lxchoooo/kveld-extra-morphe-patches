@@ -12,17 +12,15 @@ public final class TwitterMonetHelper {
     private static final int FALLBACK_ACCENT = 0xFF1D9BF0; // Canonical Twitter Blue (z1.J1)
     private static final int FALLBACK_ACCENT_CONTAINER_LIGHT = 0xFFEFAFFF; // Light unread badge (z1.a)
     private static final int FALLBACK_ACCENT_CONTAINER_DARK = 0xFF163043; // Dim unread badge
-    private static final int FALLBACK_DIM_SURFACE = 0xFF15202B; // Dim cell and app background
-    private static final int FALLBACK_DIM_SURFACE_TRANSLUCENT = 0xBF15202B; // Dim cell background @ 75% alpha
-    private static final int FALLBACK_DIM_SURFACE_GLASS = 0xCC15202B; // Dim glass background @ 80% alpha
 
     // Cached palette values
     private static int cachedUiMode = -1;
     private static int cachedAccent = FALLBACK_ACCENT;
+    private static int cachedAccentLight = FALLBACK_ACCENT;
+    private static int cachedAccentDark = FALLBACK_ACCENT;
     private static int cachedAccentContainer = FALLBACK_ACCENT_CONTAINER_LIGHT;
-    private static int cachedDimSurface = FALLBACK_DIM_SURFACE;
-    private static int cachedDimSurfaceTranslucent = FALLBACK_DIM_SURFACE_TRANSLUCENT;
-    private static int cachedDimSurfaceGlass = FALLBACK_DIM_SURFACE_GLASS;
+    private static int cachedAccentContainerLight = FALLBACK_ACCENT_CONTAINER_LIGHT;
+    private static int cachedAccentContainerDark = FALLBACK_ACCENT_CONTAINER_DARK;
 
     private TwitterMonetHelper() {
     }
@@ -71,22 +69,17 @@ public final class TwitterMonetHelper {
             int currentUiMode = config.uiMode & Configuration.UI_MODE_NIGHT_MASK;
             if (currentUiMode == cachedUiMode) return;
 
-            boolean isNight = (currentUiMode == Configuration.UI_MODE_NIGHT_YES);
-
             // Primary: system_accent1_600 (light) / system_accent1_200 (dark)
-            String accentResName = isNight ? "system_accent1_200" : "system_accent1_600";
-            cachedAccent = resolveSystemColor(res, accentResName, FALLBACK_ACCENT);
+            cachedAccentLight = resolveSystemColor(res, "system_accent1_600", FALLBACK_ACCENT);
+            cachedAccentDark = resolveSystemColor(res, "system_accent1_200", FALLBACK_ACCENT);
 
-            // Accent container: system_accent1_100 (light) / system_accent1_700 (dark)
-            String containerResName = isNight ? "system_accent1_700" : "system_accent1_100";
-            int fallbackContainer = isNight ? FALLBACK_ACCENT_CONTAINER_DARK : FALLBACK_ACCENT_CONTAINER_LIGHT;
-            cachedAccentContainer = resolveSystemColor(res, containerResName, fallbackContainer);
+            // Container: system_accent1_100 (light) / system_accent1_700 (dark)
+            cachedAccentContainerLight = resolveSystemColor(res, "system_accent1_100", FALLBACK_ACCENT_CONTAINER_LIGHT);
+            cachedAccentContainerDark = resolveSystemColor(res, "system_accent1_700", FALLBACK_ACCENT_CONTAINER_DARK);
 
-            // Dim Surface: system_neutral1_700 for Dark surface container
-            int dimBase = resolveSystemColor(res, "system_neutral1_700", FALLBACK_DIM_SURFACE);
-            cachedDimSurface = dimBase;
-            cachedDimSurfaceTranslucent = (dimBase & 0x00FFFFFF) | 0xBF000000;
-            cachedDimSurfaceGlass = (dimBase & 0x00FFFFFF) | 0xCC000000;
+            boolean isNight = (currentUiMode == Configuration.UI_MODE_NIGHT_YES);
+            cachedAccent = isNight ? cachedAccentDark : cachedAccentLight;
+            cachedAccentContainer = isNight ? cachedAccentContainerDark : cachedAccentContainerLight;
 
             cachedUiMode = currentUiMode;
             System.out.println("[Dynamic Color] Refreshed Monet palette cache for uiMode " + currentUiMode + ".");
@@ -100,23 +93,28 @@ public final class TwitterMonetHelper {
         return cachedAccent;
     }
 
+    public static int accentLight() {
+        ensureCache();
+        return cachedAccentLight;
+    }
+
+    public static int accentDark() {
+        ensureCache();
+        return cachedAccentDark;
+    }
+
     public static int accentContainer() {
         ensureCache();
         return cachedAccentContainer;
     }
 
-    public static int dimSurface() {
+    public static int accentContainerLight() {
         ensureCache();
-        return cachedDimSurface;
+        return cachedAccentContainerLight;
     }
 
-    public static int dimSurfaceTranslucent() {
+    public static int accentContainerDark() {
         ensureCache();
-        return cachedDimSurfaceTranslucent;
-    }
-
-    public static int dimSurfaceGlass() {
-        ensureCache();
-        return cachedDimSurfaceGlass;
+        return cachedAccentContainerDark;
     }
 }
