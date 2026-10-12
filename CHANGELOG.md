@@ -1,3 +1,11 @@
+## [1.12.4](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.12.3...v1.12.4) (2026-10-12)
+
+### Bug Fixes
+
+* **twitter:** collapse DM call toggles into a single hideDmCalls option ([5148fbc](https://github.com/kveld9/kveld-extra-morphe-patches/commit/5148fbc2eb9131417837bb649d27ee3d2e636075))
+* **twitter:** disambiguate Share Links custom domain toggle title ([6a419dd](https://github.com/kveld9/kveld-extra-morphe-patches/commit/6a419dd82f0c8b3002c30fe2e8362dbb50dcdce4))
+* **twitter:** remove Dynamic Color patch ([63c09b8](https://github.com/kveld9/kveld-extra-morphe-patches/commit/63c09b873fb86e98572848a673e63efbeead0dce))
+
 ## [1.12.3](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.12.2...v1.12.3) (2026-10-12)
 
 ### Bug Fixes
