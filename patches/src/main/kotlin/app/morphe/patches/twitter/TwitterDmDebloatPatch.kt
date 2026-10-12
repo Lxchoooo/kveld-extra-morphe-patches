@@ -141,30 +141,19 @@ val twitterDmDebloatPatch = bytecodePatch(
 ) {
     compatibleWith(Constants.COMPATIBILITY_TWITTER)
 
-    val hideDmAudioCall by booleanOption(
-        key = "hideDmAudioCall",
+    val hideDmCalls by booleanOption(
+        key = "hideDmCalls",
         default = true,
-        title = "Hide DM Audio Call",
-        description = "Hide audio call button in direct message conversation header. WARNING: neutralizing the unified xchat calling flag disables DM outgoing-call entrypoints, not just the icons.",
-        required = false,
-    )
-
-    val hideDmVideoCall by booleanOption(
-        key = "hideDmVideoCall",
-        default = true,
-        title = "Hide DM Video Call",
-        description = "Hide video call button in direct message conversation header. WARNING: neutralizing the unified xchat calling flag disables DM outgoing-call entrypoints, not just the icons.",
+        title = "Hide DM Calls",
+        description = "Hide audio and video call buttons in direct message conversation header. WARNING: neutralizing the unified xchat calling flag disables DM outgoing-call entrypoints, not just the icons.",
         required = false,
     )
 
     execute {
         var patched = 0
 
-        val hideAudio = hideDmAudioCall ?: true
-        val hideVideo = hideDmVideoCall ?: true
-
-        // 1 & 2. Call buttons (unified xchat calling pipeline)
-        if (hideAudio || hideVideo) {
+        // Call buttons (unified xchat calling pipeline hides both together)
+        if (hideDmCalls ?: true) {
             if (neutralizeFlag(dmCallFingerprint, "xcall_xchat_enabled", "DM Debloat")) {
                 patched++
                 println("[DM Debloat] Neutralized 'xcall_xchat_enabled': unified xchat pipeline hides both audio and video call header buttons together.")
@@ -172,7 +161,7 @@ val twitterDmDebloatPatch = bytecodePatch(
                 error("[DM Debloat] Failed to neutralize 'xcall_xchat_enabled' flag.")
             }
         } else {
-            println("[DM Debloat] Skipped call buttons: hideDmAudioCall and hideDmVideoCall disabled by patch options.")
+            println("[DM Debloat] Skipped call buttons: hideDmCalls disabled by patch option.")
         }
 
         if (patched > 0) {
