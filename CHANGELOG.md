@@ -1,3 +1,9 @@
+## [1.12.2](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.12.1...v1.12.2) (2026-10-12)
+
+### Bug Fixes
+
+* **twitter:** stop overriding J1 accent load in lights-out Dynamic Color case ([940067a](https://github.com/kveld9/kveld-extra-morphe-patches/commit/940067a0eabb30f097d8b492263c5a8653594428))
+
 ## [1.12.1](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.12.0...v1.12.1) (2026-10-12)
 
 ### Bug Fixes
