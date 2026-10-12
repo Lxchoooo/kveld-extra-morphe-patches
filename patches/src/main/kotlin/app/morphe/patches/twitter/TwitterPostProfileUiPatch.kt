@@ -133,14 +133,6 @@ val twitterPostProfileUiPatch = bytecodePatch(
 ) {
     compatibleWith(Constants.COMPATIBILITY_TWITTER)
 
-    val hideCommunityBadges by booleanOption(
-        key = "hideCommunityBadges",
-        default = true,
-        title = "Hide Community Badges",
-        description = "Hide community badge indicators across user and post labels",
-        required = false,
-    )
-
     val hideGrokPostAction by booleanOption(
         key = "hideGrokPostAction",
         default = true,
@@ -167,13 +159,6 @@ val twitterPostProfileUiPatch = bytecodePatch(
 
     execute {
         var patched = 0
-
-        // hideCommunityBadges
-        if (hideCommunityBadges ?: true) {
-            println("[Post & Profile UI] Skipped hideCommunityBadges: community badges are served via URT metadata in 12.33; no client feature flag gate.")
-        } else {
-            println("[Post & Profile UI] Skipped hideCommunityBadges: disabled by patch option.")
-        }
 
         // hideGrokPostAction
         if (hideGrokPostAction ?: true) {
