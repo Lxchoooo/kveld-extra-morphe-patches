@@ -1,3 +1,9 @@
+## [1.11.1](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.11.0...v1.11.1) (2026-10-12)
+
+### Bug Fixes
+
+* **twitter:** hide profile Grok CTA via header state hook ([191f7a7](https://github.com/kveld9/kveld-extra-morphe-patches/commit/191f7a720a5fe2af216389996ae6129635164605))
+
 ## [1.11.0](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.10.0...v1.11.0) (2026-10-11)
 
 ### New Features
