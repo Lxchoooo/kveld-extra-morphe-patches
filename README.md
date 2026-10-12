@@ -181,7 +181,7 @@
 | **Control Video Auto Scroll** | Prevents automatic scrolling to the next video in immersive view |  |
 | **DM Debloat** | Hide call buttons and composer actions in direct message conversations | • Hide DM Audio Call<br>• Hide DM Video Call |
 | **Drawer Items** | Hide individual items in the navigation drawer | • Hide Profile<br>• Hide Premium<br>• Hide Communities<br>• Hide Bookmarks<br>• Hide Lists<br>• Hide Spaces<br>• Hide Creator Studio<br>• Hide Get Grok<br>• Hide Help Center |
-| **Navigation UI** | Bottom navigation, FAB, tabs and bars | • Hide Badges<br>• Hide FAB<br>• Hide FAB Menu<br>• Navigation Bar<br>• Grok Tab<br>• Explore Tabs<br>• Notification Tabs<br>• Search Suggestions<br>• Search Tab Items<br>• Side Bar Items |
+| **Navigation UI** | Bottom navigation, FAB, tabs and bars | • Hide Badges<br>• Hide FAB Menu<br>• Navigation Bar<br>• Grok Tab<br>• Explore Tabs<br>• Search Tab Items<br>• Side Bar Items |
 | **No Shortened URL** | Expands t.co shortened URLs, removing the click-tracking intermediary |  |
 | **Pause Search Suggestions** | Stops persisting search suggestions locally without breaking search |  |
 | **Post & Profile UI** | Post actions, profile header and Grok surfaces | • Hide Community Badges<br>• Hide Grok Post Action<br>• Hide Profile Grok Button<br>• Profile Tabs |

@@ -150,14 +150,6 @@ val twitterNavigationUiPatch = bytecodePatch(
         required = false,
     )
 
-    val hideFab by booleanOption(
-        key = "hideFab",
-        default = true,
-        title = "Hide FAB",
-        description = "Hide primary floating action button in timeline",
-        required = false,
-    )
-
     val hideFabMenu by booleanOption(
         key = "hideFabMenu",
         default = true,
@@ -190,22 +182,6 @@ val twitterNavigationUiPatch = bytecodePatch(
         required = false,
     )
 
-    val notificationTabs by booleanOption(
-        key = "notificationTabs",
-        default = true,
-        title = "Notification Tabs",
-        description = "Toggle notification timeline tab items",
-        required = false,
-    )
-
-    val searchSuggestions by booleanOption(
-        key = "searchSuggestions",
-        default = true,
-        title = "Search Suggestions",
-        description = "Toggle search typeahead and local suggestion persistence",
-        required = false,
-    )
-
     val searchTabItems by booleanOption(
         key = "searchTabItems",
         default = true,
@@ -234,13 +210,6 @@ val twitterNavigationUiPatch = bytecodePatch(
             }
         } else {
             println("[Navigation UI] Skipped hideBadges: disabled by patch option.")
-        }
-
-        // 2. hideFab
-        if (hideFab ?: true) {
-            println("[Navigation UI] Skipped hideFab: primary compose FAB scaffold is embedded in root Compose UI in 12.33; no client feature flag gate.")
-        } else {
-            println("[Navigation UI] Skipped hideFab: disabled by patch option.")
         }
 
         // 3. hideFabMenu
@@ -285,20 +254,6 @@ val twitterNavigationUiPatch = bytecodePatch(
             }
         } else {
             println("[Navigation UI] Skipped exploreTabs: disabled by patch option.")
-        }
-
-        // 7. notificationTabs
-        if (notificationTabs ?: true) {
-            println("[Navigation UI] Skipped notificationTabs: notification tab hierarchy is served via URT in 12.33; no client feature flag gate.")
-        } else {
-            println("[Navigation UI] Skipped notificationTabs: disabled by patch option.")
-        }
-
-        // 8. searchSuggestions
-        if (searchSuggestions ?: true) {
-            println("[Navigation UI] Skipped searchSuggestions: search suggestions persistence is handled by dedicated Pause Search Suggestions patch; no UI toggle gate.")
-        } else {
-            println("[Navigation UI] Skipped searchSuggestions: disabled by patch option.")
         }
 
         // 9. searchTabItems
