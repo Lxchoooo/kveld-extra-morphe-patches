@@ -82,25 +82,11 @@ val twitterDynamicColorPatch = bytecodePatch(
         val case3Start = themeConstructors[2]
         val case3End = instructions.size
 
-        // Case 1: Lights-Out (black backgrounds, dynamic primary accent and unread container)
-        // Uses scratch pair v0/v1 for accent, and v8/v9 for unread container (both pairs verified dead)
+        // Case 1: Lights-Out (black backgrounds, dynamic unread container)
+        // Uses scratch pair v8/v9 for unread container (verified dead)
         for (i in case1Start until case2Start) {
             val ins = instructions[i]
-            if (ins.opcode == Opcode.SGET_WIDE) {
-                val fieldRef = (ins as? ReferenceInstruction)?.reference as? FieldReference
-                if (fieldRef?.name == "J1") {
-                    val reg = (ins as OneRegisterInstruction).registerA
-                    val smali = """
-                        invoke-static {}, Lcom/kveld9/morphe/extra/extension/TwitterMonetHelper;->accent()I
-                        move-result v0
-                        invoke-static {v0}, Landroidx/compose/ui/graphics/n0;->c(I)J
-                        move-result-wide v0
-                        move-wide/from16 v$reg, v0
-                    """.trimIndent()
-                    // Replaces primary (v6) and link (v16, copied from v6 at 0188)
-                    insertions.add(Triple(i + 1, smali, 2))
-                }
-            } else if (ins.opcode == Opcode.CONST_WIDE) {
+            if (ins.opcode == Opcode.CONST_WIDE) {
                 val lit = (ins as? WideLiteralInstruction)?.wideLiteral?.and(0xFFFFFFFFL)
                 if (lit == 0x051D2BL || lit == 0xFF051D2BL) {
                     // Subsequent move-result-wide holds unread container
