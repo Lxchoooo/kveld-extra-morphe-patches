@@ -1,3 +1,9 @@
+## [1.12.5](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.12.4...v1.12.5) (2026-10-12)
+
+### Bug Fixes
+
+* **twitter:** stop blanket early-return in profile Grok Imagine hook ([43b339d](https://github.com/kveld9/kveld-extra-morphe-patches/commit/43b339d064a6e63627295ef934cbd47d7fd01792))
+
 ## [1.12.4](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.12.3...v1.12.4) (2026-10-12)
 
 ### Bug Fixes
