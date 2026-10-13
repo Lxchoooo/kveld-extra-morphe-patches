@@ -194,3 +194,14 @@ CLAUDE.local.md
 # Physical & Runtime ADB Test Harness
 validation/physical_harness/results/
 validation/runtime/
+
+# --- Private agent skills: nunca publicar (viven en kveld-morphe-skills-private) ---
+.agents/
+.claude/
+.opencode/
+AGENTS.md
+CLAUDE.md
+CLAUDE.local.md
+docs/apps/
+scripts/sync_shared_skills.sh
+scripts/hooks/
