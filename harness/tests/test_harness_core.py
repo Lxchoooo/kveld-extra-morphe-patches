@@ -1,9 +1,11 @@
 """
 Comprehensive Unit Tests for DEX, ELF, Fingerprints, and Symbols.
-Demonstrates deterministic behavior across core reverse-engineering modules.
+Demonstrates deterministic behavior across all 12 edge cases specified in Phase 11.
 """
 
 from pathlib import Path
+import contextlib
+import io
 import struct
 import unittest
 from unittest.mock import MagicMock
@@ -21,7 +23,7 @@ class TestFingerprints(unittest.TestCase):
         # Mock class and methods
         self.cls = IndexedClass(
             dex_name="classes.dex",
-            name="Lcom/test/TestClass;",
+            name="Lcom/brave/TestClass;",
             access_flags=1,
             superclass="Ljava/lang/Object;",
             interfaces=[],
@@ -29,7 +31,7 @@ class TestFingerprints(unittest.TestCase):
         )
         self.m1 = IndexedMethod(
             dex_name="classes.dex",
-            class_name="Lcom/test/TestClass;",
+            class_name="Lcom/brave/TestClass;",
             name="uniqueMethod",
             parameters=["Ljava/lang/String;"],
             return_type="Z",
@@ -40,7 +42,7 @@ class TestFingerprints(unittest.TestCase):
         )
         self.m2 = IndexedMethod(
             dex_name="classes.dex",
-            class_name="Lcom/test/TestClass;",
+            class_name="Lcom/brave/TestClass;",
             name="ambiguousMethod1",
             parameters=[],
             return_type="V",
@@ -51,7 +53,7 @@ class TestFingerprints(unittest.TestCase):
         )
         self.m3 = IndexedMethod(
             dex_name="classes.dex",
-            class_name="Lcom/test/TestClass;",
+            class_name="Lcom/brave/TestClass;",
             name="ambiguousMethod2",
             parameters=[],
             return_type="V",
@@ -70,7 +72,7 @@ class TestFingerprints(unittest.TestCase):
     def test_fingerprint_unique_pass(self):
         query = FingerprintQuery(
             name_id="test_unique",
-            defining_class="Lcom/test/TestClass;",
+            defining_class="Lcom/brave/TestClass;",
             method_name="uniqueMethod",
             return_type="Z",
             parameters=["Ljava/lang/String;"],
@@ -84,7 +86,7 @@ class TestFingerprints(unittest.TestCase):
     def test_fingerprint_nonexistent_block(self):
         query = FingerprintQuery(
             name_id="test_nonexistent",
-            defining_class="Lcom/test/TestClass;",
+            defining_class="Lcom/brave/TestClass;",
             method_name="doesNotExist",
             return_type="V",
         )
@@ -95,7 +97,7 @@ class TestFingerprints(unittest.TestCase):
     def test_fingerprint_ambiguous_block(self):
         query = FingerprintQuery(
             name_id="test_ambiguous",
-            defining_class="Lcom/test/TestClass;",
+            defining_class="Lcom/brave/TestClass;",
             strings=["shared_duplicate_string"],
             return_type="V",
         )
@@ -104,7 +106,59 @@ class TestFingerprints(unittest.TestCase):
         self.assertEqual(len(res.candidates), 2)
 
 
+def _telemetry_analyzer(offsets_by_host):
+    """Elf analyzer stub that reports the given offsets for each known host."""
+    analyzer = MagicMock(spec=Elf64Analyzer)
+    analyzer.find_string_occurrences.return_value = []
+    analyzer.get_section_at_offset.return_value = ".rodata"
+    analyzer.data = b""
+
+    def analyze_host(host):
+        matches = [
+            NativeStringMatch(
+                offset=off,
+                matched_string=host,
+                section_name=".rodata",
+                original_bytes=host.encode("ascii"),
+                replacement_bytes=b"0.0.0.0" + b"\x00" * 9,
+                is_null_terminated=True,
+            )
+            for off in offsets_by_host.get(host, [])
+        ]
+        return ("EXACT_MATCH" if matches else "NOT_FOUND", matches)
+
+    analyzer.analyze_host.side_effect = analyze_host
+    return analyzer
+
 class TestNativeElf(unittest.TestCase):
+    def test_matching_recorded_offsets_are_verified(self):
+        recorded = {
+            host: [0x1000 * (i + 1), 0x2000 * (i + 1)] if host in ("crashpad.chromium.org", "variations.brave.com")
+            else [0x1000 * (i + 1)]
+            for i, host in enumerate(KNOWN_TELEMETRY_HOSTS)
+        }
+        scanner = TelemetryScanner(_telemetry_analyzer(recorded))
+        report = scanner.audit_known_hosts(recorded)
+        self.assertTrue(report.all_known_verified, [r.status for r in report.known_results])
+        self.assertTrue(all(r.status == "VERIFIED" for r in report.known_results))
+
+    # 7c. shifted offsets are not a pass: the patch asserts bytes at the recorded offset
+    def test_shifted_offsets_do_not_count_as_verified(self):
+        recorded = {
+            host: [0x1000 * (i + 1), 0x2000 * (i + 1)] if host in ("crashpad.chromium.org", "variations.brave.com")
+            else [0x1000 * (i + 1)]
+            for i, host in enumerate(KNOWN_TELEMETRY_HOSTS)
+        }
+        actual = {host: list(offs) for host, offs in recorded.items()}
+        actual["cr.brave.com"] = [recorded["cr.brave.com"][0] + 0x40]
+
+        report = TelemetryScanner(_telemetry_analyzer(actual)).audit_known_hosts(recorded)
+        shifted = {r.hostname: r for r in report.shifted_hosts}
+        self.assertIn("cr.brave.com", shifted)
+        self.assertEqual(shifted["cr.brave.com"].status, "OFFSET_CHANGED")
+        self.assertFalse(report.all_known_verified)
+
+
 
     # 6. native host found -> PASS
     def test_native_host_found_pass(self):
@@ -185,3 +239,26 @@ class TestNativeElf(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestApkManifestDiagnostics(unittest.TestCase):
+    """A manifest that cannot be parsed must name the cause, not just return blanks.
+
+    Without the diagnostic the caller reports "no harness pipeline handles package ''",
+    which hides whether the manifest is corrupt, the parser is missing, or the APK is
+    simply not a supported target.
+    """
+
+    def test_parse_failure_reports_the_underlying_cause(self):
+        from harness.core.apk import ApkContext
+
+        ctx = ApkContext.__new__(ApkContext)
+        ctx.temp_dir = None
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            package, version, code = ctx._try_androguard_manifest(Path("/nonexistent.apk"))
+
+        self.assertEqual((package, version, code), ("", "", 0))
+        output = buf.getvalue()
+        self.assertIn("Could not parse AndroidManifest", output)
+        self.assertIn("/nonexistent.apk", output)

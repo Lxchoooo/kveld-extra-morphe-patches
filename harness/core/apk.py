@@ -1,5 +1,5 @@
 """
-APK analysis and extraction utilities for the Morphe Patches Update Harness.
+APK analysis and extraction utilities for the Brave Update Harness.
 Manages safe temporary workspace lifecycle and metadata extraction.
 """
 
@@ -44,7 +44,7 @@ class ApkContext:
         self._metadata: Optional[ApkMetadata] = None
 
     def __enter__(self) -> ApkContext:
-        self.temp_dir = Path(tempfile.mkdtemp(prefix="morphe_harness_"))
+        self.temp_dir = Path(tempfile.mkdtemp(prefix="morphe_brave_harness_"))
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
@@ -137,7 +137,7 @@ class ApkContext:
             base_apk_name = self._find_base_apk_name(zf)
             if base_apk_name:
                 if not self.temp_dir:
-                    self.temp_dir = Path(tempfile.mkdtemp(prefix="morphe_harness_"))
+                    self.temp_dir = Path(tempfile.mkdtemp(prefix="morphe_brave_harness_"))
                 base_path = self.temp_dir / base_apk_name
                 with open(base_path, "wb") as f:
                     f.write(zf.read(base_apk_name))
@@ -155,7 +155,11 @@ class ApkContext:
             ver_name = apk_obj.get_androidversion_name() or ""
             ver_code = int(apk_obj.get_androidversion_code() or 0)
             return pkg_name, ver_name, ver_code
-        except Exception:
+        except Exception as e:
+            # Surface the cause: the caller only sees an empty package name and would
+            # otherwise report "no pipeline handles package ''", which hides the real
+            # problem (unreadable manifest, missing parser dependency, corrupt APK).
+            print(f"[WARN] Could not parse AndroidManifest from {path.name}: {type(e).__name__}: {e}")
             return "", "", 0
 
     def extract_dex_bytes(self) -> List[tuple[str, bytes]]:

@@ -25,13 +25,13 @@ class TestMigratorAndValidator(unittest.TestCase):
         self.temp_dir.cleanup()
 
     def test_version_new_metadata_updated(self):
-        plan = self.migrator.plan_version_constant_update("TARGET_VERSION", "1.1.0")
+        plan = self.migrator._plan_version_constants([("TARGET_VERSION", "1.1.0")])
         self.assertTrue(plan.has_changes)
         self.assertIn('const val TARGET_VERSION = "1.1.0"', plan.modified_content)
         self.assertEqual(plan.changes, ["Updated TARGET_VERSION to '1.1.0'"])
 
     def test_version_identical_noop(self):
-        plan = self.migrator.plan_version_constant_update("TARGET_VERSION", "1.0.0")
+        plan = self.migrator._plan_version_constants([("TARGET_VERSION", "1.0.0")])
         self.assertFalse(plan.has_changes)
         self.assertEqual(len(plan.changes), 0)
 
