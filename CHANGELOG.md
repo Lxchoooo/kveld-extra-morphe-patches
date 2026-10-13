@@ -1,3 +1,9 @@
+## [1.14.1](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.14.0...v1.14.1) (2026-10-13)
+
+### Bug Fixes
+
+* **twitter:** force empty units loop in Round Off Numbers ([1b4b4ec](https://github.com/kveld9/kveld-extra-morphe-patches/commit/1b4b4ec0577092465c20ad85e24310bf379d17a5))
+
 ## [1.14.0](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.13.0...v1.14.0) (2026-10-13)
 
 ### Bug Fixes
