@@ -167,7 +167,7 @@
 </details>
 
 <details>
-<summary>X&nbsp;&nbsp;•&nbsp;&nbsp;<b>18 patches</b></summary>
+<summary>X&nbsp;&nbsp;•&nbsp;&nbsp;<b>19 patches</b></summary>
 <br>
 
 **Supported versions:**
@@ -177,7 +177,7 @@
 
 | Patch | Description | Options |
 |----------|----------------|-----------|
-| **Block Telemetry & Trackers** | Neutralizes Google AppMeasurement and Firebase Performance Trace dispatchers, and strips advertising identifiers. |  |
+| **Block Telemetry & Trackers** | Neutralizes Google AppMeasurement, Firebase Performance, Braze marketing SDK, and strips advertising identifiers. |  |
 | **Block Update Screen** | Blocks the 'This app is out of date' screen and suppresses in-app update prompts on launch |  |
 | **Control Video Auto Scroll** | Prevents automatic scrolling to the next video in immersive view |  |
 | **Custom Deep Links** | Registers intent filters to open custom links directly in the app | • Custom Link Hosts |
@@ -194,6 +194,7 @@
 | **Share Links** | Custom sharing domain, handle custom links and legacy share links | • Enable Custom Domain<br>• Custom Sharing Domain<br>• Handle Custom Links<br>• Legacy Share Links |
 | **Show Sensitive Media** | Displays sensitive media directly without requiring tap to reveal |  |
 | **Timeline UI** | Timeline surfaces: posts, threads, banners, recommendations and video entry points | • Hide Banner<br>• Hide Promote Button<br>• Hide Nudge Button<br>• Hide Recommendation Items<br>• Hide Discover More<br>• Hide Recommended Users<br>• Hide Live Threads<br>• Hide Community Notes<br>• Hide Post Metrics<br>• Hide View Count<br>• Inline Action Bar<br>• Timeline Add Tab<br>• Timeline Top Bar<br>• Hide Live Banner |
+| **X Background Slimmer** | Disables background WorkManager services, home screen widgets, and Cast/NFC companion services to reduce background resource consumption. |  |
 | **X MLKit Vision Slimmer** | Disables MLKit component discovery and registrars. WARNING: this breaks in-app QR and barcode scanning. |  |
 
 </details>
