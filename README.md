@@ -167,7 +167,7 @@
 </details>
 
 <details>
-<summary>X&nbsp;&nbsp;•&nbsp;&nbsp;<b>17 patches</b></summary>
+<summary>X&nbsp;&nbsp;•&nbsp;&nbsp;<b>18 patches</b></summary>
 <br>
 
 **Supported versions:**
@@ -181,6 +181,7 @@
 | **Block Update Screen** | Blocks the 'This app is out of date' screen and suppresses in-app update prompts on launch |  |
 | **Control Video Auto Scroll** | Prevents automatic scrolling to the next video in immersive view |  |
 | **Custom Deep Links** | Registers intent filters to open custom links directly in the app | • Custom Link Hosts |
+| **Custom Fonts** | Applies custom typography to post and profile text | • Custom Font Path |
 | **DM Debloat** | Hide call buttons and composer actions in direct message conversations | • Hide DM Calls |
 | **Drawer Items** | Hide individual items in the navigation drawer | • Hide Profile<br>• Hide Premium<br>• Hide Communities<br>• Hide Bookmarks<br>• Hide Lists<br>• Hide Spaces<br>• Hide Creator Studio<br>• Hide Get Grok<br>• Hide Help Center |
 | **Navigation UI** | Bottom navigation, FAB, tabs and bars | • Hide Badges<br>• Hide FAB<br>• Hide FAB Menu<br>• Navigation Bar<br>• Grok Tab<br>• Explore Tabs<br>• Search Tab Items<br>• Side Bar Items |
