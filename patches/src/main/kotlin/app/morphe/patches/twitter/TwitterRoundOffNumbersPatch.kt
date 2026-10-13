@@ -20,14 +20,16 @@ package app.morphe.patches.twitter
 
 import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.LiteralFilter
-import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
+import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.literal
 import app.morphe.patcher.patch.booleanOption
 import app.morphe.patcher.patch.bytecodePatch
-import app.morphe.patcher.util.smali.ExternalLabel
 import app.morphe.patches.shared.Constants
 import com.android.tools.smali.dexlib2.Opcode
+import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
+import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
+import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 
 private enum class ResourceType {
     INTEGER,
@@ -91,17 +93,27 @@ val twitterRoundOffNumbersPatch = bytecodePatch(
                 method.parameterTypes == listOf("J", "Ljava/lang/Integer;")
         } ?: error("[Round Off Numbers] Format method not found in ${enclosingClass.type}.")
 
-        val sgetObj = formatMethod.instructions.lastOrNull { it.opcode == Opcode.SGET_OBJECT }
-            ?: error("[Round Off Numbers] Target SGET_OBJECT instruction not found.")
+        val instructions = formatMethod.instructions
+        val sizeInvokeIndex = instructions.indexOfFirst { ins ->
+            ins.opcode.name.startsWith("invoke-") &&
+                ((ins as? ReferenceInstruction)?.reference as? MethodReference)?.let { ref ->
+                    ref.name == "size" && ref.returnType == "I" && ref.parameterTypes.isEmpty()
+                } == true
+        }
+        if (sizeInvokeIndex < 0 || sizeInvokeIndex + 1 >= instructions.size) {
+            error("[Round Off Numbers] Collection.size() instruction not found in ${formatMethod.name}.")
+        }
 
-        formatMethod.addInstructionsWithLabels(
-            0,
-            """
-            goto/16 :here
-            """.trimIndent(),
-            ExternalLabel("here", sgetObj),
-        )
+        val moveResultIns = instructions[sizeInvokeIndex + 1]
+        if (moveResultIns.opcode != Opcode.MOVE_RESULT) {
+            error("[Round Off Numbers] Expected MOVE_RESULT after size() at index ${sizeInvokeIndex + 1}, found ${moveResultIns.opcode}.")
+        }
 
-        println("[Round Off Numbers] Applied 1 hook -> number abbreviation bypassed.")
+        val reg = (moveResultIns as OneRegisterInstruction).registerA
+        val constIns = if (reg <= 15) "const/4 v$reg, 0x0" else "const/16 v$reg, 0x0"
+
+        formatMethod.addInstructions(sizeInvokeIndex + 2, constIns)
+
+        println("[Round Off Numbers] Applied 1 hook -> forced units size to 0 in v$reg.")
     }
 }
