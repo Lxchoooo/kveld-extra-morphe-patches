@@ -1,3 +1,9 @@
+## [1.14.2](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.14.1...v1.14.2) (2026-10-13)
+
+### Bug Fixes
+
+* **extension:** anotar TargetApi P en TypefaceSpan de Custom Fonts ([4633a0d](https://github.com/kveld9/kveld-extra-morphe-patches/commit/4633a0d9970d40557d578835aad4d65940c9e2ab))
+
 ## [1.14.1](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.14.0...v1.14.1) (2026-10-13)
 
 ### Bug Fixes
