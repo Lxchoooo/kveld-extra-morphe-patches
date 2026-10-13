@@ -34,6 +34,10 @@ private val badgesFingerprint = Fingerprint(
     strings = listOf("grok_android_tab_badge_enabled"),
 )
 
+private val fabFingerprint = Fingerprint(
+    strings = listOf("android_composer_fab_always_visible_enabled"),
+)
+
 private val fabMenuFingerprint = Fingerprint(
     strings = listOf("android_compose_fab_expansion_enabled"),
 )
@@ -150,6 +154,14 @@ val twitterNavigationUiPatch = bytecodePatch(
         required = false,
     )
 
+    val hideFab by booleanOption(
+        key = "hideFab",
+        default = true,
+        title = "Hide FAB",
+        description = "Hide floating action button entirely",
+        required = false,
+    )
+
     val hideFabMenu by booleanOption(
         key = "hideFabMenu",
         default = true,
@@ -210,6 +222,17 @@ val twitterNavigationUiPatch = bytecodePatch(
             }
         } else {
             println("[Navigation UI] Skipped hideBadges: disabled by patch option.")
+        }
+
+        // 2. hideFab
+        if (hideFab ?: true) {
+            if (neutralizeFlag(fabFingerprint, "android_composer_fab_always_visible_enabled", "Navigation UI")) {
+                patched++
+            } else {
+                error("[Navigation UI] Failed to neutralize 'android_composer_fab_always_visible_enabled' flag.")
+            }
+        } else {
+            println("[Navigation UI] Skipped hideFab: disabled by patch option.")
         }
 
         // 3. hideFabMenu
