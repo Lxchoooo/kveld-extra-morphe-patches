@@ -56,6 +56,12 @@ private val twitterTelemetryResourcePatch = resourcePatch(
             "com.google.android.gms.measurement.AppMeasurementReceiver",
             "com.google.android.datatransport.runtime.scheduling.jobscheduling.AlarmManagerSchedulerBroadcastReceiver",
             "com.twitter.analytics.tracking.InstallationReferrer\$OemIntentReceiver",
+
+            // Braze marketing components (BrazePushReceiver is preserved)
+            "com.braze.BrazeFlushPushDeliveryReceiver",
+            "com.braze.push.NotificationTrampolineActivity",
+            "com.braze.ui.activities.ContentCardsActivity",
+            "com.braze.ui.BrazeWebViewActivity",
         )
 
         val optOutMetadata = listOf(
@@ -260,10 +266,68 @@ private fun BytecodePatchContext.removePerfGetInstanceNullChecks(): Int {
     return removedCount
 }
 
+private val brazeInitFingerprint = Fingerprint(
+    strings = listOf("Braze SDK Initializing"),
+)
+
+private val brazeConfigFingerprint = Fingerprint(
+    strings = listOf("Configuring Braze SDK"),
+)
+
+private val brazeApiKeyFingerprint = Fingerprint(
+    strings = listOf("subscriptions_braze_api_key"),
+)
+
+private val brazeEndpointFingerprint = Fingerprint(
+    strings = listOf("subscriptions_braze_endpoint"),
+)
+
+private val sentryDsnFingerprint = Fingerprint(
+    strings = listOf("io.sentry.dsn"),
+)
+
+private val sentryEndpointFingerprint = Fingerprint(
+    strings = listOf("o794212.ingest.us.sentry.io"),
+)
+
+private fun evaluateSafeVoidDispatcher(method: Method): Pair<Boolean, String> {
+    if (method.name == "<init>" || method.name == "<clinit>") {
+        return false to "constructor (${method.name})"
+    }
+    if (method.returnType != "V") {
+        return false to "non-void return type '${method.returnType}'"
+    }
+    val callbackParams = method.parameterTypes.map { it.toString() }.filter { param ->
+        param.contains("Callback", ignoreCase = true) ||
+            param.contains("Listener", ignoreCase = true) ||
+            param.contains("Continuation", ignoreCase = true) ||
+            param.contains("Observer", ignoreCase = true) ||
+            param.contains("Handler", ignoreCase = true)
+    }
+    if (callbackParams.isNotEmpty()) {
+        return false to "has callback/listener/continuation parameters (${callbackParams.joinToString()})"
+    }
+    val lifecycleNames = setOf(
+        "onCreate", "onStart", "onResume", "onPause", "onStop", "onDestroy",
+        "onReceive", "onBind", "onStartCommand", "attachBaseContext",
+    )
+    if (method.name in lifecycleNames) {
+        return false to "lifecycle method '${method.name}'"
+    }
+    val definingClass = method.definingClass
+    if (definingClass.startsWith("Lcom/sardine/") ||
+        definingClass.startsWith("Lcom/plaid/") ||
+        definingClass.startsWith("Lcom/persona/")
+    ) {
+        return false to "fraud/risk or auth SDK class '$definingClass'"
+    }
+    return true to "safe"
+}
+
 @Suppress("unused")
 val twitterBlockTelemetryPatch = bytecodePatch(
     name = "Block Telemetry & Trackers",
-    description = "Neutralizes Google AppMeasurement and Firebase Performance Trace dispatchers, and strips advertising identifiers.",
+    description = "Neutralizes Google AppMeasurement, Firebase Performance, Braze marketing SDK, and strips advertising identifiers.",
     default = true,
 ) {
     compatibleWith(Constants.COMPATIBILITY_TWITTER)
@@ -271,6 +335,8 @@ val twitterBlockTelemetryPatch = bytecodePatch(
 
     execute {
         val hookedMethods = mutableListOf<String>()
+        val appliedHooks = mutableListOf<String>()
+        val skippedHooks = mutableListOf<String>()
 
         // Google AppMeasurement
         hookVoidMethod(
@@ -280,6 +346,7 @@ val twitterBlockTelemetryPatch = bytecodePatch(
             hookedMethods = hookedMethods,
             label = "AppMeasurement.logEventInternal",
         )
+        appliedHooks.add("AppMeasurement.logEventInternal")
 
         // Firebase Performance
         val traceClass = "Lcom/google/firebase/perf/metrics/Trace;"
@@ -290,6 +357,7 @@ val twitterBlockTelemetryPatch = bytecodePatch(
             hookedMethods = hookedMethods,
             label = "Trace.start",
         )
+        appliedHooks.add("Trace.start")
         hookVoidMethod(
             definingClass = traceClass,
             name = "stop",
@@ -297,6 +365,7 @@ val twitterBlockTelemetryPatch = bytecodePatch(
             hookedMethods = hookedMethods,
             label = "Trace.stop",
         )
+        appliedHooks.add("Trace.stop")
         hookVoidMethod(
             definingClass = traceClass,
             name = "putAttribute",
@@ -304,6 +373,7 @@ val twitterBlockTelemetryPatch = bytecodePatch(
             hookedMethods = hookedMethods,
             label = "Trace.putAttribute",
         )
+        appliedHooks.add("Trace.putAttribute")
         hookVoidMethod(
             definingClass = traceClass,
             name = "removeAttribute",
@@ -311,6 +381,7 @@ val twitterBlockTelemetryPatch = bytecodePatch(
             hookedMethods = hookedMethods,
             label = "Trace.removeAttribute",
         )
+        appliedHooks.add("Trace.removeAttribute")
         hookVoidMethod(
             definingClass = traceClass,
             name = "putMetric",
@@ -318,6 +389,7 @@ val twitterBlockTelemetryPatch = bytecodePatch(
             hookedMethods = hookedMethods,
             label = "Trace.putMetric",
         )
+        appliedHooks.add("Trace.putMetric")
         hookVoidMethod(
             definingClass = traceClass,
             name = "incrementMetric",
@@ -325,10 +397,62 @@ val twitterBlockTelemetryPatch = bytecodePatch(
             hookedMethods = hookedMethods,
             label = "Trace.incrementMetric",
         )
+        appliedHooks.add("Trace.incrementMetric")
+
+        // Braze SDK String Anchors
+        val brazeAnchors = listOf(
+            "Braze SDK Initializing" to brazeInitFingerprint,
+            "Configuring Braze SDK" to brazeConfigFingerprint,
+            "subscriptions_braze_api_key" to brazeApiKeyFingerprint,
+            "subscriptions_braze_endpoint" to brazeEndpointFingerprint,
+        )
+
+        for ((label, fp) in brazeAnchors) {
+            val match = fp.matchOrNull(this)
+                ?: error("[X Telemetry] Required Braze anchor '$label' did not resolve in DEX.")
+            val method = match.method
+            val (isSafe, reason) = evaluateSafeVoidDispatcher(method)
+            if (isSafe) {
+                method.addInstructions(0, "return-void")
+                val hookLabel = "Braze ($label -> ${method.definingClass}->${method.name})"
+                hookedMethods.add(hookLabel)
+                appliedHooks.add(hookLabel)
+            } else {
+                skippedHooks.add("Braze ($label: $reason in ${method.definingClass}->${method.name})")
+                println("[X Telemetry] Skipped Braze anchor '$label': $reason in ${method.definingClass}->${method.name}.")
+            }
+        }
+
+        // Sentry Telemetry Reconnaissance & Consumers
+        val sentryAnchors = listOf(
+            "io.sentry.dsn" to sentryDsnFingerprint,
+            "o794212.ingest.us.sentry.io" to sentryEndpointFingerprint,
+        )
+
+        for ((label, fp) in sentryAnchors) {
+            val match = fp.matchOrNull(this)
+            if (match == null) {
+                skippedHooks.add("Sentry ($label: no DEX consumer found - report-only)")
+                println("[X Telemetry] Sentry anchor '$label': no DEX consumer found (report-only).")
+                continue
+            }
+            val method = match.method
+            val (isSafe, reason) = evaluateSafeVoidDispatcher(method)
+            if (isSafe) {
+                method.addInstructions(0, "return-void")
+                val hookLabel = "Sentry ($label -> ${method.definingClass}->${method.name})"
+                hookedMethods.add(hookLabel)
+                appliedHooks.add(hookLabel)
+            } else {
+                skippedHooks.add("Sentry ($label: $reason in ${method.definingClass}->${method.name})")
+                println("[X Telemetry] Sentry anchor '$label' consumer found in ${method.definingClass}->${method.name}: skipped ($reason - report-only).")
+            }
+        }
 
         val removedNullChecks = removePerfGetInstanceNullChecks()
 
         println("[X Telemetry] Neutralized ${hookedMethods.size} telemetry dispatch methods: ${hookedMethods.joinToString(", ")}.")
+        println("[X Telemetry] Telemetry hooks summary -> applied: ${appliedHooks.size} (${appliedHooks.joinToString(", ")}), skipped: ${skippedHooks.size} (${skippedHooks.joinToString("; ")}).")
         println("[X Telemetry] Removed $removedNullChecks Firebase Performance getInstance() null checks (registrar purged).")
     }
 }
