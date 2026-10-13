@@ -1,5 +1,6 @@
 package com.kveld9.morphe.extra.extension;
 
+import android.annotation.TargetApi;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.text.Spannable;
@@ -56,6 +57,7 @@ public class TwitterFontHelper {
         return ss;
     }
 
+    @TargetApi(Build.VERSION_CODES.P)
     private static void applyTextSpan(SpannableStringBuilder ss, Typeface typeface, int length) {
         ss.setSpan(
             new TypefaceSpan(typeface),
@@ -65,6 +67,7 @@ public class TwitterFontHelper {
         );
     }
 
+    @TargetApi(Build.VERSION_CODES.P)
     private static void applyEmojiSpans(SpannableStringBuilder ss, Typeface typeface, CharSequence input) {
         Matcher matcher = EMOJI_PATTERN.matcher(input);
         while (matcher.find()) {
