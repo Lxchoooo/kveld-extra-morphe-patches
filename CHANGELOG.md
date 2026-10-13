@@ -1,3 +1,9 @@
+## [1.13.0](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.12.5...v1.13.0) (2026-10-12)
+
+### New Features
+
+* **capcut:** add bypass geoblock region restriction patch ([665c9f9](https://github.com/kveld9/kveld-extra-morphe-patches/commit/665c9f94f7c7d8d980229d023f5f9b5ca906e23b))
+
 ## [1.12.5](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.12.4...v1.12.5) (2026-10-12)
 
 ### Bug Fixes
