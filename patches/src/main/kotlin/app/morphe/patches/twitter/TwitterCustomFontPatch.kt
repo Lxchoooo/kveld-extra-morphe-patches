@@ -103,6 +103,9 @@ private fun validateTtfPath(path: String?, optionName: String): String? {
     if (path.isBlank()) {
         error("[Custom Fonts] $optionName cannot be blank.")
     }
+    if (path.contains('"') || path.contains('\\')) {
+        error("[Custom Fonts] $optionName contains invalid characters.")
+    }
     if (path.any { it.isWhitespace() || it.isISOControl() }) {
         error("[Custom Fonts] $optionName cannot contain whitespace or control characters: '$path'.")
     }
