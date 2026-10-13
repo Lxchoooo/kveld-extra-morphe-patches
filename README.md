@@ -167,7 +167,7 @@
 </details>
 
 <details>
-<summary>X&nbsp;&nbsp;•&nbsp;&nbsp;<b>15 patches</b></summary>
+<summary>X&nbsp;&nbsp;•&nbsp;&nbsp;<b>16 patches</b></summary>
 <br>
 
 **Supported versions:**
@@ -188,6 +188,7 @@
 | **Post & Profile UI** | Post actions, profile header and Grok surfaces | • Hide Grok Post Action<br>• Hide Profile Grok Button<br>• Profile Tabs |
 | **Remove Ads** | Removes promoted posts, trends and ads from timeline |  |
 | **Remove Premium Upsell** | Removes premium upsell surfaces | • Hide Profile Get Verified |
+| **Round Off Numbers** | Enable or disable rounding off numbers | • Show Full Numbers |
 | **Share Links** | Custom sharing domain, handle custom links and legacy share links | • Enable Custom Domain<br>• Custom Sharing Domain<br>• Handle Custom Links<br>• Legacy Share Links |
 | **Show Sensitive Media** | Displays sensitive media directly without requiring tap to reveal |  |
 | **Timeline UI** | Timeline surfaces: posts, threads, banners, recommendations and video entry points | • Hide Banner<br>• Hide Promote Button<br>• Hide Nudge Button<br>• Hide Recommendation Items<br>• Hide Discover More<br>• Hide Recommended Users<br>• Hide Live Threads<br>• Hide Community Notes<br>• Hide Post Metrics<br>• Hide View Count<br>• Inline Action Bar<br>• Timeline Add Tab<br>• Timeline Top Bar<br>• Hide Live Banner |
