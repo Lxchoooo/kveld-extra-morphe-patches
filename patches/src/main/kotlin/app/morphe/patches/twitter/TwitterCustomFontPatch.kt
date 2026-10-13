@@ -51,11 +51,29 @@ val twitterCustomFontPatch = bytecodePatch(
         required = false,
     )
 
+    val emojiFontTtfPath by stringOption(
+        key = "emojiFontTtfPath",
+        title = "Custom Emoji Font Path",
+        description = "Absolute device path to a .ttf applied to emojis, e.g. /sdcard/fonts/myemojifont.ttf",
+        default = "",
+        required = false,
+    )
+
     execute {
-        val path = validateTtfPath(fontTtfPath, "fontTtfPath")
-        if (path == null) {
+        val fontPath = validateTtfPath(fontTtfPath, "fontTtfPath")
+        val emojiFontPath = validateTtfPath(emojiFontTtfPath, "emojiFontTtfPath")
+
+        if (fontPath == null && emojiFontPath == null) {
             println("[Custom Fonts] Skipped fontTtfPath: disabled by patch option.")
+            println("[Custom Fonts] Skipped emojiFontTtfPath: disabled by patch option.")
             return@execute
+        }
+
+        if (fontPath == null) {
+            println("[Custom Fonts] Skipped fontTtfPath: disabled by patch option.")
+        }
+        if (emojiFontPath == null) {
+            println("[Custom Fonts] Skipped emojiFontTtfPath: disabled by patch option.")
         }
 
         val method = customFontHookFingerprint.method
@@ -73,10 +91,10 @@ val twitterCustomFontPatch = bytecodePatch(
 
         checkRegisterCapacity(paramStart, charSeqReg, totalRegisters)
 
-        val smali = buildSmaliHook(charSeqReg, path, "")
+        val smali = buildSmaliHook(charSeqReg, fontPath ?: "", emojiFontPath ?: "")
         method.addInstructions(0, smali)
 
-        println("[Custom Fonts] Applied 1 hook(s) -> custom font path configured: '$path'.")
+        println("[Custom Fonts] Applied 1 hook(s) -> custom font(s) enabled.")
     }
 }
 
