@@ -84,7 +84,7 @@ This will:
 3. Automatically execute `./gradlew check buildAndroid` and assert MPP bundle integrity, rolling back on failure.
 4. Output the complete report.
 
-After any patch source change, the in-situ patching gate is mandatory (see `AGENTS.md`):
+After any patch source change, the in-situ patching gate is mandatory:
 
 ```bash
 ./gradlew runPatchTest -Papp=<targetApp>

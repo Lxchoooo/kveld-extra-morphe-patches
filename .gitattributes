@@ -18,9 +18,6 @@ CHANGELOG.md linguist-generated=true
 
 # Vendored — third-party dependencies and agent tooling, not own code
 gradle/wrapper/gradle-wrapper.jar linguist-vendored=true
-.agents/** linguist-vendored=true
-.claude/** linguist-vendored=true
-.opencode/** linguist-vendored=true
 
 # Documentation — excluded from stats
 *.md linguist-documentation=true
