@@ -399,7 +399,7 @@ val twitterBlockTelemetryPatch = bytecodePatch(
         )
         appliedHooks.add("Trace.incrementMetric")
 
-        // Braze SDK String Anchors (required: SDK-side log strings live in Lcom/braze/**)
+        // Braze SDK String Anchors (best-effort: applied only when a safe void dispatcher resolves)
         val brazeRequiredAnchors = listOf(
             "Braze SDK Initializing" to brazeInitFingerprint,
             "Configuring Braze SDK" to brazeConfigFingerprint,
@@ -412,7 +412,11 @@ val twitterBlockTelemetryPatch = bytecodePatch(
         for ((label, fp) in brazeRequiredAnchors) {
             val sdkMatches = (fp.matchAllOrNull() ?: emptyList()).filter { it.method.definingClass.startsWith("Lcom/braze/") }
             val method = sdkMatches.map { it.method }.firstOrNull { evaluateSafeVoidDispatcher(it).first }
-                ?: error("[X Telemetry] Required Braze anchor '$label' has no safe void dispatcher in Lcom/braze/**.")
+            if (method == null) {
+                skippedHooks.add("Braze ($label: no safe void dispatcher - best-effort)")
+                println("[X Telemetry] Skipped Braze anchor '$label': no safe void dispatcher (best-effort).")
+                continue
+            }
             method.addInstructions(0, "return-void")
             val hookLabel = "Braze ($label -> ${method.definingClass}->${method.name})"
             hookedMethods.add(hookLabel)
