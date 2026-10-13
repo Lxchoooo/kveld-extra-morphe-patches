@@ -408,7 +408,7 @@ val twitterBlockTelemetryPatch = bytecodePatch(
         )
 
         for ((label, fp) in brazeAnchors) {
-            val match = fp.matchOrNull(this)
+            val match = fp.matchAll().firstOrNull()
                 ?: error("[X Telemetry] Required Braze anchor '$label' did not resolve in DEX.")
             val method = match.method
             val (isSafe, reason) = evaluateSafeVoidDispatcher(method)
@@ -430,7 +430,7 @@ val twitterBlockTelemetryPatch = bytecodePatch(
         )
 
         for ((label, fp) in sentryAnchors) {
-            val match = fp.matchOrNull(this)
+            val match = fp.matchAll().firstOrNull()
             if (match == null) {
                 skippedHooks.add("Sentry ($label: no DEX consumer found - report-only)")
                 println("[X Telemetry] Sentry anchor '$label': no DEX consumer found (report-only).")
