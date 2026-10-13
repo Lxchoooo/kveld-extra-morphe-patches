@@ -399,54 +399,56 @@ val twitterBlockTelemetryPatch = bytecodePatch(
         )
         appliedHooks.add("Trace.incrementMetric")
 
-        // Braze SDK String Anchors
-        val brazeAnchors = listOf(
+        // Braze SDK String Anchors (required: SDK-side log strings live in Lcom/braze/**)
+        val brazeRequiredAnchors = listOf(
             "Braze SDK Initializing" to brazeInitFingerprint,
             "Configuring Braze SDK" to brazeConfigFingerprint,
+        )
+        val brazeBestEffortAnchors = listOf(
             "subscriptions_braze_api_key" to brazeApiKeyFingerprint,
             "subscriptions_braze_endpoint" to brazeEndpointFingerprint,
         )
 
-        for ((label, fp) in brazeAnchors) {
-            val match = fp.matchAll().firstOrNull()
-                ?: error("[X Telemetry] Required Braze anchor '$label' did not resolve in DEX.")
-            val method = match.method
-            val (isSafe, reason) = evaluateSafeVoidDispatcher(method)
-            if (isSafe) {
-                method.addInstructions(0, "return-void")
-                val hookLabel = "Braze ($label -> ${method.definingClass}->${method.name})"
-                hookedMethods.add(hookLabel)
-                appliedHooks.add(hookLabel)
-            } else {
-                skippedHooks.add("Braze ($label: $reason in ${method.definingClass}->${method.name})")
-                println("[X Telemetry] Skipped Braze anchor '$label': $reason in ${method.definingClass}->${method.name}.")
-            }
+        for ((label, fp) in brazeRequiredAnchors) {
+            val sdkMatches = (fp.matchAllOrNull() ?: emptyList()).filter { it.method.definingClass.startsWith("Lcom/braze/") }
+            val method = sdkMatches.map { it.method }.firstOrNull { evaluateSafeVoidDispatcher(it).first }
+                ?: error("[X Telemetry] Required Braze anchor '$label' has no safe void dispatcher in Lcom/braze/**.")
+            method.addInstructions(0, "return-void")
+            val hookLabel = "Braze ($label -> ${method.definingClass}->${method.name})"
+            hookedMethods.add(hookLabel)
+            appliedHooks.add(hookLabel)
         }
 
-        // Sentry Telemetry Reconnaissance & Consumers
+        for ((label, fp) in brazeBestEffortAnchors) {
+            val method = (fp.matchAllOrNull() ?: emptyList()).map { it.method }.firstOrNull { evaluateSafeVoidDispatcher(it).first }
+            if (method == null) {
+                skippedHooks.add("Braze ($label: no safe void dispatcher - best-effort)")
+                println("[X Telemetry] Skipped Braze anchor '$label': no safe void dispatcher (best-effort).")
+                continue
+            }
+            method.addInstructions(0, "return-void")
+            val hookLabel = "Braze ($label -> ${method.definingClass}->${method.name})"
+            hookedMethods.add(hookLabel)
+            appliedHooks.add(hookLabel)
+        }
+
+        // Sentry Telemetry Reconnaissance & Consumers (report-only: no first-party SDK, DSN may be manifest-only)
         val sentryAnchors = listOf(
             "io.sentry.dsn" to sentryDsnFingerprint,
             "o794212.ingest.us.sentry.io" to sentryEndpointFingerprint,
         )
 
         for ((label, fp) in sentryAnchors) {
-            val match = fp.matchAll().firstOrNull()
-            if (match == null) {
-                skippedHooks.add("Sentry ($label: no DEX consumer found - report-only)")
-                println("[X Telemetry] Sentry anchor '$label': no DEX consumer found (report-only).")
+            val method = (fp.matchAllOrNull() ?: emptyList()).map { it.method }.firstOrNull { evaluateSafeVoidDispatcher(it).first }
+            if (method == null) {
+                skippedHooks.add("Sentry ($label: no safe void consumer - report-only)")
+                println("[X Telemetry] Sentry anchor '$label': no safe void consumer found (report-only).")
                 continue
             }
-            val method = match.method
-            val (isSafe, reason) = evaluateSafeVoidDispatcher(method)
-            if (isSafe) {
-                method.addInstructions(0, "return-void")
-                val hookLabel = "Sentry ($label -> ${method.definingClass}->${method.name})"
-                hookedMethods.add(hookLabel)
-                appliedHooks.add(hookLabel)
-            } else {
-                skippedHooks.add("Sentry ($label: $reason in ${method.definingClass}->${method.name})")
-                println("[X Telemetry] Sentry anchor '$label' consumer found in ${method.definingClass}->${method.name}: skipped ($reason - report-only).")
-            }
+            method.addInstructions(0, "return-void")
+            val hookLabel = "Sentry ($label -> ${method.definingClass}->${method.name})"
+            hookedMethods.add(hookLabel)
+            appliedHooks.add(hookLabel)
         }
 
         val removedNullChecks = removePerfGetInstanceNullChecks()
