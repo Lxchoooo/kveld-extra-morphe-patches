@@ -46,6 +46,22 @@ For bundle targets (`.apkm` / `.xapk`), the signed split APKs are written next t
 adb install-multiple -r candidate_apks/<app>_<version>_patched*.apk
 ```
 
+## APK Recon Flow
+
+Candidate packages are placed in `candidate_apks/` (gitignored). When inspecting `.apkm` or `.xapk` bundles, extract `base.apk` into `scratch/` (also gitignored) before performing `aapt2`, `unzip`, or `strings` analysis.
+
+`aapt2` is not on `PATH`; invoke the Android SDK build-tools binary using its absolute path:
+
+```bash
+# Extract base APK from bundle
+unzip -p candidate_apks/<bundle>.apkm base.apk > scratch/base.apk
+
+# Inspect manifest and package metadata
+~/Android/Sdk/build-tools/37.0.0/aapt2 dump badging scratch/base.apk
+```
+
+Run any subsequent `unzip` or `strings` inspection against `scratch/base.apk`.
+
 ## Patch Metadata
 
 ```bash
