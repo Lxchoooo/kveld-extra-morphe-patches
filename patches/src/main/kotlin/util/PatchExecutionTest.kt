@@ -878,6 +878,9 @@ fun main(args: Array<String>) {
                                 error("Potential path traversal detected in split entry name: ${splitEntry.name}")
                             }
                             val rawSplitFile = File(tempDir, splitBasename)
+                            if (!rawSplitFile.canonicalPath.startsWith(tempDir.canonicalPath + File.separator)) {
+                                error("Potential path traversal detected in split entry name: ${splitEntry.name}")
+                            }
                             apkmZip.getInputStream(splitEntry).use { input ->
                                 rawSplitFile.outputStream().buffered().use { output -> input.copyTo(output) }
                             }
@@ -901,7 +904,12 @@ fun main(args: Array<String>) {
 
                             // Prefix splits with the output name so bundles of different apps never overwrite
                             // each other and `adb install-multiple -r <out-stem>*.apk` installs the whole set.
-                            val signedSplitFile = File(outFile.parentFile, "${outFile.nameWithoutExtension}.${File(splitEntry.name).name}")
+                            val signedSplitBasename = File(splitEntry.name).name
+                            val signedSplitFile = File(outFile.parentFile, "${outFile.nameWithoutExtension}.$signedSplitBasename")
+                            val outParent = outFile.parentFile
+                            if (outParent == null || !signedSplitFile.canonicalPath.startsWith(outParent.canonicalPath + File.separator)) {
+                                error("Potential path traversal detected in split entry name: ${splitEntry.name}")
+                            }
                             println("[SIGN] Signing companion split -> ${signedSplitFile.name}...")
                             if (zipalignBin != null && apksignerBin != null && keystoreFile.exists() && keystoreFile.length() > 0L) {
                                 val splitAlignArgs = if (supports16k) {
