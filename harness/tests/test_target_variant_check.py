@@ -227,14 +227,9 @@ class TestTargetVariantConventions(unittest.TestCase):
         Reports known unpinned targets needing arch and versionCode pinning.
         """
         violations = evaluate_target_conventions(self.parsed_targets)
-        # Twitter, Moovit, PowerPoint, and OfficeHub are currently unpinned in Constants.kt
+        # All bundle targets are currently pinned with arch and versionCode in Constants.kt
         unpinned_vars = {v.split()[0] for v in violations}
-        expected_unpinned = {
-            "COMPATIBILITY_TWITTER",
-            "COMPATIBILITY_MOOVIT",
-            "COMPATIBILITY_POWERPOINT",
-            "COMPATIBILITY_OFFICEHUB",
-        }
+        expected_unpinned = set()
         self.assertEqual(
             unpinned_vars,
             expected_unpinned,
