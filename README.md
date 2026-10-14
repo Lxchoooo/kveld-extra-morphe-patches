@@ -207,6 +207,13 @@
 | :--- | :--- |
 | [Building & Development](docs/building.md) | Toolchain prerequisites, Gradle build tasks, in-situ patching gate, and catalog synchronization. |
 | [Project Scope](docs/out-of-scope.md) | Compile-time invariants, single-version policy, and rejected feature categories. |
+| [CapCut Guide](docs/apps/capcut.md) | Download target, patch catalog, and known limitations for CapCut. |
+| [Copilot Guide](docs/apps/officehub.md) | Download target, patch catalog, and known limitations for Microsoft Copilot. |
+| [Instagram Guide](docs/apps/instagram.md) | Download target, patch catalog, and known limitations for Instagram. |
+| [Lightroom Guide](docs/apps/lrmobile.md) | Download target, patch catalog, and known limitations for Adobe Lightroom. |
+| [Moovit Guide](docs/apps/moovit.md) | Download target, patch catalog, and known limitations for Moovit. |
+| [PowerPoint Guide](docs/apps/powerpoint.md) | Download target, patch catalog, and known limitations for Microsoft PowerPoint. |
+| [X Guide](docs/apps/twitter.md) | Download target, patch catalog, and known limitations for X. |
 
 ## Contributing
 
