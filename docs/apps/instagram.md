@@ -14,6 +14,7 @@ Technical documentation and patch catalog for Instagram on Android.
 | **Target Package Format** | APKM |
 | **Primary Architecture** | `arm64-v8a` |
 | **Authoritative Source** | APKMirror |
+| **Download Target** | [Instagram 447.0.0.55.81 (arm64-v8a, 120-480dpi, versionCode 385311891 / BUNDLE3 S, Sept 20)](https://www.apkmirror.com/apk/instagram/instagram-instagram/instagram-447-0-0-55-81-release/instagram-447-0-0-55-81-8-android-apk-download/) |
 
 ---
 
