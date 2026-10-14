@@ -14,6 +14,7 @@ Technical documentation and patch catalog for X (Twitter) on Android.
 | **Target Package Format** | APKM |
 | **Primary Architecture** | `arm64-v8a` |
 | **Authoritative Source** | APKMirror |
+| **Download Target** | [X 12.33.1-prod.01 (arm64-v8a, 120-640dpi, versionCode 312331001 / BUNDLE 35 S, Oct 10)](https://www.apkmirror.com/apk/x-corp/x/x-12-33-1-prod-01-release/x-12-33-1-prod-01-android-12l-arm64-v8a-arm-v7a-120-640dpi-2-android-apk-download/) |
 
 ---
 

@@ -14,6 +14,7 @@ Technical documentation and patch catalog for CapCut on Android.
 | **Target Package Format** | standalone APK |
 | **Primary Architecture** | `arm64-v8a` |
 | **Authoritative Source** | APKMirror |
+| **Download Target** | [CapCut 19.7.0 (arm64-v8a, nodpi, versionCode 19701600, Oct 8)](https://www.apkmirror.com/apk/bytedance-pte-ltd/capcut/capcut-video-editor-19-7-0-release/capcut-video-editor-19-7-0-android-apk-download/) |
 
 ---
 
