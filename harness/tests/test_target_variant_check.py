@@ -3,7 +3,7 @@ Guard rails for download target variants in Constants.kt.
 
 Every Compatibility block's AppTarget description in Constants.kt must name an
 arch token (arm64-v8a, armeabi-v7a, x86, x86_64, or universal) and a
-versionCode (6+ digits), unless the target file type is a single-file APK
+versionCode (keyword followed by 4+ digits), unless the target file type is a single-file APK
 with no APKMirror variants (e.g. ApkFileType.APK or ApkFileType.APK_REQUIRED).
 Bundle/APKM formats always require both tokens to prevent ambiguous target downloads.
 """
@@ -26,7 +26,7 @@ CONSTANTS_PATH = (
 )
 
 ARCH_PATTERN = re.compile(r"\b(arm64-v8a|armeabi-v7a|x86|x86_64|universal)\b")
-VERSION_CODE_PATTERN = re.compile(r"\b\d{6,}\b")
+VERSION_CODE_PATTERN = re.compile(r"versionCode\s+\d{4,}")
 
 # Single-file APK types that do not have APKMirror split bundles
 SINGLE_FILE_TYPES = {"APK", "APK_REQUIRED"}
@@ -88,7 +88,7 @@ def evaluate_target_conventions(targets):
         if not has_arch:
             missing.append("arch token (arm64-v8a, armeabi-v7a, x86, x86_64, or universal)")
         if not has_version_code:
-            missing.append("versionCode (6+ digits)")
+            missing.append("versionCode (4+ digits)")
 
         if missing:
             violations.append(
@@ -144,7 +144,7 @@ class TestTargetVariantConventions(unittest.TestCase):
     def test_parser_evaluates_exact_variant_conventions(self):
         """
         Validates exact-variant rule enforcement logic on bundle targets:
-        checks arch token and 6+ digit versionCode presence.
+        checks arch token and keyword-anchored 4+ digit versionCode presence.
         """
         valid_sample = """
         val COMPATIBILITY_SAMPLE_BUNDLE = Compatibility(
