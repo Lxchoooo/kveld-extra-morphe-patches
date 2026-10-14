@@ -111,7 +111,7 @@ object Constants {
         targets = listOf(
             AppTarget(
                 version = LRMOBILE_TARGET_VERSION,
-                description = "Download com.adobe.lrmobile v\$LRMOBILE_TARGET_VERSION (APKM) arm64-v8a 120-640dpi versionCode 711106010 (BUNDLE 6 S) from APKMirror",
+                description = "Download com.adobe.lrmobile v\$LRMOBILE_TARGET_VERSION (APK) arm64-v8a nodpi from Uptodown",
             )
         )
     )
