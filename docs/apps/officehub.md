@@ -35,38 +35,37 @@ Technical documentation and patch catalog for Microsoft Copilot (OfficeHub) on A
 
 ### A. Manifest & Telemetry Sanitization Layer (`resourcePatch` & `bytecodePatch`)
 
-1. **Manifest Stripping**:
-   - Strips `AD_ID` and install referrer permissions.
-   - Disables Microsoft cross-sell broadcast receivers, HockeyApp activities, and Google DataTransport background services.
-   - Injects Firebase Analytics and Crashlytics opt-out metadata.
+1. **Copilot Telemetry Manifest Purge**:
+   - **Objective**: Prevent tracker initialization and background data transport.
+   - **How**: Strips advertising identifiers and install referrer permissions, disables cross-sell, HockeyApp, and DataTransport components, and injects analytics opt-out flags.
 
-2. **Telemetry Dispatcher Neutralization**:
-   - Hooks Microsoft OneDS/Aria event dispatchers to return immediately.
-   - Spoofs advertising identifiers (`AIFA`, `AppSetId`) to empty or zeroed strings.
-   - Rewrites telemetry endpoint URLs to `0.0.0.0`.
+2. **Block Telemetry & Trackers**:
+   - **Objective**: Neutralize runtime telemetry and metric dispatching.
+   - **How**: Hooks Microsoft OneDS event dispatchers to return immediately, nullifies advertising identifiers, and redirects telemetry endpoints to 0.0.0.0.
 
 ### B. Sideload & Login Bypass Layer (`bytecodePatch`)
 
 1. **Bypass Code Transparency**:
-   - Intercepts code transparency verification checks and records verification success in shared preferences to allow execution on sideloaded installs.
+   - **Objective**: Enable sideloaded installations without code transparency validation failures.
+   - **How**: Intercepts verification checks and notifies the application that transparency checks passed successfully.
 
 2. **Disable Login Requirement**:
-   - Completes first-run experience task callbacks without requiring Microsoft account credentials.
-   - Short-circuits SSO checks to allow unauthenticated access to local surfaces.
+   - **Objective**: Allow using local application functions without compulsory Microsoft account sign-in.
+   - **How**: Bypasses initial first-run onboarding task gates and short-circuits single sign-on checks.
 
 ### C. Resource and Native Slimming Axes
 
 1. **Copilot DPI Slimmer (`resourcePatch`)**:
-   - Strips drawables matching unselected screen densities.
-   - Purges non-phone UI mode qualifiers (`watch`, `television`, `car`, `vrheadset`).
-   - Protects application launcher icons and single-density orphan drawables.
+   - **Objective**: Reduce package size by discarding unused screen density drawables.
+   - **How**: Removes non-phone UI mode qualifiers and strips unselected density directories while preserving application icons and single-density assets.
 
 2. **Copilot Junk Cleaner (`rawResourcePatch`)**:
-   - Deletes build metadata, properties, compiler leftovers, and duplicate license declarations in APK root and `META-INF`.
+   - **Objective**: Strip extraneous build metadata and unused license notices from the APK.
+   - **How**: Deletes build properties, proto definitions, and redundant license texts from root and metadata directories while protecting executable assets.
 
 3. **Copilot Companion Native Slimmer (`rawResourcePatch`)**:
-   - Zeroes companion `.so` binaries (`libhermes.so`, `libreactnative.so`, `libSlimCV.so`, `libhermestooling.so`, `libfbjni.so`) across arm64-v8a and armeabi-v7a.
-   - Never touches HockeyApp or voice SDK binaries, which are load-bearing on the boot path.
+   - **Objective**: Reduce package footprint by removing optional companion native libraries.
+   - **How**: Empties companion native binaries in-situ across target architectures while preserving boot-critical voice and exception handler binaries.
 
 ---
 

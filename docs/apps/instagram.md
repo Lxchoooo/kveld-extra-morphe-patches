@@ -34,34 +34,33 @@ Technical documentation and patch catalog for Instagram on Android.
 
 ### A. Manifest Purge & Diagnostics Layer (`resourcePatch`)
 
-Declarative transformations applied to `AndroidManifest.xml`:
+1. **Instagram Telemetry Manifest Purge**:
+   - **Objective**: Prevent tracking permissions and analytics component initialization.
+   - **How**: Strips advertising identifiers and install referrer permissions, and disables Facebook analytics services and device identifier providers.
 
-1. **Permission Stripping**:
-   - `com.google.android.gms.permission.AD_ID`
-   - `android.permission.ACCESS_ADSERVICES_ATTRIBUTION`
-   - `android.permission.ACCESS_ADSERVICES_AD_ID`
-   - `android.permission.ACCESS_ADSERVICES_CUSTOM_AUDIENCE`
-   - `android.permission.ACCESS_ADSERVICES_TOPICS`
-   - `com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE`
+2. **Instagram Crash & Diagnostics Manifest Purge**:
+   - **Objective**: Disable diagnostic reporters and background crash loggers.
+   - **How**: Disables crash upload services, detector broadcast receivers, and carrier preload tracking services.
 
-2. **Component Disabling**:
-   - Analytics and install referrer providers (`AsyncInstagramFDIDLiteProvider`, `AsyncInstagramPhoneIdProvider`, `InstallReferrerProvider`).
-   - Analytics upload and scheduler services across Facebook Analytics2, DataTransport, and Google Play services.
-   - Crash and diagnostic reporting: Lacrima detector broadcast receivers, Dumper upload services, Flipper diagnostic activities, and Oxygen carrier preload services.
-
-3. **MLKit Discovery Suppression**:
-   - Disables `MlKitComponentDiscoveryService` and strips Firebase component registrars.
+3. **MLKit Vision Slimmer**:
+   - **Objective**: Reduce binary overhead from machine learning vision components.
+   - **How**: Disables the component discovery service and removes vision component registrars from the manifest.
 
 ### B. Bytecode Dispatcher Neutralization Layer (`bytecodePatch`)
 
-Dalvik bytecode entrypoint hooks neutralize telemetry upload dispatchers:
-- Injects early `return-void` instructions into task-based and privacy-controlled upload dispatchers.
+1. **Block Telemetry & Trackers**:
+   - **Objective**: Stop runtime telemetry data transmission.
+   - **How**: Injects immediate void returns into analytics upload methods and privacy-controlled dispatchers.
+
+2. **Block Crash & Diagnostics**:
+   - **Objective**: Stop runtime crash and diagnostic dump dispatching.
+   - **How**: Suppresses diagnostic hooks and pairs with manifest purging to neutralize reporting pipelines.
 
 ### C. Resource and Binary Debloat Axes (`rawResourcePatch`)
 
 1. **AR Effects Slimmer**:
-   - Verifies ELF headers, size, and SHA-256 fingerprints before zeroing companion native libraries (`libarcore_sdk_c.so`, `libarcore_sdk_jni.so`).
-   - Removes facial tracking and segmentation asset models under `assets/app_modules/contents/` and `assets/ReferenceFaceShapeConstants/`.
+   - **Objective**: Save storage space by removing augmented reality assets and libraries.
+   - **How**: Verifies ELF headers and zeroes companion ARCore native libraries in-situ while removing face tracking models.
 
 ---
 

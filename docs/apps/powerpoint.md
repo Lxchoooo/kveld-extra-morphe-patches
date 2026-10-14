@@ -37,35 +37,45 @@ Technical documentation and patch catalog for Microsoft PowerPoint on Android.
 
 ### A. Manifest & Licensing Layer (`resourcePatch`)
 
-1. **Manifest Sanitization & Permissions**:
-   - Removes `android:sharedUserId` and `android:sharedUserLabel` from `<manifest>` root to prevent signature conflict installation errors.
-   - Strips advertising and attribution permissions (`AD_ID`, `BIND_GET_INSTALL_REFERRER_SERVICE`, `ACCESS_ADSERVICES_*`).
-   - Disables HockeyApp feedback activities and Google DataTransport background services.
-   - Injects Firebase and Google Analytics opt-out metadata.
+1. **Remove Shared User ID**:
+   - **Objective**: Prevent installation conflicts on devices with other Microsoft apps installed.
+   - **How**: Strips shared user identifier attributes from the root manifest element.
+
+2. **PowerPoint Telemetry Manifest Purge**:
+   - **Objective**: Stop tracker initialization and background telemetry services.
+   - **How**: Strips advertising identifiers and install referrer permissions, disables telemetry and HockeyApp activities, and injects opt-out flags.
 
 ### B. Bytecode Bypass & Feature Unlocking Layer (`bytecodePatch`)
 
-1. **Unlock 365 Family**:
-   - Forces consumer premium licensing states in session checks.
-   - Sets family, personal, and premium plan flags to true.
-   - Synthesizes mock entitlement collections and bypasses enterprise OLS checks.
-   - Nullifies premium upsell triggers and storage quota limiters.
+1. **Block Telemetry & Trackers**:
+   - **Objective**: Neutralize runtime telemetry and failure logging dispatchers.
+   - **How**: Hooks Microsoft OneDS entrypoints to return immediately and nullifies advertising identifiers.
 
-2. **Login & Code Transparency Bypasses**:
-   - Short-circuits code transparency verification callbacks to report success immediately.
-   - Bypasses first-run onboarding task gates to proceed without obligatory sign-in.
+2. **Bypass Code Transparency**:
+   - **Objective**: Allow sideloaded packages to launch without code transparency validation errors.
+   - **How**: Short-circuits verification checks to report immediate success to the caller.
 
-3. **Telemetry Neutralization**:
-   - Hooks Microsoft OneDS/Aria event submission entrypoints to return immediately without dispatching logs.
+3. **Disable Login Requirement**:
+   - **Objective**: Allow creating and editing presentations without compulsory Microsoft account sign-in.
+   - **How**: Bypasses first-run experience task callbacks and short-circuits single sign-on checks.
+
+4. **Unlock 365 Family**:
+   - **Objective**: Unlock premium subscription features and editing capabilities locally.
+   - **How**: Forces subscription status checks to return true and bypasses enterprise license validation.
 
 ### C. Resource & Binary Trimming Axes
 
-1. **Locale & DPI Slimmers (`resourcePatch`)**:
-   - Removes unselected locale directories under `res/values-*` (retaining English and base values).
-   - Strips unselected density assets while retaining application launcher icons and single-density assets.
+1. **PowerPoint Locale Slimmer (`resourcePatch`)**:
+   - **Objective**: Reduce package size by discarding unselected languages.
+   - **How**: Removes unselected locale directories while retaining English and base fallback strings.
 
-2. **Companion Native Slimmer (`rawResourcePatch`)**:
-   - In-situ zeroing of React Native and Hermes companion `.so` binaries.
+2. **PowerPoint DPI Slimmer (`resourcePatch`)**:
+   - **Objective**: Reduce package size by removing unneeded display density drawables.
+   - **How**: Strips unselected screen density directories while preserving application icons and single-density assets.
+
+3. **PowerPoint Companion Native Slimmer (`rawResourcePatch`)**:
+   - **Objective**: Reduce application disk footprint by discarding companion native libraries.
+   - **How**: Empties React Native and Hermes runtime libraries in-situ across target architectures.
 
 ---
 
