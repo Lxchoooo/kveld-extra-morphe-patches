@@ -38,48 +38,49 @@ Technical documentation and patch catalog for CapCut on Android.
 
 ### A. Manifest Purge Layer (`resourcePatch`)
 
-The resource patch executes declarative transformations on `AndroidManifest.xml`:
-
-1. **Permission Stripping**:
-   - `com.google.android.gms.permission.AD_ID`
-   - `android.permission.ACCESS_ADSERVICES_ATTRIBUTION`
-   - `android.permission.ACCESS_ADSERVICES_AD_ID`
-   - `android.permission.ACCESS_ADSERVICES_TOPICS`
-   - `com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE`
-   - `com.applovin.array.apphub.permission.BIND_APPHUB_SERVICE`
-
-2. **Component Disabling**:
-   Disables analytics, tracking, measurement, and advertising providers, services, and receivers. Dynamic ad activities matching AppLovin, MaxDebugger, and Vungle are also disabled.
-
-3. **Discovery Registrar Pruning**:
-   Removes entries matching analytics, measurement, crashlytics, perf, remoteconfig, sessions, or abt from `ComponentDiscoveryService`. MLKit, push messaging, and Crashlytics runtime registrars are preserved.
-
-4. **Opt-Out Metadata Injection**:
-   Injects declarative configuration tags under `<application>` disabling Firebase and Google Analytics collection.
+1. **CapCut Telemetry Manifest Purge**:
+   - **Objective**: Prevent tracker initialization and background telemetry collection.
+   - **How**: Strips advertising and attribution permissions from the manifest, disables tracking and dynamic ad components, prunes discovery registrars, and injects opt-out flags.
 
 ### B. Bytecode Dispatcher Neutralization Layer (`bytecodePatch`)
 
-The Dalvik bytecode layer neutralizes Google AppMeasurement event submission:
+1. **Block Telemetry & Trackers**:
+   - **Objective**: Stop runtime telemetry event dispatching.
+   - **How**: Intercepts event logging entrypoints and injects immediate void returns.
 
-1. **Targeted Entrypoint Hooks**:
-   - `Lcom/google/android/gms/measurement/AppMeasurement;->logEventInternal`: Injects `return-void` at instruction index 0.
+2. **Bypass Effects Region Restriction**:
+   - **Objective**: Restore loading of effects, transitions, and templates blocked by region firewalls.
+   - **How**: Spoofs the device platform parameter to "windows" and resets the device identifier to zero in effect requests.
+
+3. **Bypass GeoBlock Region Restriction**:
+   - **Objective**: Keep region-restricted application entrypoints and pages accessible.
+   - **How**: Forces internal geographic restriction configuration lists to return empty lists.
+
+4. **Bypass Signature Check**:
+   - **Objective**: Allow re-signed application packages to run without integrity errors or tamper alerts.
+   - **How**: Returns the official APK signature hash during telemetry checks, clears the signature blacklist, silences tamper toasts, and disables injection detection gates.
+
+5. **Bypass Unsafe Package Modal**:
+   - **Objective**: Prevent blocking security warning dialogs on startup.
+   - **How**: Rewrites Lynx schema default fallback addresses to point directly to the template portal instead of the security notice dialog.
+
+6. **Unlock Premium**:
+   - **Objective**: Enable VIP editing capabilities and premium user interface elements locally.
+   - **How**: Forces subscription status and VIP account entitlement checks to return true.
 
 ### C. Resource and Binary Debloat Axes
 
 1. **Locale Slimmer (`resourcePatch`)**:
-   - Recursively removes unselected `res/values-*` directories matching unselected language qualifiers.
-   - Deletes unselected JSON locale bundles in `assets/locales/*.json`.
-   - Preserves base `res/values`, non-language qualifiers, and English fallback assets.
+   - **Objective**: Reduce package size by removing unneeded languages.
+   - **How**: Deletes unselected values directories and JSON language bundles while preserving base and English fallbacks.
 
 2. **Screen Density Slimmer (`resourcePatch`)**:
-   - Purges non-phone UI mode qualifiers (`watch`, `television`, `car`, `vrheadset`).
-   - Strips unselected densities across `drawable-*` and `mipmap-*` families.
-   - Preserves `nodpi`/`anydpi`, launcher application icons, and single-density orphan assets.
+   - **Objective**: Reduce package size by removing unneeded display densities.
+   - **How**: Purges non-phone layout modes and strips non-target drawable folders while retaining launcher icons and single-density assets.
 
 3. **Native Bloat Slimmer (`rawResourcePatch`)**:
-   - Zeroes target companion `.so` files in-situ across `lib/<abi>/` architectures (`arm64-v8a`, `armeabi-v7a`).
-   - Always zeroes `libapplovin-native-crash-reporter.so`.
-   - Optional `trimSpeechEngines` toggle zeroes speech synthesis and recognition binaries (`libspeechengine.so`, `libspeechepg.so`, `libspeechsdk.so`).
+   - **Objective**: Reduce disk space by stripping unused native libraries.
+   - **How**: Empties target crash reporter and optional speech recognition binaries directly within the native library directories.
 
 ---
 

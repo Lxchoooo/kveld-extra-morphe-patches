@@ -37,40 +37,45 @@ Technical documentation and patch catalog for Moovit on Android.
 
 ### A. Manifest & Telemetry Purge Layer (`resourcePatch`)
 
-1. **Permission Stripping**:
-   - `com.google.android.gms.permission.AD_ID`
-   - `android.permission.ACCESS_ADSERVICES_ATTRIBUTION`
-   - `android.permission.ACCESS_ADSERVICES_AD_ID`
-   - `android.permission.ACCESS_ADSERVICES_CUSTOM_AUDIENCE`
-   - `android.permission.ACCESS_ADSERVICES_TOPICS`
-   - `com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE`
+1. **Moovit Telemetry Manifest Purge**:
+   - **Objective**: Prevent tracker initialization and background analytics collection.
+   - **How**: Strips advertising identifiers and install referrer permissions, disables AppsFlyer and DataTransport services, and injects opt-out metadata flags.
 
-2. **Component Disabling & Opt-Out Flags**:
-   - Disables AppsFlyer install receivers and tracking services.
-   - Disables Google DataTransport background scheduling services.
-   - Injects Firebase Analytics and Crashlytics opt-out metadata flags into `<application>`.
+2. **Moovit Custom Maps API Key**:
+   - **Objective**: Allow using a custom Google Maps Platform key.
+   - **How**: Replaces the Google Maps key in the manifest and application strings when provided.
 
 ### B. Bytecode Dispatcher & Premium Unlocking Layer (`bytecodePatch`)
 
-1. **Unlock Moovit+**:
-   - Forces subscription check methods to return true.
-   - Sets package and Safe Ride state evaluations to active.
-   - Unlocks address search within favorite location editors.
+1. **Block Telemetry & Trackers**:
+   - **Objective**: Neutralize runtime telemetry and tracking calls.
+   - **How**: Short-circuits AppsFlyer, Braze, and Inneractive dispatchers and strips tracking permissions.
 
-2. **Paywall Suppression**:
-   - Suppresses Moovit+ onboarding flows and dismisses package purchase dialogs automatically.
-   - Collapses promotional cards and upgrade banners across navigation and account views.
+2. **Fix Google Maps**:
+   - **Objective**: Prevent map tile rendering failures on re-signed builds.
+   - **How**: Spoofs original package signatures communicated to Google Play Services.
 
-3. **Maps Restoration**:
-   - Intercepts package signature checks communicated to Google Play Services, preserving map tile rendering on re-signed builds.
+3. **Remove Ads**:
+   - **Objective**: Remove banner and inline advertisements.
+   - **How**: Hides advertisement views and returns empty strings for ad unit lookups.
+
+4. **Suppress Paywalls**:
+   - **Objective**: Prevent subscription dialogs and upgrade popups from interrupting navigation.
+   - **How**: Bypasses onboarding upgrade flows, dismisses purchase dialogs, and hides premium promotional cards.
+
+5. **Unlock Moovit+**:
+   - **Objective**: Enable Moovit+ premium features locally.
+   - **How**: Forces subscription status checks to return true and activates Safe Ride and favorite address search flags.
 
 ### C. Resource Trimming Axes (`resourcePatch`)
 
 1. **Locale Slimmer**:
-   - Strips unselected `res/values-*` locale tables while protecting base strings and English.
+   - **Objective**: Reduce package size by discarding unused language resources.
+   - **How**: Strips unselected locale value tables from the base APK while retaining English and base fallback strings.
 
 2. **Screen Density Slimmer**:
-   - Purges non-phone qualifiers (`watch`, `television`, `car`, `vrheadset`) and strips non-target densities while retaining launcher icons and single-density assets.
+   - **Objective**: Reduce package size by removing unneeded display densities.
+   - **How**: Purges non-phone UI qualifiers and strips unselected density assets while retaining launcher icons and single-density assets.
 
 ---
 

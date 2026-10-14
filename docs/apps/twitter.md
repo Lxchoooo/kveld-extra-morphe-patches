@@ -48,32 +48,87 @@ Technical documentation and patch catalog for X (Twitter) on Android.
 
 ### A. Manifest & Background Optimization Layer (`resourcePatch`)
 
-1. **Telemetry & Permission Purge**:
-   - Strips `AD_ID`, Google Play install referrer, and Privacy Sandbox ad attribution permissions.
-   - Disables Braze, Google AppMeasurement, and analytics broadcast receivers and services.
-   - Injects Firebase and Google Analytics opt-out metadata.
+1. **X Telemetry Manifest Purge**:
+   - **Objective**: Prevent tracker initialization and background analytics collection.
+   - **How**: Strips advertising and attribution permissions, disables analytics services and receivers, and injects opt-out metadata.
 
-2. **Background Slimmer**:
-   - Disables periodic WorkManager jobs and reschedule receivers.
-   - Disables news/search app widgets and remote views services.
-   - Disables Google Cast and NFC companion services.
+2. **Custom Deep Links**:
+   - **Objective**: Open custom domain links directly in the application.
+   - **How**: Injects intent filters with specified domains into the manifest.
 
-3. **MLKit Suppression**:
-   - Disables `MlKitComponentDiscoveryService` and removes discovery registrars.
+3. **X MLKit Vision Slimmer**:
+   - **Objective**: Reduce binary overhead from machine learning vision components.
+   - **How**: Disables component discovery and removes discovery registrars from the manifest.
+
+4. **X Background Slimmer**:
+   - **Objective**: Reduce background battery and memory usage.
+   - **How**: Disables background periodic jobs, home screen widgets, and Cast/NFC companion services.
 
 ### B. Bytecode Modification Layer (`bytecodePatch`)
 
-1. **Ad & Upsell Removal**:
-   - Hooks timeline adapters to filter out promoted tweets and sponsored trend items.
-   - Neutralizes premium upsell prompts, verification banners, and subscription badges.
+1. **Block Telemetry & Trackers**:
+   - **Objective**: Stop runtime metric and event submission.
+   - **How**: Injects immediate returns into measurement and performance tracking methods.
 
-2. **Telemetry Dispatcher Neutralization**:
-   - Short-circuits Google AppMeasurement and Firebase Performance recording methods with immediate returns.
+2. **Block Update Screen**:
+   - **Objective**: Prevent outdated-app blocking screens on launch.
+   - **How**: Intercepts update checks and suppresses update requirement prompts.
 
-3. **UI Customization & Link Sanitization**:
-   - Bypasses update requirement dialogs on launch.
-   - Intercepts t.co shortened links to restore full original URLs.
-   - Rewrites link share actions to target alternative privacy frontends (e.g., fxtwitter.com).
+3. **Control Video Auto Scroll**:
+   - **Objective**: Stop automatic advancement to the next video in immersive mode.
+   - **How**: Modifies video configuration state initialization to disable auto-advance behavior.
+
+4. **Custom Fonts**:
+   - **Objective**: Apply user-selected typography to application text.
+   - **How**: Replaces font asset paths with configured font file paths.
+
+5. **DM Debloat**:
+   - **Objective**: Simplify direct message conversation headers.
+   - **How**: Toggles conversation action flags to hide call buttons and composer actions.
+
+6. **Drawer Items**:
+   - **Objective**: Declutter the side navigation drawer.
+   - **How**: Hides configured navigation entries such as Premium, Grok, and Communities.
+
+7. **Navigation UI**:
+   - **Objective**: Customize navigation bars, floating buttons, and tabs.
+   - **How**: Adjusts layout flags to hide unread badges, floating action buttons, and secondary tabs.
+
+8. **No Shortened URL**:
+   - **Objective**: Bypass t.co link redirection and click tracking.
+   - **How**: Replaces shortened link destinations with their full original target URLs.
+
+9. **Pause Search Suggestions**:
+   - **Objective**: Stop storing recent search entries without breaking active search.
+   - **How**: Suppresses local caching of search queries.
+
+10. **Post & Profile UI**:
+    - **Objective**: Remove unwanted action buttons from posts and profiles.
+    - **How**: Hides AI analysis buttons and customizes profile header tabs.
+
+11. **Remove Ads**:
+    - **Objective**: Remove promoted posts and sponsored content.
+    - **How**: Filters out promoted tweets and advertising objects in timeline adapters.
+
+12. **Remove Premium Upsell**:
+    - **Objective**: Eliminate subscription prompts and badges.
+    - **How**: Hides verification upsell pills and premium upgrade banners.
+
+13. **Round Off Numbers**:
+    - **Objective**: Show exact metric counts on posts and profiles.
+    - **How**: Disables number abbreviation formatting routines.
+
+14. **Share Links**:
+    - **Objective**: Clean and customize links when sharing posts.
+    - **How**: Replaces domains with alternative frontends and restores author usernames in URLs.
+
+15. **Show Sensitive Media**:
+    - **Objective**: View sensitive media without manual tap-to-reveal prompts.
+    - **How**: Sets sensitive media warning flags to display media directly.
+
+16. **Timeline UI**:
+    - **Objective**: Clean up home timeline feeds.
+    - **How**: Removes banner alerts, recommendation carousels, and video entrypoints.
 
 ---
 

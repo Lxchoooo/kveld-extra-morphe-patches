@@ -34,27 +34,31 @@ Technical documentation and patch catalog for Adobe Lightroom on Android.
 
 ### A. Manifest & Licensing Layer (`resourcePatch` & `bytecodePatch`)
 
-1. **Manifest Sanitization**:
-   - Strips advertising and attribution permissions (`AD_ID`, `BIND_GET_INSTALL_REFERRER_SERVICE`, `ACCESS_ADSERVICES_*`).
-   - Injects Firebase Analytics and Crashlytics opt-out metadata.
-   - Preserves analytics components and WorkManager initializers to prevent boot failures.
+1. **Lightroom Telemetry Manifest Purge**:
+   - **Objective**: Block telemetry collection and measurement permissions.
+   - **How**: Strips advertising identifiers and install referrer permissions, injects opt-out metadata, and preserves component declarations to avoid boot failures.
 
-2. **Sideload Support & Integrity Bypasses**:
-   - Forces local installer source checks and check status flags to report success.
-   - Completes Play Integrity token requests immediately to allow operation without Google Play Services.
-   - Neutralizes PairIP signature verification and dismisses license activity if present.
+2. **Block Telemetry & Trackers**:
+   - **Objective**: Prevent runtime event logging and analytics dispatching.
+   - **How**: Hooks Google measurement and Crashlytics methods to return immediately.
 
-3. **Premium Feature Unlocking**:
-   - Forces the internal Limited-Time Premium Unlock (`isLTPUActive`) gate method to return true, enabling subscription-locked editing features locally.
+3. **Sideload Install Support**:
+   - **Objective**: Allow sideloaded packages to launch without redirection or license failures.
+   - **How**: Intercepts installer source checks to report success, fulfills Play Integrity token requests with empty responses, and neutralizes PairIP signature verification.
+
+4. **Unlock Premium Features**:
+   - **Objective**: Enable subscription-only editing tools locally.
+   - **How**: Forces the internal limited-time premium unlock gate check to return true.
 
 ### B. Cleaning & Background Sync Suppression (`rawResourcePatch` & `resourcePatch`)
 
 1. **Lightroom Junk Cleaner**:
-   - Purges build metadata, compiler properties, text proto files, and duplicate license notices from APK root and `META-INF`.
-   - Protects critical DEX, manifest, resource tables, and signature structures.
+   - **Objective**: Reduce package overhead by removing superfluous build files.
+   - **How**: Deletes build metadata, properties, proto files, and redundant license texts from root and metadata directories while protecting executable assets.
 
-2. **Background Sync Suppression**:
-   - Strips boot completion permissions and disables WorkManager services and broadcast receivers.
+2. **Lightroom Background Sync**:
+   - **Objective**: Prevent background sync tasks and periodic jobs from running.
+   - **How**: Removes boot completion permissions and disables background worker receivers and sync services.
 
 ---
 
