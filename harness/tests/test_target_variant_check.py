@@ -54,7 +54,29 @@ def parse_compatibility_targets(text: str):
         type_match = re.search(r"apkFileType\s*=\s*ApkFileType\.(\w+)", block)
         file_type = type_match.group(1) if type_match else "APK"
 
-        app_targets = re.findall(r"AppTarget\s*\((?:[^()]*|\([^()]*\))*\)", block, re.DOTALL)
+        app_targets = []
+        cursor = 0
+        while cursor < len(block):
+            match = re.search(r"AppTarget\s*\(", block[cursor:])
+            if not match:
+                break
+            start = cursor + match.start()
+            depth = 0
+            end = -1
+            for idx in range(cursor + match.end() - 1, len(block)):
+                if block[idx] == "(":
+                    depth += 1
+                elif block[idx] == ")":
+                    depth -= 1
+                    if depth == 0:
+                        end = idx + 1
+                        break
+            if end != -1:
+                app_targets.append(block[start:end])
+                cursor = end
+            else:
+                cursor = cursor + match.end()
+
         for target_str in app_targets:
             desc_match = re.search(r'description\s*=\s*"([^"]*)"', target_str)
             description = desc_match.group(1) if desc_match else ""
