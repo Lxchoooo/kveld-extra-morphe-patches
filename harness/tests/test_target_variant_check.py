@@ -124,6 +124,15 @@ class TestTargetVariantConventions(unittest.TestCase):
             any(t["var_name"] == "COMPATIBILITY_CAPCUT" for t in single_file),
             "Expected COMPATIBILITY_CAPCUT to be exempt as a single-file APK",
         )
+        # Warning assertion: an EXEMPT (single-file) description must NOT contain bundle tokens
+        exempt_bundle_pattern = re.compile(r"\b(APKM|BUNDLE)\b")
+        for target in single_file:
+            desc = target["description"]
+            matches = exempt_bundle_pattern.findall(desc)
+            self.assertFalse(
+                matches,
+                f"Exempt single-file target {target['var_name']} must NOT contain bundle tokens {matches}: {repr(desc)}",
+            )
 
     def test_bundle_targets_are_enforced(self):
         """Ensures bundle/APKM targets are correctly classified as enforced."""
@@ -204,6 +213,27 @@ class TestTargetVariantConventions(unittest.TestCase):
         self.assertEqual(len(violations), 1)
         self.assertIn("NoVcApp", violations[0])
         self.assertIn("versionCode", violations[0])
+
+    def test_exempt_target_with_bundle_tokens_fails_assertion(self):
+        """Ensures single-file APK targets containing bundle tokens trigger assertion failure."""
+        sample = """
+        val COMPATIBILITY_BAD_EXEMPT = Compatibility(
+            name = "BadExempt",
+            packageName = "com.bad.exempt",
+            apkFileType = ApkFileType.APK,
+            targets = listOf(
+                AppTarget(
+                    version = "1.0.0",
+                    description = "Download com.bad.exempt v1.0.0 (APKM) arm64-v8a BUNDLE from APKMirror",
+                )
+            )
+        )
+        """
+        targets = parse_compatibility_targets(sample)
+        exempt_targets = [t for t in targets if t["is_single_file"]]
+        exempt_bundle_pattern = re.compile(r"\b(APKM|BUNDLE)\b")
+        matches = exempt_bundle_pattern.findall(exempt_targets[0]["description"])
+        self.assertTrue(bool(matches))
 
     def test_constants_pinned_variant_compliance(self):
         """

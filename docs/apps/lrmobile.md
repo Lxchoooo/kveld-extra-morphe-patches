@@ -14,7 +14,7 @@ Technical documentation and patch catalog for Adobe Lightroom on Android.
 | **Target Package Format** | standalone APK |
 | **Primary Architecture** | `arm64-v8a` |
 | **Authoritative Source** | Uptodown (PairIP-free) |
-| **Download Target** | [Lightroom 11.6.01 (arm64-v8a, 120-640dpi, versionCode 711106010 / BUNDLE 6 S, Oct 5)](https://www.apkmirror.com/apk/adobe/lightroom-photo-video-editor/lightroom-photo-video-editor-11-6-01-release/lightroom-photo-video-editor-11-6-01-arm64-v8a-x86_64-120-640dpi-android-8-0-2-android-apk-download/) |
+| **Download Target** | [Lightroom 11.6.01 (arm64-v8a, nodpi, standalone APK)](https://adobe-lightroom-mobile.uptodown.com/android) |
 
 ---
 

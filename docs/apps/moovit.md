@@ -16,6 +16,8 @@ Technical documentation and patch catalog for Moovit on Android.
 | **Authoritative Source** | APKMirror |
 | **Download Target** | [Moovit 5.201.1.1809 (arm64-v8a, 160-640dpi, versionCode 1809 / BUNDLE 31 S, Sept 30)](https://www.apkmirror.com/apk/moovit/moovit-your-transit-tracker/moovit-your-transit-tracker-5-201-1-1809-release/moovit-your-transit-tracker-5-201-1-1809-160-640dpi-android-7-0-android-apk-download/) |
 
+Note: `versionCode 1809` corresponds to the actual build versionCode assigned on APKMirror, not a trailing versionName fragment.
+
 ---
 
 ## 2. Applied Patches Catalog
