@@ -1,7 +1,7 @@
 {
-  "created_at": "2026-10-14T19:07:05",
-  "description": "## [1.15.0](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.14.2...v1.15.0) (2026-10-14)\n\n### Bug Fixes\n\n* **extra:** align Lightroom single-APK description and harden variant check ([b642855](https://github.com/kveld9/kveld-extra-morphe-patches/commit/b642855605f531a33cfc34e1f204fa21dcaafcaa))\n* **instagram:** remove Breakpad slimmer that crashed the app at startup ([e64569a](https://github.com/kveld9/kveld-extra-morphe-patches/commit/e64569a7d3adad8f35b65fe7efc72e9863c37493))\n\n### New Features\n\n* **capcut:** bypass the unofficial-version security notice ([e69b62e](https://github.com/kveld9/kveld-extra-morphe-patches/commit/e69b62e011b36568493f5441bfcd137c5de8ad1e))",
-  "download_url": "https://github.com/kveld9/kveld-extra-morphe-patches/releases/download/v1.15.0/patches-1.15.0.mpp",
+  "created_at": "2026-10-14T20:03:03",
+  "description": "## [1.15.1](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.15.0...v1.15.1) (2026-10-14)\n\n### Bug Fixes\n\n* **harness:** prevent regex backtracking when scanning download targets ([410f415](https://github.com/kveld9/kveld-extra-morphe-patches/commit/410f415ca00424a5076290b4bb97f6d7e996107a))\n* **tooling:** prevent path traversal during split extraction ([5709ba7](https://github.com/kveld9/kveld-extra-morphe-patches/commit/5709ba7b87472f1778da8a9d060202010a25c523))",
+  "download_url": "https://github.com/kveld9/kveld-extra-morphe-patches/releases/download/v1.15.1/patches-1.15.1.mpp",
   "signature_download_url": "",
-  "version": "1.15.0"
+  "version": "1.15.1"
 }
