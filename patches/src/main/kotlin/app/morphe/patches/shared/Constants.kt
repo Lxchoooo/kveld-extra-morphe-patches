@@ -43,7 +43,7 @@ object Constants {
         targets = listOf(
             AppTarget(
                 version = INSTAGRAM_TARGET_VERSION,
-                description = "Download com.instagram.android v\$INSTAGRAM_TARGET_VERSION (APKM) from APKMirror",
+                description = "Download com.instagram.android v\$INSTAGRAM_TARGET_VERSION (APKM) arm64-v8a 120-480dpi versionCode 385311891 (BUNDLE3 S) from APKMirror",
             )
         )
     )
