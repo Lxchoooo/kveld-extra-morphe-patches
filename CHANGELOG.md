@@ -1,3 +1,14 @@
+## [1.15.0](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.14.2...v1.15.0) (2026-10-14)
+
+### Bug Fixes
+
+* **extra:** align Lightroom single-APK description and harden variant check ([b642855](https://github.com/kveld9/kveld-extra-morphe-patches/commit/b642855605f531a33cfc34e1f204fa21dcaafcaa))
+* **instagram:** remove Breakpad slimmer that crashed the app at startup ([e64569a](https://github.com/kveld9/kveld-extra-morphe-patches/commit/e64569a7d3adad8f35b65fe7efc72e9863c37493))
+
+### New Features
+
+* **capcut:** bypass the unofficial-version security notice ([e69b62e](https://github.com/kveld9/kveld-extra-morphe-patches/commit/e69b62e011b36568493f5441bfcd137c5de8ad1e))
+
 ## [1.14.2](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.14.1...v1.14.2) (2026-10-13)
 
 ### Bug Fixes

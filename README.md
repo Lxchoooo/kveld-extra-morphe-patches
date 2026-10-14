@@ -45,7 +45,7 @@
 
 <!-- PATCHES_START -->
 <details>
-<summary>Instagram&nbsp;&nbsp;•&nbsp;&nbsp;<b>5 patches</b></summary>
+<summary>Instagram&nbsp;&nbsp;•&nbsp;&nbsp;<b>4 patches</b></summary>
 <br>
 
 **Supported versions:**
@@ -58,13 +58,12 @@
 | **AR Effects Slimmer** | Strips ARCore native binaries (libarcore_sdk_c.so, libarcore_sdk_jni.so) and AR effect/face tracking asset models. WARNING: Disables camera AR filters, 3D face effects, and body/face tracking. |  |
 | **Block Crash & Diagnostics** | Neutralizes crash-dump uploaders, Lacrima detector broadcasts, debug diagnostics, carrier preload trackers, and lead-ads entrypoints. |  |
 | **Block Telemetry & Trackers** | Neutralizes Facebook Analytics2, DataTransport, FDID/PhoneId providers, and strips AD_ID permissions. |  |
-| **Breakpad Crash Reporter Slimmer** | Zeroes Google Breakpad native crash reporter binaries (libbreakpad.so, libbreakpad_cpp_helper.so) in-situ. WARNING: Native crash reporting is silenced. If the host application loads these libraries unconditionally without exception guards, startup crashes could occur. |  |
 | **MLKit Vision Slimmer** | Disable MLKit component discovery and registrars. WARNING: this breaks in-app QR and barcode scanning. |  |
 
 </details>
 
 <details>
-<summary>CapCut&nbsp;&nbsp;•&nbsp;&nbsp;<b>7 patches</b></summary>
+<summary>CapCut&nbsp;&nbsp;•&nbsp;&nbsp;<b>9 patches</b></summary>
 <br>
 
 **Supported versions:**
@@ -77,6 +76,8 @@
 | **Block Telemetry & Trackers** | Neutralizes Google AppMeasurement event dispatchers. |  |
 | **Bypass Effects Region Restriction** | Fixes effects, transitions, and templates failing to load (ByteDance Shark WAF block) by spoofing device_platform to 'windows' and resetting deviceId in effect requests. |  |
 | **Bypass GeoBlock Region Restriction** | Forces CapCut GeoBlock config lists (cert, dock, entrance, page, scheme) to empty so region-blocked surfaces stay enabled. Server-refused content may still fail to load. |  |
+| **Bypass Signature Check** | Spoofs the official APK signature (SHA-256) for tamper telemetry, drops the server-driven signature blacklist, silences the abnormal-source toast, and disables the Godzilla inject-detect gate so re-signed builds are not blocked. |  |
+| **Bypass Unsafe Package Modal** | Replaces the unsafe-package modal fallback URL in the Lynx schema defaults with the real template portal URL so region-blocked or untrusted-client fallbacks open templates instead of the blocking security notice. |  |
 | **Locale Slimmer** | Strips unselected language string tables, resources, and asset JSON files from the APK. Base fallback and English are always preserved. | • Locales to keep |
 | **Native Bloat Slimmer** | Strips non-essential companion native libraries by zeroing bytes in-situ. Always zeroes AppLovin ad crash reporter. WARNING: Stripping speech recognition and synthesis engines (libspeech*.so) disables voice recognition, voiceover captions, and speech-to-text features. | • Trim Speech Engines (Breaks Voice Features) |
 | **Screen Density Slimmer** | Strips unselected screen density assets and purges non-phone UI mode qualifiers. Launcher icons, nodpi/anydpi, and single-density orphans are always preserved. | • Target screen density |
