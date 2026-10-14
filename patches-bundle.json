@@ -1,7 +1,7 @@
 {
-  "created_at": "2026-10-13T10:31:23",
-  "description": "## [1.14.2](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.14.1...v1.14.2) (2026-10-13)\n\n### Bug Fixes\n\n* **extension:** anotar TargetApi P en TypefaceSpan de Custom Fonts ([4633a0d](https://github.com/kveld9/kveld-extra-morphe-patches/commit/4633a0d9970d40557d578835aad4d65940c9e2ab))",
-  "download_url": "https://github.com/kveld9/kveld-extra-morphe-patches/releases/download/v1.14.2/patches-1.14.2.mpp",
+  "created_at": "2026-10-14T19:07:05",
+  "description": "## [1.15.0](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.14.2...v1.15.0) (2026-10-14)\n\n### Bug Fixes\n\n* **extra:** align Lightroom single-APK description and harden variant check ([b642855](https://github.com/kveld9/kveld-extra-morphe-patches/commit/b642855605f531a33cfc34e1f204fa21dcaafcaa))\n* **instagram:** remove Breakpad slimmer that crashed the app at startup ([e64569a](https://github.com/kveld9/kveld-extra-morphe-patches/commit/e64569a7d3adad8f35b65fe7efc72e9863c37493))\n\n### New Features\n\n* **capcut:** bypass the unofficial-version security notice ([e69b62e](https://github.com/kveld9/kveld-extra-morphe-patches/commit/e69b62e011b36568493f5441bfcd137c5de8ad1e))",
+  "download_url": "https://github.com/kveld9/kveld-extra-morphe-patches/releases/download/v1.15.0/patches-1.15.0.mpp",
   "signature_download_url": "",
-  "version": "1.14.2"
+  "version": "1.15.0"
 }
