@@ -60,7 +60,7 @@ object Constants {
         targets = listOf(
             AppTarget(
                 version = TWITTER_TARGET_VERSION,
-                description = "Download com.twitter.android v\$TWITTER_TARGET_VERSION (APKM) from APKMirror",
+                description = "Download com.twitter.android v\$TWITTER_TARGET_VERSION (APKM) arm64-v8a 120-640dpi versionCode 312331001 (BUNDLE 35 S) from APKMirror",
             )
         )
     )
@@ -77,7 +77,7 @@ object Constants {
         targets = listOf(
             AppTarget(
                 version = MOOVIT_TARGET_VERSION,
-                description = "Download com.tranzmate v\$MOOVIT_TARGET_VERSION (APKM) from APKMirror",
+                description = "Download com.tranzmate v\$MOOVIT_TARGET_VERSION (APKM) arm64-v8a 160-640dpi versionCode 1809 (BUNDLE 31 S) from APKMirror",
             )
         )
     )
@@ -94,7 +94,7 @@ object Constants {
         targets = listOf(
             AppTarget(
                 version = POWERPOINT_TARGET_VERSION,
-                description = "Download com.microsoft.office.powerpoint v\$POWERPOINT_TARGET_VERSION (APKM) from APKMirror",
+                description = "Download com.microsoft.office.powerpoint v\$POWERPOINT_TARGET_VERSION (APKM) arm64-v8a 120-480dpi versionCode 2005437911 (BUNDLE 5 S) from APKMirror",
             )
         )
     )
@@ -111,7 +111,7 @@ object Constants {
         targets = listOf(
             AppTarget(
                 version = LRMOBILE_TARGET_VERSION,
-                description = "Download com.adobe.lrmobile v\$LRMOBILE_TARGET_VERSION (APK, PairIP-free) from Uptodown",
+                description = "Download com.adobe.lrmobile v\$LRMOBILE_TARGET_VERSION (APKM) arm64-v8a 120-640dpi versionCode 711106010 (BUNDLE 6 S) from APKMirror",
             )
         )
     )
@@ -128,7 +128,7 @@ object Constants {
         targets = listOf(
             AppTarget(
                 version = CAPCUT_TARGET_VERSION,
-                description = "Download com.lemon.lvoverseas v\$CAPCUT_TARGET_VERSION (APK) from APKMirror",
+                description = "Download com.lemon.lvoverseas v\$CAPCUT_TARGET_VERSION (APK) arm64-v8a nodpi versionCode 19701600 from APKMirror",
             )
         )
     )
@@ -145,7 +145,7 @@ object Constants {
         targets = listOf(
             AppTarget(
                 version = OFFICEHUB_TARGET_VERSION,
-                description = "Download com.microsoft.office.officehubrow v\$OFFICEHUB_TARGET_VERSION (APKM) from APKMirror",
+                description = "Download com.microsoft.office.officehubrow v\$OFFICEHUB_TARGET_VERSION (APKM) arm64-v8a 120-480dpi versionCode 45451803 (BUNDLE 32 S) from APKMirror",
             )
         )
     )
