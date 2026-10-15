@@ -2,12 +2,18 @@ package app.morphe.patches.lrmobile
 
 import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
+import app.morphe.patcher.extensions.InstructionExtensions.instructionsOrNull
+import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.morphe.patcher.patch.BytecodePatchContext
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.patch.resourcePatch
 import app.morphe.patches.shared.Constants
 import app.morphe.patches.shared.setApplicationMetaData
 import app.morphe.patches.shared.stripPermissionsWhere
+import com.android.tools.smali.dexlib2.Opcode
+import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
+import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
+import com.android.tools.smali.dexlib2.iface.reference.StringReference
 import org.w3c.dom.Element
 
 private val blockedPermissions = setOf(
@@ -87,10 +93,41 @@ private fun hookVoidMethod(
     }
 }
 
+private fun BytecodePatchContext.rewriteStringLiteralInClass(
+    definingClass: String,
+    targetString: String,
+    replacementString: String,
+    hookedMethods: MutableList<String>,
+    label: String,
+) {
+    val classDef = classDefByOrNull(definingClass) ?: return
+    val mutableClass = mutableClassDefBy(classDef)
+    var count = 0
+    for (method in mutableClass.methods) {
+        val instructions = method.instructionsOrNull?.toList() ?: continue
+        for ((index, instruction) in instructions.withIndex().reversed()) {
+            val opcode = instruction.opcode
+            if (opcode != Opcode.CONST_STRING && opcode != Opcode.CONST_STRING_JUMBO) continue
+            val ref = (instruction as? ReferenceInstruction)?.reference as? StringReference ?: continue
+            if (ref.string == targetString) {
+                val register = (instruction as? OneRegisterInstruction)?.registerA ?: continue
+                val op = if (register > 255) "const-string/jumbo" else "const-string"
+                method.replaceInstruction(index, "$op v$register, \"${replacementString.replace("\"", "\\\"")}\"")
+                count++
+            }
+        }
+    }
+    if (count > 0) {
+        hookedMethods.add("$label ($count rewrites -> $replacementString)")
+    } else {
+        println("[Block Telemetry & Trackers] Skipped: $label literal \"$targetString\" absent in $definingClass.")
+    }
+}
+
 @Suppress("unused")
 val lightroomBlockTelemetryPatch = bytecodePatch(
     name = "Block Telemetry & Trackers",
-    description = "Neutralizes Google AppMeasurement, Firebase Crashlytics, Branch attribution, and Adobe Creative SDK analytics dispatchers, strips advertising permissions, and injects analytics opt-out flags.",
+    description = "Neutralizes Google AppMeasurement, Firebase Crashlytics, Branch attribution, and Adobe Creative SDK analytics dispatchers, redirects Adobe Edge and DTM endpoints to 0.0.0.0, strips advertising permissions, and injects analytics opt-out flags.",
     default = true,
 ) {
     compatibleWith(Constants.COMPATIBILITY_LRMOBILE)
@@ -279,6 +316,41 @@ val lightroomBlockTelemetryPatch = bytecodePatch(
             println("[Block Telemetry & Trackers] Skipped: CSDKAnalyticsQueue absent (CSDK stripped from input).")
         }
 
-        println("[Block Telemetry & Trackers] Neutralized ${hookedMethods.size} telemetry dispatch methods: ${hookedMethods.joinToString(", ")}.")
+        // Adobe Experience Platform Edge Endpoints (edge.adobedc.net)
+        val edgeEndpointClass = "Lcom/adobe/marketing/mobile/EdgeEndpoint;"
+        if (classDefByOrNull(edgeEndpointClass) != null) {
+            rewriteStringLiteralInClass(
+                definingClass = edgeEndpointClass,
+                targetString = "edge.adobedc.net",
+                replacementString = "0.0.0.0",
+                hookedMethods = hookedMethods,
+                label = "EdgeEndpoint.edge.adobedc.net",
+            )
+            rewriteStringLiteralInClass(
+                definingClass = edgeEndpointClass,
+                targetString = "edge-int.adobedc.net",
+                replacementString = "0.0.0.0",
+                hookedMethods = hookedMethods,
+                label = "EdgeEndpoint.edge-int.adobedc.net",
+            )
+        } else {
+            println("[Block Telemetry & Trackers] Skipped: EdgeEndpoint absent (AEP Edge SDK stripped from input).")
+        }
+
+        // Adobe Dynamic Tag Management (assets.adobedtm.com)
+        val dtmConfigStateClass = "Llv/i;"
+        if (classDefByOrNull(dtmConfigStateClass) != null) {
+            rewriteStringLiteralInClass(
+                definingClass = dtmConfigStateClass,
+                targetString = "https://assets.adobedtm.com/%s.json",
+                replacementString = "https://0.0.0.0/%s.json",
+                hookedMethods = hookedMethods,
+                label = "DTM.assetsUrl",
+            )
+        } else {
+            println("[Block Telemetry & Trackers] Skipped: ConfigurationStateManager (lv.i) absent (DTM fetch stripped from input).")
+        }
+
+        println("[Block Telemetry & Trackers] Neutralized ${hookedMethods.size} telemetry dispatch methods and endpoints: ${hookedMethods.joinToString(", ")}.")
     }
 }

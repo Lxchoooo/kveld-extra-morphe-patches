@@ -22,7 +22,7 @@ Technical documentation and patch catalog for Adobe Lightroom on Android.
 
 | Patch Name | Typology | Default State | Dependencies | Description |
 | :--- | :--- | :--- | :--- | :--- |
-| **Block Telemetry & Trackers** | `bytecodePatch` | `true` (Enabled) | `Lightroom Telemetry Manifest Purge` | Neutralizes Google AppMeasurement, Firebase Crashlytics, Branch attribution, and Adobe Creative SDK analytics dispatchers, strips advertising permissions, and injects analytics opt-out flags. |
+| **Block Telemetry & Trackers** | `bytecodePatch` | `true` (Enabled) | `Lightroom Telemetry Manifest Purge` | Neutralizes Google AppMeasurement, Firebase Crashlytics, Branch attribution, and Adobe Creative SDK analytics dispatchers, redirects Adobe Edge and DTM endpoints to 0.0.0.0, strips advertising permissions, and injects analytics opt-out flags. |
 | **Lightroom Telemetry Manifest Purge** | `resourcePatch` | `false` (Opt-in) | None | Strips advertising and tracking permissions and injects opt-out metadata in AndroidManifest.xml. Analytics components are preserved to allow application boot. |
 | **Lightroom Background Sync** | `resourcePatch` | `false` (Opt-in) | None | Disables WorkManager background sync services, scheduled jobs, and boot receiver. The WorkManager startup initializer is preserved to allow application boot. |
 | **Lightroom Junk Cleaner** | `rawResourcePatch` | `false` (Opt-in) | None | Purges non-functional build metadata, compiler properties, and duplicate license files from the APK root and META-INF. |
@@ -41,7 +41,7 @@ Technical documentation and patch catalog for Adobe Lightroom on Android.
 
 2. **Block Telemetry & Trackers**:
    - **Objective**: Prevent runtime event logging and analytics dispatching.
-   - **How**: Gates class presence via `classDefByOrNull` and hooks Google AppMeasurement, Firebase Crashlytics, Branch attribution (`InitSessionBuilder`, `ServerRequestQueue`), and Adobe Creative SDK analytics (`AdobeInternalAnalytics`, `CSDKAnalyticsQueue`) dispatch methods to return immediately. First-party Adobe analytics view helpers are transitively neutralized at the dispatcher perimeter; functional cloud/identity endpoints (`photos.adobe.io`, `api.lightroom.adobe.com`, `ims-na1.adobelogin.com`, `device.griffon.adobe.com`) and native libraries are preserved for application boot and sync stability.
+   - **How**: Gates class presence via `classDefByOrNull` and hooks Google AppMeasurement, Firebase Crashlytics, Branch attribution (`InitSessionBuilder`, `ServerRequestQueue`), and Adobe Creative SDK analytics (`AdobeInternalAnalytics`, `CSDKAnalyticsQueue`) dispatch methods to return immediately. Redirects Adobe Experience Platform Edge collection hostnames (`edge.adobedc.net`, `edge-int.adobedc.net`) in `EdgeEndpoint` and Adobe Dynamic Tag Management configuration fetch URLs (`assets.adobedtm.com`) in `lv.i` to `0.0.0.0`. First-party Adobe analytics view helpers are transitively neutralized at the dispatcher perimeter; functional cloud/identity endpoints (`photos.adobe.io`, `api.lightroom.adobe.com`, `ims-na1.adobelogin.com`, `device.griffon.adobe.com`, `mh.adobe.io`, `adobeid-na1.services.adobe.com`, `cc-api-cp.adobe.io`, `cc-api-behance.adobe.io`) and native libraries are preserved for application boot and sync stability.
 
 3. **Sideload Install Support**:
    - **Objective**: Allow sideloaded packages to launch without redirection or license failures.
