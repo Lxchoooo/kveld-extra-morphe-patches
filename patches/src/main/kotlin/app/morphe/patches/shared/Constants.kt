@@ -101,7 +101,7 @@ object Constants {
 
     const val LRMOBILE_PACKAGE_NAME = "com.adobe.lrmobile"
     const val LRMOBILE_TARGET_VERSION = "11.6.01"
-    const val LRMOBILE_INPUT_SHA256 = "019620c4b558de549ae2b91536572b2f5fdd5b962eaca6b5319e7f81b7d4873a"
+    const val LRMOBILE_INPUT_SHA256 = "292dc10e127bf2ecaf99a32ddc1d4d87308c3e79e4c640fb33ec80522affaf52"
 
     val COMPATIBILITY_LRMOBILE = Compatibility(
         name = "Lightroom",
