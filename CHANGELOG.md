@@ -1,3 +1,9 @@
+## [1.16.2](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.16.1...v1.16.2) (2026-10-15)
+
+### Bug Fixes
+
+* **ci:** drop harness tests step, harness is local-only ([01651ef](https://github.com/kveld9/kveld-extra-morphe-patches/commit/01651ef3408965111268c364179ddcc001ed0211))
+
 ## [1.16.1](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.16.0...v1.16.1) (2026-10-15)
 
 ### Bug Fixes

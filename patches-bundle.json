@@ -1,7 +1,7 @@
 {
-  "created_at": "2026-10-15T07:38:30",
-  "description": "## [1.16.1](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.16.0...v1.16.1) (2026-10-15)\n\n### Bug Fixes\n\n* **ci:** skip harness tests when harness directory is untracked ([269fe57](https://github.com/kveld9/kveld-extra-morphe-patches/commit/269fe57703e40f96abae2e2dbb415a4b68e3c8f1))",
-  "download_url": "https://github.com/kveld9/kveld-extra-morphe-patches/releases/download/v1.16.1/patches-1.16.1.mpp",
+  "created_at": "2026-10-15T07:51:20",
+  "description": "## [1.16.2](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.16.1...v1.16.2) (2026-10-15)\n\n### Bug Fixes\n\n* **ci:** drop harness tests step, harness is local-only ([01651ef](https://github.com/kveld9/kveld-extra-morphe-patches/commit/01651ef3408965111268c364179ddcc001ed0211))",
+  "download_url": "https://github.com/kveld9/kveld-extra-morphe-patches/releases/download/v1.16.2/patches-1.16.2.mpp",
   "signature_download_url": "",
-  "version": "1.16.1"
+  "version": "1.16.2"
 }
