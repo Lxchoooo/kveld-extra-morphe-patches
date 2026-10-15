@@ -116,6 +116,8 @@ val lightroomBlockTelemetryPatch = bytecodePatch(
                 hookedMethods = hookedMethods,
                 label = "AppMeasurement.logEventInternalNoInterceptor",
             )
+        } else {
+            println("[Block Telemetry & Trackers] Skipped: AppMeasurement absent (analytics SDK stripped from input).")
         }
 
         // Firebase Crashlytics
@@ -205,6 +207,8 @@ val lightroomBlockTelemetryPatch = bytecodePatch(
                 hookedMethods = hookedMethods,
                 label = "FirebaseCrashlytics.setCustomKeys",
             )
+        } else {
+            println("[Block Telemetry & Trackers] Skipped: FirebaseCrashlytics absent (analytics SDK stripped from input).")
         }
 
         println("[Block Telemetry & Trackers] Neutralized ${hookedMethods.size} telemetry dispatch methods: ${hookedMethods.joinToString(", ")}.")
