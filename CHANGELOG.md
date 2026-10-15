@@ -1,3 +1,16 @@
+## [1.15.2](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.15.1...v1.15.2) (2026-10-15)
+
+### Bug Fixes
+
+* **twitter:** adapt navigation ui grok tab for 12.34.0 ([c94a67b](https://github.com/kveld9/kveld-extra-morphe-patches/commit/c94a67be3348ba0057724cc2b18e8b0dd223111a))
+* **twitter:** adapt remove ads presenter fingerprints for 12.34.0 ([d0052b5](https://github.com/kveld9/kveld-extra-morphe-patches/commit/d0052b5b0145572bb19b2af9f1dc789cc1ddb669))
+* **twitter:** adapt remove premium upsell profile verified surface for 12.34.0 ([7cdb397](https://github.com/kveld9/kveld-extra-morphe-patches/commit/7cdb397cadc838601c5cb558e861faa25daeae15))
+* **twitter:** adapt round off numbers iterator check for 12.34.0 ([7065fe6](https://github.com/kveld9/kveld-extra-morphe-patches/commit/7065fe6677532df0c1e908665dda8fb4c77962d1))
+* **twitter:** adapt timeline ui presenters and top bar for 12.34.0 ([09857c1](https://github.com/kveld9/kveld-extra-morphe-patches/commit/09857c187747245d4f954883fb410ac9695d371f))
+* **twitter:** eliminate user-visible patch duplication and overlap ([7c5849b](https://github.com/kveld9/kveld-extra-morphe-patches/commit/7c5849b0a407905cd0a09df4a6403cbe0972dc9c))
+* **twitter:** intercept and filter who-to-follow module in timeline ingestion ([25fbc85](https://github.com/kveld9/kveld-extra-morphe-patches/commit/25fbc85b82531aa746d18e8819a879d8fa749a2e))
+* **twitter:** update supported version to 12.34.0-prod.01 ([520d46a](https://github.com/kveld9/kveld-extra-morphe-patches/commit/520d46ab5e766c75f03792b747d7234d3fe14768))
+
 ## [1.15.1](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.15.0...v1.15.1) (2026-10-14)
 
 ### Bug Fixes
