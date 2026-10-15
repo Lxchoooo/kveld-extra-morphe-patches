@@ -24,6 +24,7 @@ import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patches.shared.Constants
 
 private val dmCallFingerprint = Fingerprint(
+    returnType = "Z",
     strings = listOf("xcall_xchat_enabled"),
 )
 
