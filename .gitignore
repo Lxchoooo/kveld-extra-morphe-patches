@@ -195,6 +195,9 @@ CLAUDE.local.md
 validation/physical_harness/results/
 validation/runtime/
 
+# Local RE harness: untracked by user decision, kept on disk
+harness/
+
 # --- Private agent skills: nunca publicar (viven en kveld-morphe-skills-private) ---
 .agents/
 .claude/
