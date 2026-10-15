@@ -1,3 +1,9 @@
+## [1.16.1](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.16.0...v1.16.1) (2026-10-15)
+
+### Bug Fixes
+
+* **ci:** skip harness tests when harness directory is untracked ([269fe57](https://github.com/kveld9/kveld-extra-morphe-patches/commit/269fe57703e40f96abae2e2dbb415a4b68e3c8f1))
+
 ## [1.16.0](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.15.4...v1.16.0) (2026-10-15)
 
 ### Bug Fixes

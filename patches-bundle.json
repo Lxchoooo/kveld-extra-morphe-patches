@@ -1,7 +1,7 @@
 {
-  "created_at": "2026-10-15T06:54:01",
-  "description": "## [1.16.0](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.15.4...v1.16.0) (2026-10-15)\n\n### Bug Fixes\n\n* **twitter:** prefix labels in TwitterRemoveAdsPatch with rmad_ ([a27098a](https://github.com/kveld9/kveld-extra-morphe-patches/commit/a27098ab698ebf610d88c931665363df8c5a3b48))\n* **twitter:** prefix labels in TwitterTimelineUiPatch with tlflt_ and tluid_ ([4184d29](https://github.com/kveld9/kveld-extra-morphe-patches/commit/4184d2960b86df2ae5104190c16e297e90f3cd8a))\n\n### New Features\n\n* **harness:** add smali member reference verifier for target DEX ([360d2bd](https://github.com/kveld9/kveld-extra-morphe-patches/commit/360d2bd84fc54e8c38f5fffa88e79e213144fafd))",
-  "download_url": "https://github.com/kveld9/kveld-extra-morphe-patches/releases/download/v1.16.0/patches-1.16.0.mpp",
+  "created_at": "2026-10-15T07:38:30",
+  "description": "## [1.16.1](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.16.0...v1.16.1) (2026-10-15)\n\n### Bug Fixes\n\n* **ci:** skip harness tests when harness directory is untracked ([269fe57](https://github.com/kveld9/kveld-extra-morphe-patches/commit/269fe57703e40f96abae2e2dbb415a4b68e3c8f1))",
+  "download_url": "https://github.com/kveld9/kveld-extra-morphe-patches/releases/download/v1.16.1/patches-1.16.1.mpp",
   "signature_download_url": "",
-  "version": "1.16.0"
+  "version": "1.16.1"
 }
