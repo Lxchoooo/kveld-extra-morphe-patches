@@ -90,7 +90,7 @@ private fun hookVoidMethod(
 @Suppress("unused")
 val lightroomBlockTelemetryPatch = bytecodePatch(
     name = "Block Telemetry & Trackers",
-    description = "Neutralizes Google AppMeasurement and Firebase Crashlytics dispatchers, strips advertising permissions, and injects analytics opt-out flags.",
+    description = "Neutralizes Google AppMeasurement, Firebase Crashlytics, Branch attribution, and Adobe Creative SDK analytics dispatchers, strips advertising permissions, and injects analytics opt-out flags.",
     default = true,
 ) {
     compatibleWith(Constants.COMPATIBILITY_LRMOBILE)
@@ -209,6 +209,74 @@ val lightroomBlockTelemetryPatch = bytecodePatch(
             )
         } else {
             println("[Block Telemetry & Trackers] Skipped: FirebaseCrashlytics absent (analytics SDK stripped from input).")
+        }
+
+        // Branch Attribution
+        val branchSessionBuilderClass = "Lio/branch/referral/c\$i;"
+        if (classDefByOrNull(branchSessionBuilderClass) != null) {
+            hookVoidMethod(
+                definingClass = branchSessionBuilderClass,
+                name = "b",
+                parameters = emptyList(),
+                hookedMethods = hookedMethods,
+                label = "Branch.InitSessionBuilder.initSession",
+            )
+            hookVoidMethod(
+                definingClass = branchSessionBuilderClass,
+                name = "d",
+                parameters = emptyList(),
+                hookedMethods = hookedMethods,
+                label = "Branch.InitSessionBuilder.reInitSession",
+            )
+        } else {
+            println("[Block Telemetry & Trackers] Skipped: Branch InitSessionBuilder absent (Branch SDK stripped from input).")
+        }
+
+        val branchServerRequestQueueClass = "Lio/branch/referral/n0;"
+        if (classDefByOrNull(branchServerRequestQueueClass) != null) {
+            hookVoidMethod(
+                definingClass = branchServerRequestQueueClass,
+                name = "v",
+                parameters = listOf("Ljava/lang/String;"),
+                hookedMethods = hookedMethods,
+                label = "Branch.ServerRequestQueue.processNextQueueItem",
+            )
+        } else {
+            println("[Block Telemetry & Trackers] Skipped: Branch ServerRequestQueue absent (Branch SDK stripped from input).")
+        }
+
+        // Adobe Creative SDK Analytics (cc-api-data.adobe.io)
+        val csdkAnalyticsEventClass = "Lcom/adobe/creativesdk/foundation/adobeinternal/analytics/a;"
+        if (classDefByOrNull(csdkAnalyticsEventClass) != null) {
+            hookVoidMethod(
+                definingClass = csdkAnalyticsEventClass,
+                name = "l",
+                parameters = emptyList(),
+                hookedMethods = hookedMethods,
+                label = "AdobeInternalAnalytics.postEvent",
+            )
+        } else {
+            println("[Block Telemetry & Trackers] Skipped: AdobeInternalAnalytics absent (CSDK stripped from input).")
+        }
+
+        val csdkAnalyticsQueueClass = "Lcom/adobe/creativesdk/foundation/internal/analytics/e;"
+        if (classDefByOrNull(csdkAnalyticsQueueClass) != null) {
+            hookVoidMethod(
+                definingClass = csdkAnalyticsQueueClass,
+                name = "b",
+                parameters = listOf("Lcom/adobe/creativesdk/foundation/internal/analytics/c;"),
+                hookedMethods = hookedMethods,
+                label = "CSDKAnalyticsQueue.enqueueEvent",
+            )
+            hookVoidMethod(
+                definingClass = csdkAnalyticsQueueClass,
+                name = "k",
+                parameters = listOf("Z"),
+                hookedMethods = hookedMethods,
+                label = "CSDKAnalyticsQueue.sendEvents",
+            )
+        } else {
+            println("[Block Telemetry & Trackers] Skipped: CSDKAnalyticsQueue absent (CSDK stripped from input).")
         }
 
         println("[Block Telemetry & Trackers] Neutralized ${hookedMethods.size} telemetry dispatch methods: ${hookedMethods.joinToString(", ")}.")
