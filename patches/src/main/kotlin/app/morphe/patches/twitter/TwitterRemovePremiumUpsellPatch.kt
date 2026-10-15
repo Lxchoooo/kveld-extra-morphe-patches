@@ -38,9 +38,8 @@ private val homeNavOfferFingerprint = Fingerprint(
     strings = listOf("subscriptions_upsells_premium_home_nav_offer_enabled"),
 )
 
-private val profileGetVerifiedFingerprint = Fingerprint(
-    returnType = "Z",
-    strings = listOf("subscriptions_is_blue_verified_review_status_profile_enabled"),
+private val ownProfileUpsellsFingerprint = Fingerprint(
+    strings = listOf("OwnProfileUpsells(showAnalyticsUpsell="),
 )
 
 context(_: BytecodePatchContext)
@@ -138,12 +137,15 @@ val twitterRemovePremiumUpsellPatch = bytecodePatch(
         var patched = 0
 
         if (hideProfileGetVerified ?: true) {
-            val method = profileGetVerifiedFingerprint.method
-            method.addInstructions(
+            val constructor = ownProfileUpsellsFingerprint.classDef.methods.firstOrNull {
+                it.name == "<init>" && it.parameterTypes == listOf("Z", "Z", "Z")
+            } ?: error("[Remove Premium Upsell] OwnProfileUpsells constructor not found.")
+
+            constructor.addInstructions(
                 0,
                 """
-                    const/4 v0, 0x0
-                    return v0
+                    const/4 p2, 0x0
+                    const/4 p3, 0x0
                 """.trimIndent(),
             )
             patched++
