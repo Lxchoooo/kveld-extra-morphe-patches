@@ -27,6 +27,7 @@ import app.morphe.patcher.patch.BytecodePatchContext
 import app.morphe.patcher.patch.booleanOption
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patches.shared.Constants
+import app.morphe.patches.shared.wrapWithScratchRegisters
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.instruction.NarrowLiteralInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
@@ -499,11 +500,7 @@ val twitterTimelineUiPatch = bytecodePatch(
 
         // 5. hideDiscoverMore
         if (hideDiscoverMore ?: true) {
-            val suppressionSmali = """
-                move-object/from16 v0, p2
-                if-nez v0, :tluid_cond_check_item
-                goto :tluid_cond_continue
-
+            val discoverItemTestSmali = """
                 :tluid_cond_check_item
                 invoke-interface {v0}, Lcom/x/models/timelines/items/p0;->c()Ljava/lang/String;
                 move-result-object v1
@@ -525,16 +522,43 @@ val twitterTimelineUiPatch = bytecodePatch(
                 :tluid_cond_suppress_discover
                 sget-object v0, Lcom/x/urt/e0;->a:Lcom/x/urt/e0;
                 return-object v0
+            """.trimIndent()
+
+            val inlineSmali = """
+                move-object/from16 v0, p2
+                if-nez v0, :tluid_cond_check_item
+                goto :tluid_cond_continue
+
+                $discoverItemTestSmali
 
                 :tluid_cond_continue
                 nop
             """.trimIndent()
 
+            val wrapperSmali = """
+                move-object/from16 v0, p2
+                if-nez v0, :tluid_cond_check_item
+                goto :tluid_cond_continue
+
+                $discoverItemTestSmali
+
+                :tluid_cond_continue
+                invoke-virtual {v3, v4, v5}, Lcom/x/postdetail/m;->morphePostDetailPresenterTimelineUi(ILcom/x/models/timelines/items/p0;)Lcom/x/presenter/a;
+                move-result-object v0
+                return-object v0
+            """.trimIndent()
+
             val discBefore = patched
-            urtItemPresenterFingerprint.method.addInstructionsWithLabels(0, suppressionSmali)
+            urtItemPresenterFingerprint.method.addInstructionsWithLabels(0, inlineSmali)
             patched++
 
-            postDetailPresenterFingerprint.method.addInstructionsWithLabels(0, suppressionSmali)
+            val wrapped = postDetailPresenterFingerprint.method.wrapWithScratchRegisters(
+                mutableClassDefBy(postDetailPresenterFingerprint.method.definingClass),
+                "morphePostDetailPresenterTimelineUi",
+                3,
+                wrapperSmali,
+            )
+            if (!wrapped) postDetailPresenterFingerprint.method.addInstructionsWithLabels(0, inlineSmali)
             patched++
 
             if (patched == discBefore) {
