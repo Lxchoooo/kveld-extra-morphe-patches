@@ -6,7 +6,6 @@ import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.patch.resourcePatch
 import app.morphe.patches.shared.Constants
 import app.morphe.patches.shared.disableComponentsByName
-import app.morphe.patches.shared.removeComponentDiscoveryRegistrarsWhere
 import app.morphe.patches.shared.stripPermissionsWhere
 
 private val instagramTelemetryResourcePatch = resourcePatch(
@@ -60,14 +59,10 @@ private val instagramTelemetryResourcePatch = resourcePatch(
             "com.google.android.gms.analytics.AnalyticsReceiver",
             "com.instagram.analytics.uploadscheduler.AnalyticsUploadAlarmReceiver",
             "com.instagram.common.analytics.phoneid.InstagramPhoneIdRequestReceiver",
-
-            // Activities
-            "com.google.android.play.core.common.PlayCoreDialogWrapperActivity",
         )
 
         var removedPermissions = 0
         var disabledComponents = 0
-        var removedRegistrars = 0
 
         document(manifestFile.absolutePath).use { doc ->
             val application = doc.documentElement.getElementsByTagName("application").item(0) as? org.w3c.dom.Element
@@ -78,16 +73,10 @@ private val instagramTelemetryResourcePatch = resourcePatch(
             if (application != null) {
                 // 2. Disable blocked components
                 disabledComponents = application.disableComponentsByName(*blockedComponents.toTypedArray())
-
-                // 3. Remove MLKit and DynamicLoading registrars
-                removedRegistrars = application.removeComponentDiscoveryRegistrarsWhere { name ->
-                    name.contains("dynamicloading.DynamicLoadingRegistrar", ignoreCase = true) ||
-                    name.contains("mlkit", ignoreCase = true)
-                }
             }
         }
 
-        println("[Instagram Telemetry] Stripped $removedPermissions permissions, disabled $disabledComponents tracking components, and removed $removedRegistrars discovery registrars in AndroidManifest.xml.")
+        println("[Instagram Telemetry] Stripped $removedPermissions permissions and disabled $disabledComponents tracking components in AndroidManifest.xml.")
     }
 }
 
