@@ -51,7 +51,7 @@ private val customDomainRegex = Regex("^https?://[A-Za-z0-9.-]+(:[0-9]+)?(/.*)?$
 @Suppress("unused")
 val twitterShareLinksPatch = bytecodePatch(
     name = "Share Links",
-    description = "Custom sharing domain, handle custom links and legacy share links",
+    description = "Customizes domain and format for shared post links (for opening custom links in app, see Custom Deep Links).",
     default = false,
 ) {
     compatibleWith(Constants.COMPATIBILITY_TWITTER)
@@ -59,29 +59,21 @@ val twitterShareLinksPatch = bytecodePatch(
     val customSharingDomain by booleanOption(
         key = "customSharingDomain",
         default = true,
-        title = "Enable Custom Domain",
-        description = "Substitutes twitter.com/x.com with custom domain when sharing post links",
+        title = "Custom Sharing Domain",
+        description = "Replace x.com with the selected custom domain when sharing post links.",
         required = false,
     )
 
     val sharingDomain by stringOption(
         key = "sharingDomain",
-        default = "https://fxtwitter.com",
+        default = "https://${DEFAULT_CUSTOM_LINK_HOSTS[2]}",
         values = mapOf(
-            "FixTweet (fxtwitter.com)" to "https://fxtwitter.com",
-            "VXTwitter (vxtwitter.com)" to "https://vxtwitter.com",
-            "FixUpX (fixupx.com)" to "https://fixupx.com",
+            "FixTweet (${DEFAULT_CUSTOM_LINK_HOSTS[2]})" to "https://${DEFAULT_CUSTOM_LINK_HOSTS[2]}",
+            "VXTwitter (${DEFAULT_CUSTOM_LINK_HOSTS[0]})" to "https://${DEFAULT_CUSTOM_LINK_HOSTS[0]}",
+            "FixUpX (${DEFAULT_CUSTOM_LINK_HOSTS[3]})" to "https://${DEFAULT_CUSTOM_LINK_HOSTS[3]}",
         ),
-        title = "Custom Sharing Domain",
-        description = "Domain replacing x.com when sharing post links, e.g. https://fxtwitter.com",
-        required = false,
-    )
-
-    val handleCustomLinks by booleanOption(
-        key = "handleCustomLinks",
-        default = true,
-        title = "Handle Custom Links",
-        description = "Enables in-app handling of alternative Twitter domains (vxtwitter.com, fxtwitter.com, fixupx.com)",
+        title = "Sharing Domain",
+        description = "Domain replacing x.com when sharing post links, e.g. https://fxtwitter.com.",
         required = false,
     )
 
@@ -89,7 +81,7 @@ val twitterShareLinksPatch = bytecodePatch(
         key = "legacyShareLinks",
         default = true,
         title = "Legacy Share Links",
-        description = "Restores post author username in shared links instead of the modern generic /i/status/ format",
+        description = "Include post author username in shared links instead of the modern generic status format.",
         required = false,
     )
 
@@ -150,10 +142,6 @@ val twitterShareLinksPatch = bytecodePatch(
             patched++
         } else {
             println("[Share Links] Skipped customSharingDomain: disabled by patch option.")
-        }
-
-        if (handleCustomLinks ?: true) {
-            println("[Share Links] Skipped handleCustomLinks: custom domain routing (fxtwitter/vxtwitter/fixupx) is not present in stock 12.33 DEX.")
         }
 
         if (legacyShareLinks ?: true) {

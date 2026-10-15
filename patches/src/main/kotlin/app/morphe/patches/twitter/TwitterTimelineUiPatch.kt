@@ -196,7 +196,7 @@ private fun neutralizeFlag(
 @Suppress("unused")
 val twitterTimelineUiPatch = bytecodePatch(
     name = "Timeline UI",
-    description = "Timeline surfaces: posts, threads, banners, recommendations and video entry points",
+    description = "Customizes timeline surfaces including banners, recommendation carousels, and action buttons.",
     default = true,
 ) {
     compatibleWith(Constants.COMPATIBILITY_TWITTER)
@@ -205,7 +205,7 @@ val twitterTimelineUiPatch = bytecodePatch(
         key = "hideBanner",
         default = true,
         title = "Hide Banner",
-        description = "Hides new post banner",
+        description = "Hide new post banner.",
         required = false,
     )
 
@@ -213,7 +213,7 @@ val twitterTimelineUiPatch = bytecodePatch(
         key = "hidePromoteButton",
         default = true,
         title = "Hide Promote Button",
-        description = "Hides promote button under self posts",
+        description = "Hide promote button under self posts.",
         required = false,
     )
 
@@ -221,7 +221,7 @@ val twitterTimelineUiPatch = bytecodePatch(
         key = "hideNudgeButton",
         default = true,
         title = "Hide Nudge Button",
-        description = "Hides follow/subscribe/follow back buttons on posts",
+        description = "Hide follow, subscribe, and follow back buttons on posts.",
         required = false,
     )
 
@@ -229,7 +229,7 @@ val twitterTimelineUiPatch = bytecodePatch(
         key = "hideRecommendationItems",
         default = true,
         title = "Hide Recommendation Items",
-        description = "Hides recommendation items such as Who to follow and Today's news in timeline, search, and replies",
+        description = "Hide recommendation items such as Who to follow and Today's news in timeline, search, and replies.",
         required = false,
     )
 
@@ -237,7 +237,7 @@ val twitterTimelineUiPatch = bytecodePatch(
         key = "hideDiscoverMore",
         default = true,
         title = "Hide Discover More",
-        description = "Hides Discover more recommendations in tweet reply threads",
+        description = "Hide Discover more recommendations in tweet reply threads.",
         required = false,
     )
 
@@ -245,7 +245,7 @@ val twitterTimelineUiPatch = bytecodePatch(
         key = "hideRecommendedUsers",
         default = true,
         title = "Hide Recommended Users",
-        description = "Hides recommended users popup shown when following someone",
+        description = "Hide recommended users popup shown when following someone.",
         required = false,
     )
 
@@ -253,7 +253,7 @@ val twitterTimelineUiPatch = bytecodePatch(
         key = "hideLiveThreads",
         default = true,
         title = "Hide Live Threads",
-        description = "Hides live threads",
+        description = "Hide live threads.",
         required = false,
     )
 
@@ -261,7 +261,7 @@ val twitterTimelineUiPatch = bytecodePatch(
         key = "hideCommunityNotes",
         default = true,
         title = "Hide Community Notes",
-        description = "Hide community notes and birdwatch contributions on posts",
+        description = "Hide community notes and birdwatch contributions on posts.",
         required = false,
     )
 
@@ -269,7 +269,7 @@ val twitterTimelineUiPatch = bytecodePatch(
         key = "hidePostMetrics",
         default = true,
         title = "Hide Post Metrics",
-        description = "Hide like, repost, and reply count metrics on timeline posts",
+        description = "Hide like, repost, and reply count metrics on timeline posts.",
         required = false,
     )
 
@@ -277,15 +277,15 @@ val twitterTimelineUiPatch = bytecodePatch(
         key = "hideViewCount",
         default = true,
         title = "Hide View Count",
-        description = "Hide post view count metrics on timeline and post detail",
+        description = "Hide post view count metrics on timeline and post detail.",
         required = false,
     )
 
     val inlineActionBar by booleanOption(
         key = "inlineActionBar",
         default = true,
-        title = "Inline Action Bar",
-        description = "Toggle inline action buttons across notification timeline",
+        title = "Hide Inline Action Bar",
+        description = "Hide inline action buttons across notification timeline.",
         required = false,
     )
 
@@ -293,15 +293,15 @@ val twitterTimelineUiPatch = bytecodePatch(
         key = "timelineAddTab",
         default = true,
         title = "Timeline Add Tab",
-        description = "Hide add tab (+) button in home timeline tab header",
+        description = "Hide add tab (+) button in home timeline tab header.",
         required = false,
     )
 
     val timelineTopBar by booleanOption(
         key = "timelineTopBar",
         default = true,
-        title = "Timeline Top Bar",
-        description = "Toggle top bar elements in home and custom timelines",
+        title = "Hide Timeline Top Bar",
+        description = "Hide top bar elements in home and custom timelines.",
         required = false,
     )
 
@@ -309,7 +309,7 @@ val twitterTimelineUiPatch = bytecodePatch(
         key = "hideLiveBanner",
         default = true,
         title = "Hide Live Banner",
-        description = "Hides live and broadcast pill at top of home timeline",
+        description = "Hide live and broadcast pill at top of home timeline.",
         required = false,
     )
 

@@ -136,7 +136,7 @@ private fun neutralizeFlag(
 @Suppress("unused")
 val twitterDmDebloatPatch = bytecodePatch(
     name = "DM Debloat",
-    description = "Hide call buttons and composer actions in direct message conversations",
+    description = "Hides call buttons and composer actions in direct message conversations.",
     default = false,
 ) {
     compatibleWith(Constants.COMPATIBILITY_TWITTER)
@@ -145,7 +145,7 @@ val twitterDmDebloatPatch = bytecodePatch(
         key = "hideDmCalls",
         default = true,
         title = "Hide DM Calls",
-        description = "Hide audio and video call buttons in direct message conversation header. WARNING: neutralizing the unified xchat calling flag disables DM outgoing-call entrypoints, not just the icons.",
+        description = "Hide audio and video call buttons in direct message conversations (warning: disables outgoing direct message calls).",
         required = false,
     )
 

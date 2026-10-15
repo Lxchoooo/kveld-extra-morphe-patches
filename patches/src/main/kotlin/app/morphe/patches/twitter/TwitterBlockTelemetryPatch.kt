@@ -24,7 +24,7 @@ import com.android.tools.smali.dexlib2.iface.instruction.TwoRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 
 private val twitterTelemetryResourcePatch = resourcePatch(
-    name = "X Telemetry Manifest Purge",
+    name = "Block Telemetry Manifest Purge",
     description = "Strips tracking/advertising permissions, disables analytics services and receivers, and injects opt-out metadata in AndroidManifest.xml.",
     default = false,
 ) {
@@ -33,7 +33,7 @@ private val twitterTelemetryResourcePatch = resourcePatch(
     execute {
         val manifestFile = get("AndroidManifest.xml")
         if (!manifestFile.exists()) {
-            println("[X Telemetry] AndroidManifest.xml not found - skipping manifest purge.")
+            println("[Block Telemetry & Trackers] AndroidManifest.xml not found - skipping manifest purge.")
             return@execute
         }
 
@@ -114,7 +114,7 @@ private val twitterTelemetryResourcePatch = resourcePatch(
             }
         }
 
-        println("[X Telemetry] Stripped $removedPermissions permissions, disabled $disabledComponents tracking components, removed $removedRegistrars discovery registrars, and injected $injectedMetadata opt-out flags in AndroidManifest.xml.")
+        println("[Block Telemetry & Trackers] Stripped $removedPermissions permissions, disabled $disabledComponents tracking components, removed $removedRegistrars discovery registrars, and injected $injectedMetadata opt-out flags in AndroidManifest.xml.")
     }
 }
 
@@ -260,7 +260,7 @@ private fun BytecodePatchContext.removePerfGetInstanceNullChecks(): Int {
     }
 
     if (removedCount == 0) {
-        error("[X Telemetry] No Firebase Performance getInstance() null-check call sites found.")
+        error("[Block Telemetry & Trackers] No Firebase Performance getInstance() null-check call sites found.")
     }
 
     return removedCount
@@ -327,7 +327,7 @@ private fun evaluateSafeVoidDispatcher(method: Method): Pair<Boolean, String> {
 @Suppress("unused")
 val twitterBlockTelemetryPatch = bytecodePatch(
     name = "Block Telemetry & Trackers",
-    description = "Neutralizes Google AppMeasurement, Firebase Performance, Braze marketing SDK, and strips advertising identifiers.",
+    description = "Blocks tracking services, analytics collection, and advertising identifiers.",
     default = true,
 ) {
     compatibleWith(Constants.COMPATIBILITY_TWITTER)
@@ -414,7 +414,7 @@ val twitterBlockTelemetryPatch = bytecodePatch(
             val method = sdkMatches.map { it.method }.firstOrNull { evaluateSafeVoidDispatcher(it).first }
             if (method == null) {
                 skippedHooks.add("Braze ($label: no safe void dispatcher - best-effort)")
-                println("[X Telemetry] Skipped Braze anchor '$label': no safe void dispatcher (best-effort).")
+                println("[Block Telemetry & Trackers] Skipped Braze anchor '$label': no safe void dispatcher (best-effort).")
                 continue
             }
             method.addInstructions(0, "return-void")
@@ -427,7 +427,7 @@ val twitterBlockTelemetryPatch = bytecodePatch(
             val method = (fp.matchAllOrNull() ?: emptyList()).map { it.method }.firstOrNull { evaluateSafeVoidDispatcher(it).first }
             if (method == null) {
                 skippedHooks.add("Braze ($label: no safe void dispatcher - best-effort)")
-                println("[X Telemetry] Skipped Braze anchor '$label': no safe void dispatcher (best-effort).")
+                println("[Block Telemetry & Trackers] Skipped Braze anchor '$label': no safe void dispatcher (best-effort).")
                 continue
             }
             method.addInstructions(0, "return-void")
@@ -446,7 +446,7 @@ val twitterBlockTelemetryPatch = bytecodePatch(
             val method = (fp.matchAllOrNull() ?: emptyList()).map { it.method }.firstOrNull { evaluateSafeVoidDispatcher(it).first }
             if (method == null) {
                 skippedHooks.add("Sentry ($label: no safe void consumer - report-only)")
-                println("[X Telemetry] Sentry anchor '$label': no safe void consumer found (report-only).")
+                println("[Block Telemetry & Trackers] Sentry anchor '$label': no safe void consumer found (report-only).")
                 continue
             }
             method.addInstructions(0, "return-void")
@@ -457,8 +457,8 @@ val twitterBlockTelemetryPatch = bytecodePatch(
 
         val removedNullChecks = removePerfGetInstanceNullChecks()
 
-        println("[X Telemetry] Neutralized ${hookedMethods.size} telemetry dispatch methods: ${hookedMethods.joinToString(", ")}.")
-        println("[X Telemetry] Telemetry hooks summary -> applied: ${appliedHooks.size} (${appliedHooks.joinToString(", ")}), skipped: ${skippedHooks.size} (${skippedHooks.joinToString("; ")}).")
-        println("[X Telemetry] Removed $removedNullChecks Firebase Performance getInstance() null checks (registrar purged).")
+        println("[Block Telemetry & Trackers] Neutralized ${hookedMethods.size} telemetry dispatch methods: ${hookedMethods.joinToString(", ")}.")
+        println("[Block Telemetry & Trackers] Telemetry hooks summary -> applied: ${appliedHooks.size} (${appliedHooks.joinToString(", ")}), skipped: ${skippedHooks.size} (${skippedHooks.joinToString("; ")}).")
+        println("[Block Telemetry & Trackers] Removed $removedNullChecks Firebase Performance getInstance() null checks (registrar purged).")
     }
 }

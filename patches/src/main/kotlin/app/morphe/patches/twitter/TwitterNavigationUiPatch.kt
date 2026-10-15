@@ -59,10 +59,6 @@ private val searchTabsFingerprint = Fingerprint(
     strings = listOf("android_rich_tabs_search_tab_enabled"),
 )
 
-private val sideBarFingerprint = Fingerprint(
-    strings = listOf("android_grok_bot_sidebar_enabled"),
-)
-
 context(_: BytecodePatchContext)
 private fun neutralizeFlag(
     fingerprint: Fingerprint,
@@ -141,7 +137,7 @@ private fun neutralizeFlag(
 @Suppress("unused")
 val twitterNavigationUiPatch = bytecodePatch(
     name = "Navigation UI",
-    description = "Bottom navigation, FAB, tabs and bars",
+    description = "Customizes bottom navigation bar tabs, unread badges, and search surfaces.",
     default = false,
 ) {
     compatibleWith(Constants.COMPATIBILITY_TWITTER)
@@ -150,7 +146,7 @@ val twitterNavigationUiPatch = bytecodePatch(
         key = "hideBadges",
         default = true,
         title = "Hide Badges",
-        description = "Hide badges and unread indicator counters from navigation bar icons",
+        description = "Hide unread indicator badges from Grok and navigation bar tabs (for Grok drawer and post actions, see Drawer Items and Post & Profile UI).",
         required = false,
     )
 
@@ -158,7 +154,7 @@ val twitterNavigationUiPatch = bytecodePatch(
         key = "hideFab",
         default = true,
         title = "Hide FAB",
-        description = "Hide floating action button entirely",
+        description = "Hide floating action button entirely.",
         required = false,
     )
 
@@ -166,47 +162,39 @@ val twitterNavigationUiPatch = bytecodePatch(
         key = "hideFabMenu",
         default = true,
         title = "Hide FAB Menu",
-        description = "Hide secondary action expansion menu on floating action button",
+        description = "Hide secondary action expansion menu on floating action button.",
         required = false,
     )
 
     val navigationBar by booleanOption(
         key = "navigationBar",
         default = true,
-        title = "Navigation Bar",
-        description = "Toggle persistent bottom navigation bar behavior",
+        title = "Hide Navigation Bar",
+        description = "Hide persistent bottom navigation bar.",
         required = false,
     )
 
     val grokTab by booleanOption(
         key = "grokTab",
         default = true,
-        title = "Grok Tab",
-        description = "Hide Grok tab from bottom navigation bar",
+        title = "Hide Grok Tab",
+        description = "Hide Grok tab from bottom navigation bar (for Grok drawer and post actions, see Drawer Items and Post & Profile UI).",
         required = false,
     )
 
     val exploreTabs by booleanOption(
         key = "exploreTabs",
         default = true,
-        title = "Explore Tabs",
-        description = "Toggle rich explore tab surfaces",
+        title = "Hide Explore Tabs",
+        description = "Hide rich explore tab surfaces.",
         required = false,
     )
 
     val searchTabItems by booleanOption(
         key = "searchTabItems",
         default = true,
-        title = "Search Tab Items",
-        description = "Toggle rich search tab items and surfaces",
-        required = false,
-    )
-
-    val sideBarItems by booleanOption(
-        key = "sideBarItems",
-        default = true,
-        title = "Side Bar Items",
-        description = "Toggle drawer sidebar items including Grok assistant entry",
+        title = "Hide Search Tab Items",
+        description = "Hide rich search tab items and surfaces.",
         required = false,
     )
 
@@ -288,17 +276,6 @@ val twitterNavigationUiPatch = bytecodePatch(
             }
         } else {
             println("[Navigation UI] Skipped searchTabItems: disabled by patch option.")
-        }
-
-        // 10. sideBarItems
-        if (sideBarItems ?: true) {
-            if (neutralizeFlag(sideBarFingerprint, "android_grok_bot_sidebar_enabled", "Navigation UI")) {
-                patched++
-            } else {
-                error("[Navigation UI] Failed to neutralize 'android_grok_bot_sidebar_enabled' flag.")
-            }
-        } else {
-            println("[Navigation UI] Skipped sideBarItems: disabled by patch option.")
         }
 
         if (patched > 0) {

@@ -9,28 +9,28 @@ import org.w3c.dom.Element
 private val disableWorkManager by booleanOption(
     key = "disableWorkManager",
     default = true,
-    title = "Disable WorkManager and boot receivers",
+    title = "Disable WorkManager and Boot Receivers",
     description = "Disables background WorkManager periodic job services and reschedule receivers.",
 )
 
 private val disableWidgets by booleanOption(
     key = "disableWidgets",
     default = true,
-    title = "Disable home screen widgets",
-    description = "Disables news, search widget receivers, and Glance remote views service.",
+    title = "Disable Home Screen Widgets",
+    description = "Disables news and search widget receivers and Glance remote views service.",
 )
 
 private val disableCastNfc by booleanOption(
     key = "disableCastNfc",
     default = true,
-    title = "Disable Cast and NFC companion services",
+    title = "Disable Cast and NFC Companion Services",
     description = "Disables Google Cast reconnection service, media router receivers, and NFC profile tag APDU service.",
 )
 
 @Suppress("unused")
 val twitterBackgroundSlimmerPatch = resourcePatch(
-    name = "X Background Slimmer",
-    description = "Disables background WorkManager services, home screen widgets, and Cast/NFC companion services to reduce background resource consumption.",
+    name = "Background Slimmer",
+    description = "Disables background periodic jobs, home screen widgets, and companion services to reduce resource usage.",
     default = false,
 ) {
     compatibleWith(Constants.COMPATIBILITY_TWITTER)
@@ -38,12 +38,12 @@ val twitterBackgroundSlimmerPatch = resourcePatch(
     execute {
         val manifestFile = get("AndroidManifest.xml")
         if (!manifestFile.exists()) {
-            println("[X Background Slimmer] AndroidManifest.xml not found - skipping background slimmer.")
+            println("[Background Slimmer] AndroidManifest.xml not found - skipping background slimmer.")
             return@execute
         }
 
         if (!(disableWorkManager ?: true) && !(disableWidgets ?: true) && !(disableCastNfc ?: true)) {
-            println("[X Background Slimmer] All background slimmer options disabled - skipping.")
+            println("[Background Slimmer] All background slimmer options disabled - skipping.")
             return@execute
         }
 
@@ -91,6 +91,6 @@ val twitterBackgroundSlimmerPatch = resourcePatch(
         }
 
         val totalDisabled = wmDisabled + widgetsDisabled + castNfcDisabled
-        println("[X Background Slimmer] Disabled $totalDisabled background and companion components ($wmDisabled WorkManager, $widgetsDisabled widget, $castNfcDisabled Cast/NFC).")
+        println("[Background Slimmer] Disabled $totalDisabled background and companion components ($wmDisabled WorkManager, $widgetsDisabled widget, $castNfcDisabled Cast/NFC).")
     }
 }

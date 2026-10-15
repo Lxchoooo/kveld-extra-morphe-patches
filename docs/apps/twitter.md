@@ -22,26 +22,25 @@ Technical documentation and patch catalog for X (Twitter) on Android.
 
 | Patch Name | Typology | Default State | Dependencies | Description |
 | :--- | :--- | :--- | :--- | :--- |
-| **Block Telemetry & Trackers** | `bytecodePatch` | `true` (Enabled) | `X Telemetry Manifest Purge` | Neutralizes Google AppMeasurement, Firebase Performance, Braze marketing SDK, and strips advertising identifiers. |
-| **X Telemetry Manifest Purge** | `resourcePatch` | `false` (Opt-in) | None | Strips tracking/advertising permissions, disables analytics services and receivers, and injects opt-out metadata in AndroidManifest.xml. |
-| **Block Update Screen** | `bytecodePatch` | `true` (Enabled) | None | Blocks the "This app is out of date" screen and suppresses in-app update prompts on launch. |
-| **Control Video Auto Scroll** | `bytecodePatch` | `false` (Opt-in) | None | Prevents automatic scrolling to the next video in immersive view. |
-| **Custom Deep Links** | `resourcePatch` | `false` (Opt-in) | None | Registers intent filters to open custom links directly in the app. |
+| **Background Slimmer** | `resourcePatch` | `false` (Opt-in) | None | Disables background WorkManager tasks, widgets, and Cast/NFC companion services to reduce resource usage. |
+| **Block Telemetry & Trackers** | `bytecodePatch` | `true` (Enabled) | None | Blocks telemetry collection, tracker SDKs, and analytics services across bytecode and manifest. |
+| **Block Update Screen** | `bytecodePatch` | `true` (Enabled) | None | Blocks outdated app warning screens and suppresses update prompts on launch. |
+| **Control Video Auto Scroll** | `bytecodePatch` | `false` (Opt-in) | None | Prevents automatic scrolling to the next video in immersive media view. |
+| **Custom Deep Links** | `resourcePatch` | `false` (Opt-in) | None | Registers intent filters to open supported domains in the app. |
 | **Custom Fonts** | `bytecodePatch` | `false` (Opt-in) | None | Applies custom typography to post and profile text. |
 | **DM Debloat** | `bytecodePatch` | `false` (Opt-in) | None | Hides call buttons and composer actions in direct message conversations. |
-| **Drawer Items** | `bytecodePatch` | `false` (Opt-in) | None | Hides individual items in the navigation drawer. |
-| **X MLKit Vision Slimmer** | `resourcePatch` | `false` (Opt-in) | None | Disables MLKit component discovery and registrars. |
-| **Navigation UI** | `bytecodePatch` | `false` (Opt-in) | None | Bottom navigation, FAB, tabs and bars customization. |
-| **No Shortened URL** | `bytecodePatch` | `false` (Opt-in) | None | Expands t.co shortened URLs, removing the click-tracking intermediary. |
-| **Pause Search Suggestions** | `bytecodePatch` | `false` (Opt-in) | None | Stops persisting search suggestions locally without breaking search. |
-| **Post & Profile UI** | `bytecodePatch` | `false` (Opt-in) | None | Hides Grok analysis and Imagine action buttons, and toggles profile tabs. |
-| **Remove Ads** | `bytecodePatch` | `true` (Enabled) | None | Removes promoted posts, trends and ads from timeline. |
-| **Remove Premium Upsell** | `bytecodePatch` | `true` (Enabled) | None | Removes premium upsell surfaces including Get Verified profile pills. |
-| **Round Off Numbers** | `bytecodePatch` | `false` (Opt-in) | None | Displays full numbers without abbreviation. |
-| **Share Links** | `bytecodePatch` | `false` (Opt-in) | None | Substitutes domain with custom domain, handles alternate domains, and restores author username in links. |
-| **Show Sensitive Media** | `bytecodePatch` | `false` (Opt-in) | None | Displays sensitive media directly without requiring tap to reveal. |
-| **Timeline UI** | `bytecodePatch` | `true` (Enabled) | None | Hides banners, recommendation carousels, video entrypoints, and customizes timeline surfaces. |
-| **X Background Slimmer** | `resourcePatch` | `false` (Opt-in) | None | Disables background WorkManager services, home screen widgets, and Cast/NFC companion services to reduce background resource consumption. |
+| **Drawer Items** | `bytecodePatch` | `false` (Opt-in) | None | Hides navigation drawer items including Grok, Premium, and secondary shortcuts. |
+| **MLKit Vision Slimmer** | `resourcePatch` | `false` (Opt-in) | None | Disables MLKit components and discovery registrars to reduce binary footprint. |
+| **Navigation UI** | `bytecodePatch` | `false` (Opt-in) | None | Customizes navigation bar, unread badges, search tabs, and floating action button. |
+| **No Shortened URL** | `bytecodePatch` | `false` (Opt-in) | None | Expands t.co shortened links to their direct destination. |
+| **Pause Search Suggestions** | `bytecodePatch` | `false` (Opt-in) | None | Stops saving recent search history locally without breaking search. |
+| **Post & Profile UI** | `bytecodePatch` | `false` (Opt-in) | None | Hides post action buttons and customizes profile surfaces. |
+| **Remove Ads** | `bytecodePatch` | `true` (Enabled) | None | Removes promoted posts, timeline ads, and sponsored trends. |
+| **Remove Premium Upsell** | `bytecodePatch` | `true` (Enabled) | None | Removes premium upgrade prompts and profile verification pills. |
+| **Round Off Numbers** | `bytecodePatch` | `false` (Opt-in) | None | Displays exact counts instead of abbreviated numbers. |
+| **Share Links** | `bytecodePatch` | `false` (Opt-in) | None | Replaces shared post links with a custom domain. |
+| **Show Sensitive Media** | `bytecodePatch` | `false` (Opt-in) | None | Displays sensitive media directly without tap-to-reveal blur warnings. |
+| **Timeline UI** | `bytecodePatch` | `true` (Enabled) | None | Customizes timeline surfaces including banners, recommendation carousels, and action buttons. |
 
 ---
 
@@ -49,27 +48,23 @@ Technical documentation and patch catalog for X (Twitter) on Android.
 
 ### A. Manifest & Background Optimization Layer (`resourcePatch`)
 
-1. **X Telemetry Manifest Purge**:
-   - **Objective**: Prevent tracker initialization and background analytics collection.
-   - **How**: Strips advertising and attribution permissions, disables analytics services and receivers, and injects opt-out metadata.
-
-2. **Custom Deep Links**:
-   - **Objective**: Open custom domain links directly in the application.
-   - **How**: Injects intent filters with specified domains into the manifest.
-
-3. **X MLKit Vision Slimmer**:
-   - **Objective**: Reduce binary overhead from machine learning vision components.
-   - **How**: Disables component discovery and removes discovery registrars from the manifest.
-
-4. **X Background Slimmer**:
+1. **Background Slimmer**:
    - **Objective**: Reduce background battery and memory usage.
    - **How**: Disables background periodic jobs, home screen widgets, and Cast/NFC companion services.
+
+2. **Custom Deep Links**:
+   - **Objective**: Open custom domain links (inbound routing) directly in the application.
+   - **How**: Injects intent filters with specified domains (vxtwitter, fixvx, fxtwitter, fixupx, twittpr, xcancel) into MainActivity in the manifest.
+
+3. **MLKit Vision Slimmer**:
+   - **Objective**: Reduce binary overhead from machine learning vision components.
+   - **How**: Disables component discovery and removes discovery registrars from the manifest.
 
 ### B. Bytecode Modification Layer (`bytecodePatch`)
 
 1. **Block Telemetry & Trackers**:
-   - **Objective**: Stop runtime metric and event submission.
-   - **How**: Injects immediate returns into measurement and performance tracking methods.
+   - **Objective**: Stop runtime metric and event submission, and strip tracking components.
+   - **How**: Injects immediate returns into measurement and performance tracking methods; automatically executes internal manifest purge to strip advertising permissions and disable analytics services.
 
 2. **Block Update Screen**:
    - **Objective**: Prevent outdated-app blocking screens on launch.
@@ -88,12 +83,12 @@ Technical documentation and patch catalog for X (Twitter) on Android.
    - **How**: Toggles conversation action flags to hide call buttons and composer actions.
 
 6. **Drawer Items**:
-   - **Objective**: Declutter the side navigation drawer.
-   - **How**: Hides configured navigation entries such as Premium, Grok, and Communities.
+   - **Objective**: Declutter the side navigation drawer and sidebar surfaces.
+   - **How**: Hides configured navigation entries including Grok assistant, Premium, and secondary shortcuts.
 
 7. **Navigation UI**:
    - **Objective**: Customize navigation bars, floating buttons, and tabs.
-   - **How**: Adjusts layout flags to hide unread badges, floating action buttons, and secondary tabs.
+   - **How**: Adjusts layout flags to hide unread badges, floating action buttons, and secondary tabs (drawer and sidebar toggles are centralized under Drawer Items).
 
 8. **No Shortened URL**:
    - **Objective**: Bypass t.co link redirection and click tracking.
@@ -105,7 +100,7 @@ Technical documentation and patch catalog for X (Twitter) on Android.
 
 10. **Post & Profile UI**:
     - **Objective**: Remove unwanted action buttons from posts and profiles.
-    - **How**: Hides AI analysis buttons and customizes profile header tabs.
+    - **How**: Hides Grok post actions and profile buttons, and toggles profile header tabs.
 
 11. **Remove Ads**:
     - **Objective**: Remove promoted posts and sponsored content.
@@ -113,15 +108,15 @@ Technical documentation and patch catalog for X (Twitter) on Android.
 
 12. **Remove Premium Upsell**:
     - **Objective**: Eliminate subscription prompts and badges.
-    - **How**: Hides verification upsell pills and premium upgrade banners.
+    - **How**: Hides verification upsell pills and premium upgrade banners (drawer Premium entry is owned by Drawer Items).
 
 13. **Round Off Numbers**:
     - **Objective**: Show exact metric counts on posts and profiles.
     - **How**: Disables number abbreviation formatting routines.
 
 14. **Share Links**:
-    - **Objective**: Clean and customize links when sharing posts.
-    - **How**: Replaces domains with alternative frontends and restores author usernames in URLs.
+    - **Objective**: Clean and customize links when sharing posts (outbound).
+    - **How**: Replaces shared link domains with configured custom domains (inbound link opening is handled by Custom Deep Links).
 
 15. **Show Sensitive Media**:
     - **Objective**: View sensitive media without manual tap-to-reveal prompts.
@@ -135,7 +130,7 @@ Technical documentation and patch catalog for X (Twitter) on Android.
 
 ## 4. Behavioral Hazards Warning
 
-1. **X MLKit Vision Slimmer**:
+1. **MLKit Vision Slimmer**:
    Disabling MLKit component discovery breaks in-app QR and barcode scanning.
 2. **DM Debloat**:
    Neutralizing the calling flag disables direct message outgoing call entrypoints.

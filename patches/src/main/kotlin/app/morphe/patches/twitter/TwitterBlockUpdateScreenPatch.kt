@@ -43,7 +43,7 @@ private val inAppUpdateFingerprint = Fingerprint(
 @Suppress("unused")
 val twitterBlockUpdateScreenPatch = bytecodePatch(
     name = "Block Update Screen",
-    description = "Blocks the 'This app is out of date' screen and suppresses in-app update prompts on launch",
+    description = "Blocks the outdated app screen and suppresses in-app update prompts on launch.",
     default = true,
 ) {
     compatibleWith(Constants.COMPATIBILITY_TWITTER)

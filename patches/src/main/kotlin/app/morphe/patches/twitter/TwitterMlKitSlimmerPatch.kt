@@ -5,8 +5,8 @@ import app.morphe.patches.shared.Constants
 
 @Suppress("unused")
 val twitterMlKitSlimmerPatch = resourcePatch(
-    name = "X MLKit Vision Slimmer",
-    description = "Disables MLKit component discovery and registrars. WARNING: this breaks in-app QR and barcode scanning.",
+    name = "MLKit Vision Slimmer",
+    description = "Disables machine learning vision components to reduce binary overhead (breaks QR and barcode scanning).",
     default = false,
 ) {
     compatibleWith(Constants.COMPATIBILITY_TWITTER)
@@ -14,7 +14,7 @@ val twitterMlKitSlimmerPatch = resourcePatch(
     execute {
         val manifestFile = get("AndroidManifest.xml")
         if (!manifestFile.exists()) {
-            println("[X MLKit Slimmer] AndroidManifest.xml not found - skipping MLKit slimmer.")
+            println("[MLKit Vision Slimmer] AndroidManifest.xml not found - skipping MLKit slimmer.")
             return@execute
         }
 
@@ -72,6 +72,6 @@ val twitterMlKitSlimmerPatch = resourcePatch(
             }
         }
 
-        println("[X MLKit Slimmer] Disabled $disabledServices MLKit service, $disabledProviders MLKit provider, and removed $removedRegistrars discovery registrars in AndroidManifest.xml.")
+        println("[MLKit Vision Slimmer] Disabled $disabledServices MLKit service, $disabledProviders MLKit provider, and removed $removedRegistrars discovery registrars in AndroidManifest.xml.")
     }
 }

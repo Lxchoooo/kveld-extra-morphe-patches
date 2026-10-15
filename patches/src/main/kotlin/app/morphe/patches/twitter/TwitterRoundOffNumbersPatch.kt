@@ -68,7 +68,7 @@ private val roundOffNumbersFingerprint = Fingerprint(
 @Suppress("unused")
 val twitterRoundOffNumbersPatch = bytecodePatch(
     name = "Round Off Numbers",
-    description = "Enable or disable rounding off numbers",
+    description = "Displays full metric counts without abbreviation on posts and profiles.",
     default = false,
 ) {
     compatibleWith(Constants.COMPATIBILITY_TWITTER)
@@ -77,7 +77,7 @@ val twitterRoundOffNumbersPatch = bytecodePatch(
         key = "showFullNumbers",
         default = true,
         title = "Show Full Numbers",
-        description = "Display full numbers without abbreviation (e.g. 1,234 instead of 1.2K)",
+        description = "Show full numbers without abbreviation instead of rounded values (e.g. 1,234 instead of 1.2K).",
         required = false,
     )
 

@@ -37,7 +37,7 @@ private val customFontHookFingerprint = Fingerprint(
 @Suppress("unused")
 val twitterCustomFontPatch = bytecodePatch(
     name = "Custom Fonts",
-    description = "Applies custom typography to post and profile text",
+    description = "Applies custom typography to post and profile text.",
     default = false,
 ) {
     compatibleWith(Constants.COMPATIBILITY_TWITTER)
@@ -46,7 +46,7 @@ val twitterCustomFontPatch = bytecodePatch(
     val fontTtfPath by stringOption(
         key = "fontTtfPath",
         title = "Custom Font Path",
-        description = "Absolute device path to a .ttf applied to post/profile text, e.g. /sdcard/fonts/myfont.ttf",
+        description = "Absolute device path to a TTF font applied to post and profile text, e.g. /sdcard/fonts/myfont.ttf.",
         default = "",
         required = false,
     )
@@ -54,7 +54,7 @@ val twitterCustomFontPatch = bytecodePatch(
     val emojiFontTtfPath by stringOption(
         key = "emojiFontTtfPath",
         title = "Custom Emoji Font Path",
-        description = "Absolute device path to a .ttf applied to emojis, e.g. /sdcard/fonts/myemojifont.ttf",
+        description = "Absolute device path to a TTF font applied to emojis, e.g. /sdcard/fonts/myemojifont.ttf.",
         default = "",
         required = false,
     )

@@ -61,7 +61,7 @@ private val quickPromoteTrayFingerprint = Fingerprint(
 @Suppress("unused")
 val twitterRemoveAdsPatch = bytecodePatch(
     name = "Remove Ads",
-    description = "Removes promoted posts, trends and ads from timeline",
+    description = "Removes promoted posts, trends, and ads from timeline feeds.",
     default = true,
 ) {
     compatibleWith(Constants.COMPATIBILITY_TWITTER)

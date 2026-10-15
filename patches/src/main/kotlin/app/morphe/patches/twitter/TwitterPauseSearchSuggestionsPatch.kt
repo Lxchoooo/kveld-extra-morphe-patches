@@ -32,7 +32,7 @@ private val recentSearchRepoFingerprint = Fingerprint(
 @Suppress("unused")
 val twitterPauseSearchSuggestionsPatch = bytecodePatch(
     name = "Pause Search Suggestions",
-    description = "Stops persisting search suggestions locally without breaking search",
+    description = "Stops persisting search suggestions locally without breaking search.",
     default = false,
 ) {
     compatibleWith(Constants.COMPATIBILITY_TWITTER)

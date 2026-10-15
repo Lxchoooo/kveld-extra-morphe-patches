@@ -121,7 +121,7 @@ private fun neutralizeFlag(
 @Suppress("unused")
 val twitterRemovePremiumUpsellPatch = bytecodePatch(
     name = "Remove Premium Upsell",
-    description = "Removes premium upsell surfaces",
+    description = "Removes Premium subscription prompts and verification upsell surfaces across the app (for drawer entry, see Drawer Items).",
     default = true,
 ) {
     compatibleWith(Constants.COMPATIBILITY_TWITTER)
@@ -130,7 +130,7 @@ val twitterRemovePremiumUpsellPatch = bytecodePatch(
         key = "hideProfileGetVerified",
         default = true,
         title = "Hide Profile Get Verified",
-        description = "Hide Get Verified upsell pill on user profile",
+        description = "Hide Get Verified subscription pill on user profiles (for drawer Premium entry, see Drawer Items).",
         required = false,
     )
 

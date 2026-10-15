@@ -38,7 +38,7 @@ private val persistentVideoSettingsFingerprint = Fingerprint(
 @Suppress("unused")
 val twitterControlVideoAutoScrollPatch = bytecodePatch(
     name = "Control Video Auto Scroll",
-    description = "Prevents automatic scrolling to the next video in immersive view",
+    description = "Prevents automatic scrolling to the next video in immersive view.",
     default = false,
 ) {
     compatibleWith(Constants.COMPATIBILITY_TWITTER)

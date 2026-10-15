@@ -30,7 +30,7 @@ private val mediaVisibilityResultsFingerprint = Fingerprint(
 @Suppress("unused")
 val twitterShowSensitiveMediaPatch = bytecodePatch(
     name = "Show Sensitive Media",
-    description = "Displays sensitive media directly without requiring tap to reveal",
+    description = "Displays sensitive media directly without requiring tap to reveal.",
     default = false,
 ) {
     compatibleWith(Constants.COMPATIBILITY_TWITTER)

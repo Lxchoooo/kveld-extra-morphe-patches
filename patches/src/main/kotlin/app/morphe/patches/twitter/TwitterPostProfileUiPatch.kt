@@ -127,7 +127,7 @@ private fun neutralizeFlag(
 @Suppress("unused")
 val twitterPostProfileUiPatch = bytecodePatch(
     name = "Post & Profile UI",
-    description = "Post actions, profile header and Grok surfaces",
+    description = "Customizes post action buttons, Grok surfaces, and user profile tabs.",
     default = false,
 ) {
     compatibleWith(Constants.COMPATIBILITY_TWITTER)
@@ -136,7 +136,7 @@ val twitterPostProfileUiPatch = bytecodePatch(
         key = "hideGrokPostAction",
         default = true,
         title = "Hide Grok Post Action",
-        description = "Hide Grok analysis action button in post headers",
+        description = "Hide Grok analysis action button on posts (for Grok drawer and navigation tab, see Drawer Items and Navigation UI).",
         required = false,
     )
 
@@ -144,15 +144,15 @@ val twitterPostProfileUiPatch = bytecodePatch(
         key = "hideProfileGrokButton",
         default = true,
         title = "Hide Profile Grok Button",
-        description = "Hide Grok Imagine action button on profile header banner",
+        description = "Hide Grok Imagine action button on profile header banner (for Grok drawer and navigation tab, see Drawer Items and Navigation UI).",
         required = false,
     )
 
     val profileTabs by booleanOption(
         key = "profileTabs",
         default = true,
-        title = "Profile Tabs",
-        description = "Toggle extra connect and media tabs on user profiles",
+        title = "Hide Profile Tabs",
+        description = "Hide extra connect and media tabs on user profiles.",
         required = false,
     )
 

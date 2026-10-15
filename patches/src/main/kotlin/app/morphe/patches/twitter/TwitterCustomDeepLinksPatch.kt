@@ -23,38 +23,33 @@ import app.morphe.patcher.patch.stringsOption
 import app.morphe.patches.shared.Constants
 import org.w3c.dom.Element
 
+internal val DEFAULT_CUSTOM_LINK_HOSTS = listOf(
+    "vxtwitter.com",
+    "fixvx.com",
+    "fxtwitter.com",
+    "fixupx.com",
+    "twittpr.com",
+    "xcancel.com",
+)
+
 @Suppress("unused")
 val twitterCustomDeepLinksPatch = resourcePatch(
     name = "Custom Deep Links",
-    description = "Registers intent filters to open custom links directly in the app",
+    description = "Opens supported custom and alternative domain links directly in the app (for shared link domains, see Share Links).",
     default = false,
 ) {
     compatibleWith(Constants.COMPATIBILITY_TWITTER)
 
     val customLinkHosts by stringsOption(
         key = "customLinkHosts",
-        default = listOf(
-            "vxtwitter.com",
-            "fixvx.com",
-            "fxtwitter.com",
-            "fixupx.com",
-            "twittpr.com",
-            "xcancel.com",
-        ),
+        default = DEFAULT_CUSTOM_LINK_HOSTS,
         title = "Custom Link Hosts",
-        description = "Custom domains to register for opening in the app",
+        description = "Custom domains to register for opening directly in the app.",
         required = false,
     )
 
     execute {
-        val hosts = customLinkHosts ?: listOf(
-            "vxtwitter.com",
-            "fixvx.com",
-            "fxtwitter.com",
-            "fixupx.com",
-            "twittpr.com",
-            "xcancel.com",
-        )
+        val hosts = customLinkHosts ?: DEFAULT_CUSTOM_LINK_HOSTS
 
         document("AndroidManifest.xml").use { doc ->
             val activities = doc.getElementsByTagName("activity")

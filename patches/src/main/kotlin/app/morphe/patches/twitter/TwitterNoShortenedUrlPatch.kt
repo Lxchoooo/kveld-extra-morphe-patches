@@ -38,7 +38,7 @@ private val graphqlUrlsEntityFingerprint = Fingerprint(
 @Suppress("unused")
 val twitterNoShortenedUrlPatch = bytecodePatch(
     name = "No Shortened URL",
-    description = "Expands t.co shortened URLs, removing the click-tracking intermediary",
+    description = "Expands t.co shortened URLs, removing the click-tracking intermediary.",
     default = false,
 ) {
     compatibleWith(Constants.COMPATIBILITY_TWITTER)
