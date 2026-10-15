@@ -70,51 +70,51 @@ val twitterRemoveAdsPatch = bytecodePatch(
                 goto :cond_continue
 
                 :cond_check_item
-                instance-of v1, v0, Lcom/x/models/timelines/items/k1;
+                instance-of v1, v0, Lcom/x/models/timelines/items/l1;
                 if-nez v1, :cond_check_post
                 goto :cond_not_post
 
                 :cond_check_post
                 move-object v1, v0
-                check-cast v1, Lcom/x/models/timelines/items/k1;
-                invoke-virtual {v1}, Lcom/x/models/timelines/items/k1;->y()Lcom/x/models/ef;
+                check-cast v1, Lcom/x/models/timelines/items/l1;
+                invoke-virtual {v1}, Lcom/x/models/timelines/items/l1;->y()Lcom/x/models/df;
                 move-result-object v1
                 if-nez v1, :cond_suppress_ad
 
                 :cond_not_post
-                instance-of v1, v0, Lcom/x/models/timelines/items/z1;
+                instance-of v1, v0, Lcom/x/models/timelines/items/a2;
                 if-nez v1, :cond_check_trend
                 goto :cond_not_trend
 
                 :cond_check_trend
                 move-object v1, v0
-                check-cast v1, Lcom/x/models/timelines/items/z1;
-                iget-object v1, v1, Lcom/x/models/timelines/items/z1;->a:Lcom/x/models/sf;
+                check-cast v1, Lcom/x/models/timelines/items/a2;
+                iget-object v1, v1, Lcom/x/models/timelines/items/a2;->a:Lcom/x/models/sf;
                 if-eqz v1, :cond_not_trend
-                invoke-virtual {v1}, Lcom/x/models/sf;->b()Lcom/x/models/ef;
+                invoke-virtual {v1}, Lcom/x/models/sf;->b()Lcom/x/models/df;
                 move-result-object v1
                 if-nez v1, :cond_suppress_ad
 
                 :cond_not_trend
-                instance-of v1, v0, Lcom/x/models/timelines/items/q1;
+                instance-of v1, v0, Lcom/x/models/timelines/items/r1;
                 if-nez v1, :cond_check_rtb
                 goto :cond_not_rtb
 
                 :cond_check_rtb
                 move-object v1, v0
-                check-cast v1, Lcom/x/models/timelines/items/q1;
-                iget-object v1, v1, Lcom/x/models/timelines/items/q1;->j:Lcom/x/models/ef;
+                check-cast v1, Lcom/x/models/timelines/items/r1;
+                iget-object v1, v1, Lcom/x/models/timelines/items/r1;->j:Lcom/x/models/df;
                 if-nez v1, :cond_suppress_ad
 
                 :cond_not_rtb
-                instance-of v1, v0, Lcom/x/models/timelines/items/c2;
+                instance-of v1, v0, Lcom/x/models/timelines/items/d2;
                 if-nez v1, :cond_check_user
                 goto :cond_not_user
 
                 :cond_check_user
                 move-object v1, v0
-                check-cast v1, Lcom/x/models/timelines/items/c2;
-                iget-object v1, v1, Lcom/x/models/timelines/items/c2;->h:Lcom/x/models/ef;
+                check-cast v1, Lcom/x/models/timelines/items/d2;
+                iget-object v1, v1, Lcom/x/models/timelines/items/d2;->h:Lcom/x/models/df;
                 if-nez v1, :cond_suppress_ad
 
                 :cond_not_user
@@ -127,7 +127,7 @@ val twitterRemoveAdsPatch = bytecodePatch(
                 check-cast v1, Lcom/x/models/timelines/items/n0;
                 iget-object v1, v1, Lcom/x/models/timelines/items/n0;->a:Lcom/x/models/l2;
                 if-eqz v1, :cond_not_event
-                invoke-virtual {v1}, Lcom/x/models/l2;->a()Lcom/x/models/ef;
+                invoke-virtual {v1}, Lcom/x/models/l2;->a()Lcom/x/models/df;
                 move-result-object v1
                 if-nez v1, :cond_suppress_ad
 
@@ -162,51 +162,51 @@ val twitterRemoveAdsPatch = bytecodePatch(
                 goto :cond_continue
 
                 :cond_check_item
-                instance-of v1, v0, Lcom/x/models/timelines/items/k1;
+                instance-of v1, v0, Lcom/x/models/timelines/items/l1;
                 if-nez v1, :cond_check_post
                 goto :cond_not_post
 
                 :cond_check_post
                 move-object v1, v0
-                check-cast v1, Lcom/x/models/timelines/items/k1;
-                invoke-virtual {v1}, Lcom/x/models/timelines/items/k1;->y()Lcom/x/models/ef;
+                check-cast v1, Lcom/x/models/timelines/items/l1;
+                invoke-virtual {v1}, Lcom/x/models/timelines/items/l1;->y()Lcom/x/models/df;
                 move-result-object v1
                 if-nez v1, :cond_suppress_ad
 
                 :cond_not_post
-                instance-of v1, v0, Lcom/x/models/timelines/items/z1;
+                instance-of v1, v0, Lcom/x/models/timelines/items/a2;
                 if-nez v1, :cond_check_trend
                 goto :cond_not_trend
 
                 :cond_check_trend
                 move-object v1, v0
-                check-cast v1, Lcom/x/models/timelines/items/z1;
-                iget-object v1, v1, Lcom/x/models/timelines/items/z1;->a:Lcom/x/models/sf;
+                check-cast v1, Lcom/x/models/timelines/items/a2;
+                iget-object v1, v1, Lcom/x/models/timelines/items/a2;->a:Lcom/x/models/sf;
                 if-eqz v1, :cond_not_trend
-                invoke-virtual {v1}, Lcom/x/models/sf;->b()Lcom/x/models/ef;
+                invoke-virtual {v1}, Lcom/x/models/sf;->b()Lcom/x/models/df;
                 move-result-object v1
                 if-nez v1, :cond_suppress_ad
 
                 :cond_not_trend
-                instance-of v1, v0, Lcom/x/models/timelines/items/q1;
+                instance-of v1, v0, Lcom/x/models/timelines/items/r1;
                 if-nez v1, :cond_check_rtb
                 goto :cond_not_rtb
 
                 :cond_check_rtb
                 move-object v1, v0
-                check-cast v1, Lcom/x/models/timelines/items/q1;
-                iget-object v1, v1, Lcom/x/models/timelines/items/q1;->j:Lcom/x/models/ef;
+                check-cast v1, Lcom/x/models/timelines/items/r1;
+                iget-object v1, v1, Lcom/x/models/timelines/items/r1;->j:Lcom/x/models/df;
                 if-nez v1, :cond_suppress_ad
 
                 :cond_not_rtb
-                instance-of v1, v0, Lcom/x/models/timelines/items/c2;
+                instance-of v1, v0, Lcom/x/models/timelines/items/d2;
                 if-nez v1, :cond_check_user
                 goto :cond_not_user
 
                 :cond_check_user
                 move-object v1, v0
-                check-cast v1, Lcom/x/models/timelines/items/c2;
-                iget-object v1, v1, Lcom/x/models/timelines/items/c2;->h:Lcom/x/models/ef;
+                check-cast v1, Lcom/x/models/timelines/items/d2;
+                iget-object v1, v1, Lcom/x/models/timelines/items/d2;->h:Lcom/x/models/df;
                 if-nez v1, :cond_suppress_ad
 
                 :cond_not_user
@@ -219,7 +219,7 @@ val twitterRemoveAdsPatch = bytecodePatch(
                 check-cast v1, Lcom/x/models/timelines/items/n0;
                 iget-object v1, v1, Lcom/x/models/timelines/items/n0;->a:Lcom/x/models/l2;
                 if-eqz v1, :cond_not_event
-                invoke-virtual {v1}, Lcom/x/models/l2;->a()Lcom/x/models/ef;
+                invoke-virtual {v1}, Lcom/x/models/l2;->a()Lcom/x/models/df;
                 move-result-object v1
                 if-nez v1, :cond_suppress_ad
 
