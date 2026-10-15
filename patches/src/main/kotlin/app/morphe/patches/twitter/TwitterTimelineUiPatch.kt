@@ -543,7 +543,7 @@ val twitterTimelineUiPatch = bytecodePatch(
                 $discoverItemTestSmali
 
                 :tluid_cond_continue
-                invoke-virtual {v3, v4, v5}, Lcom/x/postdetail/m;->morphePostDetailPresenterTimelineUi(ILcom/x/models/timelines/items/p0;)Lcom/x/presenter/a;
+                invoke-virtual {p0, p1, p2}, Lcom/x/postdetail/m;->morphePostDetailPresenterTimelineUi(ILcom/x/models/timelines/items/p0;)Lcom/x/presenter/a;
                 move-result-object v0
                 return-object v0
             """.trimIndent()
