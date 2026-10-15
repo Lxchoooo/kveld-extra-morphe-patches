@@ -1,7 +1,7 @@
 {
-  "created_at": "2026-10-15T05:36:00",
-  "description": "## [1.15.3](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.15.2...v1.15.3) (2026-10-15)\n\n### Bug Fixes\n\n* **twitter:** use renamed empty timeline presenter in Remove Ads suppression ([f646b5b](https://github.com/kveld9/kveld-extra-morphe-patches/commit/f646b5b2b811e32e3acb30e0b3f148673efbc8ab))\n* **twitter:** use renamed empty timeline presenter in Timeline UI discover filter ([4f528b9](https://github.com/kveld9/kveld-extra-morphe-patches/commit/4f528b9c2aed0d8b228b8a33605db35e2f2ae707))\n\n### Code Refactoring\n\n* **twitter:** extract neutralizeFlag helper into TwitterFlagUtils ([359f50a](https://github.com/kveld9/kveld-extra-morphe-patches/commit/359f50af0546b2a645687615be5590f78ce959a2))",
-  "download_url": "https://github.com/kveld9/kveld-extra-morphe-patches/releases/download/v1.15.3/patches-1.15.3.mpp",
+  "created_at": "2026-10-15T06:05:14",
+  "description": "## [1.15.4](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.15.3...v1.15.4) (2026-10-15)\n\n### Bug Fixes\n\n* **twitter:** update timeline ad suppression item models and descriptors for 12.34.0 ([1d2e5ff](https://github.com/kveld9/kveld-extra-morphe-patches/commit/1d2e5fffc46a232ee5ed8706d6ce0adafe168174))\n* **twitter:** update timeline recommendation filter fields for 12.34.0 ([7635555](https://github.com/kveld9/kveld-extra-morphe-patches/commit/763555582b6d5ee91404a2280516e13f1612ff7e))",
+  "download_url": "https://github.com/kveld9/kveld-extra-morphe-patches/releases/download/v1.15.4/patches-1.15.4.mpp",
   "signature_download_url": "",
-  "version": "1.15.3"
+  "version": "1.15.4"
 }

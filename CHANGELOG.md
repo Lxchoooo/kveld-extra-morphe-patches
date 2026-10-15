@@ -1,3 +1,10 @@
+## [1.15.4](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.15.3...v1.15.4) (2026-10-15)
+
+### Bug Fixes
+
+* **twitter:** update timeline ad suppression item models and descriptors for 12.34.0 ([1d2e5ff](https://github.com/kveld9/kveld-extra-morphe-patches/commit/1d2e5fffc46a232ee5ed8706d6ce0adafe168174))
+* **twitter:** update timeline recommendation filter fields for 12.34.0 ([7635555](https://github.com/kveld9/kveld-extra-morphe-patches/commit/763555582b6d5ee91404a2280516e13f1612ff7e))
+
 ## [1.15.3](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.15.2...v1.15.3) (2026-10-15)
 
 ### Bug Fixes
