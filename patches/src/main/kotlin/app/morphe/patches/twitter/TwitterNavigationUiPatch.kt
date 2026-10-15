@@ -47,7 +47,7 @@ private val bottomNavFingerprint = Fingerprint(
 )
 
 private val grokTabFingerprint = Fingerprint(
-    definingClass = "Lcom/x/main/landing/d0;",
+    definingClass = "Lcom/x/main/landing/f0;",
     strings = listOf("android_webview_grok_tab_enabled"),
 )
 
