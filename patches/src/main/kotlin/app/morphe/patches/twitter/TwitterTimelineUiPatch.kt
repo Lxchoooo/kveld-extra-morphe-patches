@@ -54,6 +54,10 @@ private val focalPostStateFingerprint = Fingerprint(
     strings = listOf("FocalPostState(timelinePostState="),
 )
 
+private val timelineItemFilterFingerprint = Fingerprint(
+    strings = listOf("surface_filter"),
+)
+
 private val urtItemPresenterFingerprint = Fingerprint(
     definingClass = "Lcom/x/urt/b;",
     name = "a",
@@ -488,61 +492,101 @@ val twitterTimelineUiPatch = bytecodePatch(
 
         // 4. hideRecommendationItems
         if (hideRecommendationItems ?: true) {
-            urtItemPresenterFingerprint.method.addInstructionsWithLabels(
+            timelineItemFilterFingerprint.method.addInstructionsWithLabels(
                 0,
                 """
-                    move-object/from16 v0, p2
-                    if-nez v0, :cond_check_item
-                    goto :cond_continue
+                    move-object/from16 v0, p1
+                    if-eqz v0, :cond_filter_end
 
-                    :cond_check_item
-                    invoke-interface {v0}, Lcom/x/models/timelines/items/p0;->c()Ljava/lang/String;
-                    move-result-object v1
-                    if-eqz v1, :cond_continue
+                    new-instance v1, Ljava/util/ArrayList;
+                    invoke-direct {v1}, Ljava/util/ArrayList;-><init>()V
 
-                    :cond_check_entry_id
-                    const-string v2, "who-to-follow"
-                    invoke-virtual {v1, v2}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
+                    invoke-interface {v0}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+                    move-result-object v0
+
+                    :loop_start
+                    invoke-interface {v0}, Ljava/util/Iterator;->hasNext()Z
                     move-result v2
-                    if-nez v2, :cond_suppress_rec
+                    if-eqz v2, :loop_end
 
-                    const-string v2, "who_to_follow"
-                    invoke-virtual {v1, v2}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
-                    move-result v2
-                    if-nez v2, :cond_suppress_rec
+                    invoke-interface {v0}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+                    move-result-object v2
+                    check-cast v2, Lcom/x/models/timelines/items/p0;
 
-                    const-string v2, "who-to-subscribe"
-                    invoke-virtual {v1, v2}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
-                    move-result v2
-                    if-nez v2, :cond_suppress_rec
+                    instance-of v3, v2, Lcom/x/models/timelines/items/b1;
+                    if-eqz v3, :cond_add_item
 
-                    const-string v2, "stories"
-                    invoke-virtual {v1, v2}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
-                    move-result v2
-                    if-nez v2, :cond_suppress_rec
+                    move-object v3, v2
+                    check-cast v3, Lcom/x/models/timelines/items/b1;
 
-                    const-string v2, "eventsummary"
-                    invoke-virtual {v1, v2}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
-                    move-result v2
-                    if-nez v2, :cond_suppress_rec
+                    # Check 1: entryId contains who-to-follow, who_to_follow, or user_recommendations
+                    iget-object v4, v3, Lcom/x/models/timelines/items/b1;->f:Ljava/lang/String;
+                    if-eqz v4, :cond_check_controller
 
-                    const-string v2, "toptabsrpusermodule"
-                    invoke-virtual {v1, v2}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
-                    move-result v2
-                    if-nez v2, :cond_suppress_rec
+                    const-string v5, "who-to-follow"
+                    invoke-virtual {v4, v5}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
+                    move-result v5
+                    if-nez v5, :cond_drop_item
 
-                    const-string v2, "community-to-join"
-                    invoke-virtual {v1, v2}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
-                    move-result v2
-                    if-nez v2, :cond_suppress_rec
+                    const-string v5, "who_to_follow"
+                    invoke-virtual {v4, v5}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
+                    move-result v5
+                    if-nez v5, :cond_drop_item
 
-                    goto :cond_continue
+                    const-string v5, "user_recommendations"
+                    invoke-virtual {v4, v5}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
+                    move-result v5
+                    if-nez v5, :cond_drop_item
 
-                    :cond_suppress_rec
-                    sget-object v0, Lcom/x/urt/b0;->a:Lcom/x/urt/b0;
-                    return-object v0
+                    :cond_check_controller
+                    # Check 2: clientEventInfo.suggestionDetails.controllerData contains wtf_user
+                    iget-object v4, v3, Lcom/x/models/timelines/items/b1;->g:Lcom/x/models/u0;
+                    if-eqz v4, :cond_check_inner
 
-                    :cond_continue
+                    iget-object v4, v4, Lcom/x/models/u0;->d:Lcom/x/models/xc;
+                    if-eqz v4, :cond_check_inner
+
+                    iget-object v4, v4, Lcom/x/models/xc;->a:Ljava/lang/String;
+                    if-eqz v4, :cond_check_inner
+
+                    const-string v5, "wtf_user"
+                    invoke-virtual {v4, v5}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
+                    move-result v5
+                    if-nez v5, :cond_drop_item
+
+                    :cond_check_inner
+                    # Check 3: innerContent contains c2 (UrtTimelineUser)
+                    iget-object v4, v3, Lcom/x/models/timelines/items/b1;->a:Ljava/util/List;
+                    if-eqz v4, :cond_add_item
+
+                    invoke-interface {v4}, Ljava/util/List;->isEmpty()Z
+                    move-result v5
+                    if-nez v5, :cond_add_item
+
+                    const/4 v5, 0x0
+                    invoke-interface {v4, v5}, Ljava/util/List;->get(I)Ljava/lang/Object;
+                    move-result-object v4
+
+                    # Defect 2 guard: verify instance-of e1 before casting
+                    instance-of v5, v4, Lcom/x/models/timelines/items/e1;
+                    if-eqz v5, :cond_add_item
+
+                    check-cast v4, Lcom/x/models/timelines/items/e1;
+                    iget-object v4, v4, Lcom/x/models/timelines/items/e1;->a:Lcom/x/models/timelines/items/p0;
+                    instance-of v5, v4, Lcom/x/models/timelines/items/c2;
+                    if-nez v5, :cond_drop_item
+
+                    :cond_add_item
+                    invoke-interface {v1, v2}, Ljava/util/List;->add(Ljava/lang/Object;)Z
+                    goto :loop_start
+
+                    :cond_drop_item
+                    goto :loop_start
+
+                    :loop_end
+                    move-object/from16 p1, v1
+
+                    :cond_filter_end
                     nop
                 """.trimIndent(),
             )
