@@ -1,3 +1,14 @@
+## [1.15.3](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.15.2...v1.15.3) (2026-10-15)
+
+### Bug Fixes
+
+* **twitter:** use renamed empty timeline presenter in Remove Ads suppression ([f646b5b](https://github.com/kveld9/kveld-extra-morphe-patches/commit/f646b5b2b811e32e3acb30e0b3f148673efbc8ab))
+* **twitter:** use renamed empty timeline presenter in Timeline UI discover filter ([4f528b9](https://github.com/kveld9/kveld-extra-morphe-patches/commit/4f528b9c2aed0d8b228b8a33605db35e2f2ae707))
+
+### Code Refactoring
+
+* **twitter:** extract neutralizeFlag helper into TwitterFlagUtils ([359f50a](https://github.com/kveld9/kveld-extra-morphe-patches/commit/359f50af0546b2a645687615be5590f78ce959a2))
+
 ## [1.15.2](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.15.1...v1.15.2) (2026-10-15)
 
 ### Bug Fixes
