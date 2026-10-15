@@ -120,18 +120,11 @@ private val twitterTelemetryResourcePatch = resourcePatch(
 
 context(_: BytecodePatchContext)
 private fun hookVoidMethod(
-    definingClass: String,
-    name: String,
-    parameters: List<String>,
+    fingerprint: Fingerprint,
     hookedMethods: MutableList<String>,
     label: String,
 ) {
-    Fingerprint(
-        definingClass = definingClass,
-        name = name,
-        parameters = parameters,
-        returnType = "V",
-    ).method.apply {
+    fingerprint.method.apply {
         addInstructions(0, "return-void")
         hookedMethods.add(label)
     }
@@ -266,6 +259,55 @@ private fun BytecodePatchContext.removePerfGetInstanceNullChecks(): Int {
     return removedCount
 }
 
+private val appMeasurementLogEventInternalFingerprint = Fingerprint(
+    definingClass = "Lcom/google/android/gms/measurement/AppMeasurement;",
+    name = "logEventInternal",
+    parameters = listOf("Ljava/lang/String;", "Ljava/lang/String;", "Landroid/os/Bundle;"),
+    returnType = "V",
+)
+
+private val traceStartFingerprint = Fingerprint(
+    definingClass = "Lcom/google/firebase/perf/metrics/Trace;",
+    name = "start",
+    parameters = emptyList(),
+    returnType = "V",
+)
+
+private val traceStopFingerprint = Fingerprint(
+    definingClass = "Lcom/google/firebase/perf/metrics/Trace;",
+    name = "stop",
+    parameters = emptyList(),
+    returnType = "V",
+)
+
+private val tracePutAttributeFingerprint = Fingerprint(
+    definingClass = "Lcom/google/firebase/perf/metrics/Trace;",
+    name = "putAttribute",
+    parameters = listOf("Ljava/lang/String;", "Ljava/lang/String;"),
+    returnType = "V",
+)
+
+private val traceRemoveAttributeFingerprint = Fingerprint(
+    definingClass = "Lcom/google/firebase/perf/metrics/Trace;",
+    name = "removeAttribute",
+    parameters = listOf("Ljava/lang/String;"),
+    returnType = "V",
+)
+
+private val tracePutMetricFingerprint = Fingerprint(
+    definingClass = "Lcom/google/firebase/perf/metrics/Trace;",
+    name = "putMetric",
+    parameters = listOf("Ljava/lang/String;", "J"),
+    returnType = "V",
+)
+
+private val traceIncrementMetricFingerprint = Fingerprint(
+    definingClass = "Lcom/google/firebase/perf/metrics/Trace;",
+    name = "incrementMetric",
+    parameters = listOf("Ljava/lang/String;", "J"),
+    returnType = "V",
+)
+
 private val brazeInitFingerprint = Fingerprint(
     strings = listOf("Braze SDK Initializing"),
 )
@@ -340,60 +382,45 @@ val twitterBlockTelemetryPatch = bytecodePatch(
 
         // Google AppMeasurement
         hookVoidMethod(
-            definingClass = "Lcom/google/android/gms/measurement/AppMeasurement;",
-            name = "logEventInternal",
-            parameters = listOf("Ljava/lang/String;", "Ljava/lang/String;", "Landroid/os/Bundle;"),
+            fingerprint = appMeasurementLogEventInternalFingerprint,
             hookedMethods = hookedMethods,
             label = "AppMeasurement.logEventInternal",
         )
         appliedHooks.add("AppMeasurement.logEventInternal")
 
         // Firebase Performance
-        val traceClass = "Lcom/google/firebase/perf/metrics/Trace;"
         hookVoidMethod(
-            definingClass = traceClass,
-            name = "start",
-            parameters = emptyList(),
+            fingerprint = traceStartFingerprint,
             hookedMethods = hookedMethods,
             label = "Trace.start",
         )
         appliedHooks.add("Trace.start")
         hookVoidMethod(
-            definingClass = traceClass,
-            name = "stop",
-            parameters = emptyList(),
+            fingerprint = traceStopFingerprint,
             hookedMethods = hookedMethods,
             label = "Trace.stop",
         )
         appliedHooks.add("Trace.stop")
         hookVoidMethod(
-            definingClass = traceClass,
-            name = "putAttribute",
-            parameters = listOf("Ljava/lang/String;", "Ljava/lang/String;"),
+            fingerprint = tracePutAttributeFingerprint,
             hookedMethods = hookedMethods,
             label = "Trace.putAttribute",
         )
         appliedHooks.add("Trace.putAttribute")
         hookVoidMethod(
-            definingClass = traceClass,
-            name = "removeAttribute",
-            parameters = listOf("Ljava/lang/String;"),
+            fingerprint = traceRemoveAttributeFingerprint,
             hookedMethods = hookedMethods,
             label = "Trace.removeAttribute",
         )
         appliedHooks.add("Trace.removeAttribute")
         hookVoidMethod(
-            definingClass = traceClass,
-            name = "putMetric",
-            parameters = listOf("Ljava/lang/String;", "J"),
+            fingerprint = tracePutMetricFingerprint,
             hookedMethods = hookedMethods,
             label = "Trace.putMetric",
         )
         appliedHooks.add("Trace.putMetric")
         hookVoidMethod(
-            definingClass = traceClass,
-            name = "incrementMetric",
-            parameters = listOf("Ljava/lang/String;", "J"),
+            fingerprint = traceIncrementMetricFingerprint,
             hookedMethods = hookedMethods,
             label = "Trace.incrementMetric",
         )
