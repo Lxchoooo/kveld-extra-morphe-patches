@@ -94,26 +94,22 @@ val twitterRoundOffNumbersPatch = bytecodePatch(
         } ?: error("[Round Off Numbers] Format method not found in ${enclosingClass.type}.")
 
         val instructions = formatMethod.instructions
-        val sizeInvokeIndex = instructions.indexOfFirst { ins ->
+        val hasNextIndex = instructions.indexOfFirst { ins ->
             ins.opcode.name.startsWith("invoke-") &&
                 ((ins as? ReferenceInstruction)?.reference as? MethodReference)?.let { ref ->
-                    ref.name == "size" && ref.returnType == "I" && ref.parameterTypes.isEmpty()
+                    ref.name == "hasNext" && ref.returnType == "Z" && ref.parameterTypes.isEmpty()
                 } == true
         }
-        if (sizeInvokeIndex < 0 || sizeInvokeIndex + 1 >= instructions.size) {
-            error("[Round Off Numbers] Collection.size() instruction not found in ${formatMethod.name}.")
+        if (hasNextIndex < 0 || hasNextIndex + 1 >= instructions.size) {
+            error("[Round Off Numbers] Iterator.hasNext() instruction not found in ${formatMethod.name}.")
         }
-
-        val moveResultIns = instructions[sizeInvokeIndex + 1]
+        val moveResultIns = instructions[hasNextIndex + 1]
         if (moveResultIns.opcode != Opcode.MOVE_RESULT) {
-            error("[Round Off Numbers] Expected MOVE_RESULT after size() at index ${sizeInvokeIndex + 1}, found ${moveResultIns.opcode}.")
+            error("[Round Off Numbers] Expected MOVE_RESULT after hasNext() at index ${hasNextIndex + 1}, found ${moveResultIns.opcode}.")
         }
-
         val reg = (moveResultIns as OneRegisterInstruction).registerA
         val constIns = if (reg <= 15) "const/4 v$reg, 0x0" else "const/16 v$reg, 0x0"
-
-        formatMethod.addInstructions(sizeInvokeIndex + 2, constIns)
-
-        println("[Round Off Numbers] Applied 1 hook -> forced units size to 0 in v$reg.")
+        formatMethod.addInstructions(hasNextIndex + 2, constIns)
+        println("[Round Off Numbers] Applied 1 hook -> forced hasNext to false in v$reg.")
     }
 }
