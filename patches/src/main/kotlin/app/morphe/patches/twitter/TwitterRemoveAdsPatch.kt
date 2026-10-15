@@ -28,23 +28,15 @@ private val urtItemPresenterFingerprint = Fingerprint(
     definingClass = "Lcom/x/urt/b;",
     name = "a",
     returnType = "Lcom/x/presenter/a;",
-    parameters = listOf(
-        "I",
-        "Lcom/x/models/timelines/items/p0;",
-        "Lcom/x/navigation/wl;",
-        "Lcom/x/repositories/urt/t1;",
-        "Lcom/x/urt/t0;",
-    ),
 )
 
 private val postDetailPresenterFingerprint = Fingerprint(
-    definingClass = "Lcom/x/postdetail/c0;",
-    name = "r",
+    definingClass = "Lcom/x/postdetail/m;",
+    name = "v",
     returnType = "Lcom/x/presenter/a;",
     parameters = listOf(
         "I",
         "Lcom/x/models/timelines/items/p0;",
-        "Lcom/x/urt/t0;",
     ),
 )
 
@@ -161,7 +153,7 @@ val twitterRemoveAdsPatch = bytecodePatch(
         )
         patched++
 
-        // 2. Intercept thread reply items before presenter dispatch in com.x.postdetail.c0.r
+        // 2. Intercept thread reply items before presenter dispatch in com.x.postdetail.m.v
         postDetailPresenterFingerprint.method.addInstructionsWithLabels(
             0,
             """
