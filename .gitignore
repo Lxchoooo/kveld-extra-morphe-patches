@@ -195,8 +195,10 @@ CLAUDE.local.md
 validation/physical_harness/results/
 validation/runtime/
 
-# Local RE harness: untracked by user decision, kept on disk
+# RE harness: mounted via git-ignored symlink to kveld-morphe-harness-private/harness.
+# `harness/` ignores the directory form; `/harness` also covers the symlink itself.
 harness/
+/harness
 
 # --- Private agent skills: nunca publicar (viven en kveld-morphe-skills-private) ---
 .agents/
