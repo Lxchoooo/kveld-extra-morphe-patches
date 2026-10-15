@@ -439,7 +439,7 @@ val twitterTimelineUiPatch = bytecodePatch(
 
                     # Check 1: entryId contains who-to-follow, who_to_follow, or user_recommendations
                     iget-object v4, v3, Lcom/x/models/timelines/items/b1;->f:Ljava/lang/String;
-                    if-eqz v4, :cond_check_controller
+                    if-eqz v4, :cond_check_inner
 
                     const-string v5, "who-to-follow"
                     invoke-virtual {v4, v5}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
@@ -456,24 +456,8 @@ val twitterTimelineUiPatch = bytecodePatch(
                     move-result v5
                     if-nez v5, :cond_drop_item
 
-                    :cond_check_controller
-                    # Check 2: clientEventInfo.suggestionDetails.controllerData contains wtf_user
-                    iget-object v4, v3, Lcom/x/models/timelines/items/b1;->g:Lcom/x/models/u0;
-                    if-eqz v4, :cond_check_inner
-
-                    iget-object v4, v4, Lcom/x/models/u0;->d:Lcom/x/models/xc;
-                    if-eqz v4, :cond_check_inner
-
-                    iget-object v4, v4, Lcom/x/models/xc;->a:Ljava/lang/String;
-                    if-eqz v4, :cond_check_inner
-
-                    const-string v5, "wtf_user"
-                    invoke-virtual {v4, v5}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
-                    move-result v5
-                    if-nez v5, :cond_drop_item
-
                     :cond_check_inner
-                    # Check 3: innerContent contains c2 (UrtTimelineUser)
+                    # Check 3: innerContent contains d2 (UrtTimelineUser)
                     iget-object v4, v3, Lcom/x/models/timelines/items/b1;->a:Ljava/util/List;
                     if-eqz v4, :cond_add_item
 
@@ -491,7 +475,7 @@ val twitterTimelineUiPatch = bytecodePatch(
 
                     check-cast v4, Lcom/x/models/timelines/items/e1;
                     iget-object v4, v4, Lcom/x/models/timelines/items/e1;->a:Lcom/x/models/timelines/items/p0;
-                    instance-of v5, v4, Lcom/x/models/timelines/items/c2;
+                    instance-of v5, v4, Lcom/x/models/timelines/items/d2;
                     if-nez v5, :cond_drop_item
 
                     :cond_add_item
