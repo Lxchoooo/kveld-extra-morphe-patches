@@ -34,7 +34,8 @@ private val fabFingerprint = Fingerprint(
 )
 
 private val fabMenuFingerprint = Fingerprint(
-    returnType = "V",
+    returnType = "Ljava/util/List;",
+    parameters = listOf("Z"),
     strings = listOf("android_compose_fab_expansion_enabled"),
 )
 
