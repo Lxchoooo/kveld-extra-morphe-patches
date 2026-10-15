@@ -62,23 +62,15 @@ private val urtItemPresenterFingerprint = Fingerprint(
     definingClass = "Lcom/x/urt/b;",
     name = "a",
     returnType = "Lcom/x/presenter/a;",
-    parameters = listOf(
-        "I",
-        "Lcom/x/models/timelines/items/p0;",
-        "Lcom/x/navigation/wl;",
-        "Lcom/x/repositories/urt/t1;",
-        "Lcom/x/urt/t0;",
-    ),
 )
 
 private val postDetailPresenterFingerprint = Fingerprint(
-    definingClass = "Lcom/x/postdetail/c0;",
-    name = "r",
+    definingClass = "Lcom/x/postdetail/m;",
+    name = "v",
     returnType = "Lcom/x/presenter/a;",
     parameters = listOf(
         "I",
         "Lcom/x/models/timelines/items/p0;",
-        "Lcom/x/urt/t0;",
     ),
 )
 
@@ -95,7 +87,7 @@ private val communityNotesFingerprint = Fingerprint(
 )
 
 private val inlineActionBarItemFingerprint = Fingerprint(
-    definingClass = "Lcom/x/inlineactionbar/d;",
+    definingClass = "Lcom/x/inlineactionbar/g;",
     name = "invoke",
 )
 
@@ -806,7 +798,7 @@ val twitterTimelineUiPatch = bytecodePatch(
         if (hidePostMetrics ?: true) {
             val method = inlineActionBarItemFingerprint.method
             val instructions = method.implementation?.instructions?.toList()
-                ?: error("[Timeline UI] Method Lcom/x/inlineactionbar/d;->invoke has no instructions.")
+                ?: error("[Timeline UI] Method Lcom/x/inlineactionbar/g;->invoke has no instructions.")
             val countedPillIndex = instructions.indexOfFirst { ins ->
                 ins.opcode == Opcode.SGET_OBJECT &&
                     ((ins as? ReferenceInstruction)?.reference as? FieldReference)?.name == "CountedPill"
@@ -816,11 +808,11 @@ val twitterTimelineUiPatch = bytecodePatch(
                 val targetReg = countedPillIns.registerA
                 method.replaceInstruction(
                     countedPillIndex,
-                    "sget-object v$targetReg, Lcom/x/inlineactionbar/d1;->Countless:Lcom/x/inlineactionbar/d1;",
+                    "sget-object v$targetReg, Lcom/x/inlineactionbar/k1;->Countless:Lcom/x/inlineactionbar/k1;",
                 )
                 patched++
             } else {
-                error("[Timeline UI] Failed to find CountedPill instruction in Lcom/x/inlineactionbar/d;->invoke.")
+                error("[Timeline UI] Failed to find CountedPill instruction in Lcom/x/inlineactionbar/g;->invoke.")
             }
         } else {
             println("[Timeline UI] Skipped hidePostMetrics: disabled by patch option.")
@@ -830,10 +822,12 @@ val twitterTimelineUiPatch = bytecodePatch(
         if (hideViewCount ?: true) {
             val method = inlineActionBarItemFingerprint.method
             val instructions = method.implementation?.instructions?.toList()
-                ?: error("[Timeline UI] Method Lcom/x/inlineactionbar/d;->invoke has no instructions.")
+                ?: error("[Timeline UI] Method Lcom/x/inlineactionbar/g;->invoke has no instructions.")
             val invokeIndex = instructions.indexOfFirst { ins ->
                 ins.opcode == Opcode.INVOKE_STATIC_RANGE &&
-                    ((ins as? ReferenceInstruction)?.reference as? MethodReference)?.name == "j"
+                    ((ins as? ReferenceInstruction)?.reference as? MethodReference)?.let { ref ->
+                        ref.parameterTypes.firstOrNull() == "Lcom/x/models/l4;"
+                    } == true
             }
             if (invokeIndex >= 0) {
                 val invokeIns = instructions[invokeIndex]
@@ -847,8 +841,8 @@ val twitterTimelineUiPatch = bytecodePatch(
                 method.addInstructionsWithLabels(
                     invokeIndex,
                     """
-                        iget-object v3, v$startReg, Lcom/x/models/l4;->a:Lcom/x/models/w5;
-                        sget-object v4, Lcom/x/models/w5;->ViewCount:Lcom/x/models/w5;
+                        iget-object v3, v$startReg, Lcom/x/models/l4;->a:Lcom/x/models/v5;
+                        sget-object v4, Lcom/x/models/v5;->ViewCount:Lcom/x/models/v5;
                         if-eq v3, v4, :skip_view_count
                         invoke-static/range {v$startReg .. v$endReg}, $methodDescriptor
                         :skip_view_count
@@ -857,7 +851,7 @@ val twitterTimelineUiPatch = bytecodePatch(
                 )
                 patched++
             } else {
-                error("[Timeline UI] Failed to find Lcom/google/android/gms/dynamite/d;->j invoke in Lcom/x/inlineactionbar/d;->invoke.")
+                error("[Timeline UI] Failed to find Lcom/google/android/gms/dynamite/d;->j invoke in Lcom/x/inlineactionbar/g;->invoke.")
             }
         } else {
             println("[Timeline UI] Skipped hideViewCount: disabled by patch option.")
@@ -931,7 +925,7 @@ val twitterTimelineUiPatch = bytecodePatch(
             val followButtonFieldIdx = instructions.indexOfFirst { ins ->
                 ins.opcode == Opcode.SGET_OBJECT &&
                     ((ins as? ReferenceInstruction)?.reference as? FieldReference)?.let {
-                        it.definingClass == "Lcom/x/home/tabbed/a;" && it.name == "d"
+                        it.definingClass == "Lcom/x/home/tabbed/a;" && (it.name == "e" || it.name == "d")
                     } == true
             }
             if (followButtonFieldIdx > 0) {
@@ -947,7 +941,7 @@ val twitterTimelineUiPatch = bytecodePatch(
                     error("[Timeline UI] Preceding if-eqz branch not found before follow button field in Lcom/x/home/tabbed/a;->i.")
                 }
             } else {
-                error("[Timeline UI] Follow button field Lcom/x/home/tabbed/a;->d not found in Lcom/x/home/tabbed/a;->i.")
+                error("[Timeline UI] Follow button field not found in Lcom/x/home/tabbed/a;->i.")
             }
         } else {
             println("[Timeline UI] Skipped timelineTopBar: disabled by patch option.")
