@@ -144,7 +144,7 @@ val twitterRemoveAdsPatch = bytecodePatch(
                 goto :cond_continue
 
                 :cond_suppress_ad
-                sget-object v0, Lcom/x/urt/b0;->a:Lcom/x/urt/b0;
+                sget-object v0, Lcom/x/urt/e0;->a:Lcom/x/urt/e0;
                 return-object v0
 
                 :cond_continue
@@ -236,7 +236,7 @@ val twitterRemoveAdsPatch = bytecodePatch(
                 goto :cond_continue
 
                 :cond_suppress_ad
-                sget-object v0, Lcom/x/urt/b0;->a:Lcom/x/urt/b0;
+                sget-object v0, Lcom/x/urt/e0;->a:Lcom/x/urt/e0;
                 return-object v0
 
                 :cond_continue
