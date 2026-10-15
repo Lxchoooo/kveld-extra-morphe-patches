@@ -40,7 +40,7 @@ private val lightroomTelemetryResourcePatch = resourcePatch(
     execute {
         val manifestFile = get("AndroidManifest.xml")
         if (!manifestFile.exists()) {
-            println("[Lightroom Telemetry] Skipped: AndroidManifest.xml not found.")
+            println("[Block Telemetry & Trackers] Skipped: AndroidManifest.xml not found.")
             return@execute
         }
 
@@ -64,7 +64,7 @@ private val lightroomTelemetryResourcePatch = resourcePatch(
             }
         }
 
-        println("[Lightroom Telemetry] Stripped $removedPermissions permissions and injected $injectedMetadata opt-out flags in AndroidManifest.xml (analytics components preserved for boot stability).")
+        println("[Block Telemetry & Trackers] Stripped $removedPermissions permissions and injected $injectedMetadata opt-out flags in AndroidManifest.xml (analytics components preserved for boot stability).")
     }
 }
 
@@ -101,108 +101,112 @@ val lightroomBlockTelemetryPatch = bytecodePatch(
 
         // Google AppMeasurement
         val appMeasurementClass = "Lcom/google/android/gms/measurement/AppMeasurement;"
-        hookVoidMethod(
-            definingClass = appMeasurementClass,
-            name = "logEventInternal",
-            parameters = listOf("Ljava/lang/String;", "Ljava/lang/String;", "Landroid/os/Bundle;"),
-            hookedMethods = hookedMethods,
-            label = "AppMeasurement.logEventInternal",
-        )
-        hookVoidMethod(
-            definingClass = appMeasurementClass,
-            name = "logEventInternalNoInterceptor",
-            parameters = listOf("Ljava/lang/String;", "Ljava/lang/String;", "Landroid/os/Bundle;", "J"),
-            hookedMethods = hookedMethods,
-            label = "AppMeasurement.logEventInternalNoInterceptor",
-        )
+        if (classDefByOrNull(appMeasurementClass) != null) {
+            hookVoidMethod(
+                definingClass = appMeasurementClass,
+                name = "logEventInternal",
+                parameters = listOf("Ljava/lang/String;", "Ljava/lang/String;", "Landroid/os/Bundle;"),
+                hookedMethods = hookedMethods,
+                label = "AppMeasurement.logEventInternal",
+            )
+            hookVoidMethod(
+                definingClass = appMeasurementClass,
+                name = "logEventInternalNoInterceptor",
+                parameters = listOf("Ljava/lang/String;", "Ljava/lang/String;", "Landroid/os/Bundle;", "J"),
+                hookedMethods = hookedMethods,
+                label = "AppMeasurement.logEventInternalNoInterceptor",
+            )
+        }
 
         // Firebase Crashlytics
         val crashlyticsClass = "Lcom/google/firebase/crashlytics/FirebaseCrashlytics;"
-        hookVoidMethod(
-            definingClass = crashlyticsClass,
-            name = "recordException",
-            parameters = listOf("Ljava/lang/Throwable;"),
-            hookedMethods = hookedMethods,
-            label = "FirebaseCrashlytics.recordException(Throwable)",
-        )
-        hookVoidMethod(
-            definingClass = crashlyticsClass,
-            name = "recordException",
-            parameters = listOf("Ljava/lang/Throwable;", "Lc70/g;"),
-            hookedMethods = hookedMethods,
-            label = "FirebaseCrashlytics.recordException(Throwable, CustomKeysAndValues)",
-        )
-        hookVoidMethod(
-            definingClass = crashlyticsClass,
-            name = "log",
-            parameters = listOf("Ljava/lang/String;"),
-            hookedMethods = hookedMethods,
-            label = "FirebaseCrashlytics.log",
-        )
-        hookVoidMethod(
-            definingClass = crashlyticsClass,
-            name = "sendUnsentReports",
-            parameters = emptyList(),
-            hookedMethods = hookedMethods,
-            label = "FirebaseCrashlytics.sendUnsentReports",
-        )
-        hookVoidMethod(
-            definingClass = crashlyticsClass,
-            name = "setUserId",
-            parameters = listOf("Ljava/lang/String;"),
-            hookedMethods = hookedMethods,
-            label = "FirebaseCrashlytics.setUserId",
-        )
-        hookVoidMethod(
-            definingClass = crashlyticsClass,
-            name = "setCustomKey",
-            parameters = listOf("Ljava/lang/String;", "D"),
-            hookedMethods = hookedMethods,
-            label = "FirebaseCrashlytics.setCustomKey(double)",
-        )
-        hookVoidMethod(
-            definingClass = crashlyticsClass,
-            name = "setCustomKey",
-            parameters = listOf("Ljava/lang/String;", "F"),
-            hookedMethods = hookedMethods,
-            label = "FirebaseCrashlytics.setCustomKey(float)",
-        )
-        hookVoidMethod(
-            definingClass = crashlyticsClass,
-            name = "setCustomKey",
-            parameters = listOf("Ljava/lang/String;", "I"),
-            hookedMethods = hookedMethods,
-            label = "FirebaseCrashlytics.setCustomKey(int)",
-        )
-        hookVoidMethod(
-            definingClass = crashlyticsClass,
-            name = "setCustomKey",
-            parameters = listOf("Ljava/lang/String;", "J"),
-            hookedMethods = hookedMethods,
-            label = "FirebaseCrashlytics.setCustomKey(long)",
-        )
-        hookVoidMethod(
-            definingClass = crashlyticsClass,
-            name = "setCustomKey",
-            parameters = listOf("Ljava/lang/String;", "Ljava/lang/String;"),
-            hookedMethods = hookedMethods,
-            label = "FirebaseCrashlytics.setCustomKey(String)",
-        )
-        hookVoidMethod(
-            definingClass = crashlyticsClass,
-            name = "setCustomKey",
-            parameters = listOf("Ljava/lang/String;", "Z"),
-            hookedMethods = hookedMethods,
-            label = "FirebaseCrashlytics.setCustomKey(boolean)",
-        )
-        hookVoidMethod(
-            definingClass = crashlyticsClass,
-            name = "setCustomKeys",
-            parameters = listOf("Lc70/g;"),
-            hookedMethods = hookedMethods,
-            label = "FirebaseCrashlytics.setCustomKeys",
-        )
+        if (classDefByOrNull(crashlyticsClass) != null) {
+            hookVoidMethod(
+                definingClass = crashlyticsClass,
+                name = "recordException",
+                parameters = listOf("Ljava/lang/Throwable;"),
+                hookedMethods = hookedMethods,
+                label = "FirebaseCrashlytics.recordException(Throwable)",
+            )
+            hookVoidMethod(
+                definingClass = crashlyticsClass,
+                name = "recordException",
+                parameters = listOf("Ljava/lang/Throwable;", "Lc70/g;"),
+                hookedMethods = hookedMethods,
+                label = "FirebaseCrashlytics.recordException(Throwable, CustomKeysAndValues)",
+            )
+            hookVoidMethod(
+                definingClass = crashlyticsClass,
+                name = "log",
+                parameters = listOf("Ljava/lang/String;"),
+                hookedMethods = hookedMethods,
+                label = "FirebaseCrashlytics.log",
+            )
+            hookVoidMethod(
+                definingClass = crashlyticsClass,
+                name = "sendUnsentReports",
+                parameters = emptyList(),
+                hookedMethods = hookedMethods,
+                label = "FirebaseCrashlytics.sendUnsentReports",
+            )
+            hookVoidMethod(
+                definingClass = crashlyticsClass,
+                name = "setUserId",
+                parameters = listOf("Ljava/lang/String;"),
+                hookedMethods = hookedMethods,
+                label = "FirebaseCrashlytics.setUserId",
+            )
+            hookVoidMethod(
+                definingClass = crashlyticsClass,
+                name = "setCustomKey",
+                parameters = listOf("Ljava/lang/String;", "D"),
+                hookedMethods = hookedMethods,
+                label = "FirebaseCrashlytics.setCustomKey(double)",
+            )
+            hookVoidMethod(
+                definingClass = crashlyticsClass,
+                name = "setCustomKey",
+                parameters = listOf("Ljava/lang/String;", "F"),
+                hookedMethods = hookedMethods,
+                label = "FirebaseCrashlytics.setCustomKey(float)",
+            )
+            hookVoidMethod(
+                definingClass = crashlyticsClass,
+                name = "setCustomKey",
+                parameters = listOf("Ljava/lang/String;", "I"),
+                hookedMethods = hookedMethods,
+                label = "FirebaseCrashlytics.setCustomKey(int)",
+            )
+            hookVoidMethod(
+                definingClass = crashlyticsClass,
+                name = "setCustomKey",
+                parameters = listOf("Ljava/lang/String;", "J"),
+                hookedMethods = hookedMethods,
+                label = "FirebaseCrashlytics.setCustomKey(long)",
+            )
+            hookVoidMethod(
+                definingClass = crashlyticsClass,
+                name = "setCustomKey",
+                parameters = listOf("Ljava/lang/String;", "Ljava/lang/String;"),
+                hookedMethods = hookedMethods,
+                label = "FirebaseCrashlytics.setCustomKey(String)",
+            )
+            hookVoidMethod(
+                definingClass = crashlyticsClass,
+                name = "setCustomKey",
+                parameters = listOf("Ljava/lang/String;", "Z"),
+                hookedMethods = hookedMethods,
+                label = "FirebaseCrashlytics.setCustomKey(boolean)",
+            )
+            hookVoidMethod(
+                definingClass = crashlyticsClass,
+                name = "setCustomKeys",
+                parameters = listOf("Lc70/g;"),
+                hookedMethods = hookedMethods,
+                label = "FirebaseCrashlytics.setCustomKeys",
+            )
+        }
 
-        println("[Lightroom Telemetry] Neutralized ${hookedMethods.size} telemetry dispatch methods: ${hookedMethods.joinToString(", ")}.")
+        println("[Block Telemetry & Trackers] Neutralized ${hookedMethods.size} telemetry dispatch methods: ${hookedMethods.joinToString(", ")}.")
     }
 }

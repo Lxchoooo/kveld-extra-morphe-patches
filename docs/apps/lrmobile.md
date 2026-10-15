@@ -41,7 +41,7 @@ Technical documentation and patch catalog for Adobe Lightroom on Android.
 
 2. **Block Telemetry & Trackers**:
    - **Objective**: Prevent runtime event logging and analytics dispatching.
-   - **How**: Hooks Google measurement and Crashlytics methods to return immediately.
+   - **How**: Gates class presence via `classDefByOrNull` and hooks Google AppMeasurement and Firebase Crashlytics dispatch methods to return immediately. First-party Adobe analytics view helpers are transitively neutralized at the dispatcher perimeter; functional cloud/identity endpoints (`photos.adobe.io`, `api.lightroom.adobe.com`, `ims-na1.adobelogin.com`, `device.griffon.adobe.com`) and native libraries are preserved for application boot and sync stability.
 
 3. **Sideload Install Support**:
    - **Objective**: Allow sideloaded packages to launch without redirection or license failures.
@@ -67,6 +67,9 @@ Technical documentation and patch catalog for Adobe Lightroom on Android.
 
 1. **Lightroom Background Sync**:
    Disabling WorkManager can affect background photo uploads, syncing, and exports.
+
+2. **Block Telemetry & Trackers**:
+   Manifest components, native growth libraries, and functional cloud/identity endpoints are intentionally preserved to prevent boot crashes and maintain sync/auth operation.
 
 ---
 
