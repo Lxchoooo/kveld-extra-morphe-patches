@@ -1,3 +1,10 @@
+## [1.16.3](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.16.2...v1.16.3) (2026-10-15)
+
+### Bug Fixes
+
+* **twitter:** make DM Debloat reliably hide the DM call buttons ([2c8c578](https://github.com/kveld9/kveld-extra-morphe-patches/commit/2c8c578899f27f902ff01eef20e6a54735533148))
+* **twitter:** make Navigation UI reliably hide the FAB menu ([336670b](https://github.com/kveld9/kveld-extra-morphe-patches/commit/336670b442a88802d185cc10e0eeecf00a2e7d0b))
+
 ## [1.16.2](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.16.1...v1.16.2) (2026-10-15)
 
 ### Bug Fixes

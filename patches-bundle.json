@@ -1,7 +1,7 @@
 {
-  "created_at": "2026-10-15T07:51:20",
-  "description": "## [1.16.2](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.16.1...v1.16.2) (2026-10-15)\n\n### Bug Fixes\n\n* **ci:** drop harness tests step, harness is local-only ([01651ef](https://github.com/kveld9/kveld-extra-morphe-patches/commit/01651ef3408965111268c364179ddcc001ed0211))",
-  "download_url": "https://github.com/kveld9/kveld-extra-morphe-patches/releases/download/v1.16.2/patches-1.16.2.mpp",
+  "created_at": "2026-10-15T09:26:01",
+  "description": "## [1.16.3](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.16.2...v1.16.3) (2026-10-15)\n\n### Bug Fixes\n\n* **twitter:** make DM Debloat reliably hide the DM call buttons ([2c8c578](https://github.com/kveld9/kveld-extra-morphe-patches/commit/2c8c578899f27f902ff01eef20e6a54735533148))\n* **twitter:** make Navigation UI reliably hide the FAB menu ([336670b](https://github.com/kveld9/kveld-extra-morphe-patches/commit/336670b442a88802d185cc10e0eeecf00a2e7d0b))",
+  "download_url": "https://github.com/kveld9/kveld-extra-morphe-patches/releases/download/v1.16.3/patches-1.16.3.mpp",
   "signature_download_url": "",
-  "version": "1.16.2"
+  "version": "1.16.3"
 }
