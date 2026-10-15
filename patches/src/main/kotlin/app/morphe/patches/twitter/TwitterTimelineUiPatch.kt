@@ -822,6 +822,7 @@ val twitterTimelineUiPatch = bytecodePatch(
                 if (ifEqzIdx >= 0 && pagerConstIdx - ifEqzIdx <= 3) {
                     val reg = (pagerInstructions[ifEqzIdx] as OneRegisterInstruction).registerA
                     val constIns = if (reg <= 15) "const/4 v$reg, 0x0" else "const/16 v$reg, 0x0"
+                    requireNotJumpTarget(pagerMethod, ifEqzIdx, "Timeline UI")
                     pagerMethod.addInstructions(ifEqzIdx, constIns)
                     patched++
                 } else {
@@ -844,6 +845,7 @@ val twitterTimelineUiPatch = bytecodePatch(
                 if (ifEqzIdx >= 0 && headerConstIdx - ifEqzIdx <= 3) {
                     val reg = (headerInstructions[ifEqzIdx] as OneRegisterInstruction).registerA
                     val constIns = if (reg <= 15) "const/4 v$reg, 0x0" else "const/16 v$reg, 0x0"
+                    requireNotJumpTarget(headerMethod, ifEqzIdx, "Timeline UI")
                     headerMethod.addInstructions(ifEqzIdx, constIns)
                     patched++
                 } else {

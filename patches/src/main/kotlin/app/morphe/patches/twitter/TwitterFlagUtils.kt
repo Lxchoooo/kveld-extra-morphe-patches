@@ -5,6 +5,10 @@ import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.patch.BytecodePatchContext
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import com.android.tools.smali.dexlib2.Opcode
+import com.android.tools.smali.dexlib2.builder.BuilderInstruction
+import com.android.tools.smali.dexlib2.builder.BuilderOffsetInstruction
+import com.android.tools.smali.dexlib2.builder.BuilderSwitchPayload
+import com.android.tools.smali.dexlib2.builder.MethodLocation
 import com.android.tools.smali.dexlib2.iface.instruction.Instruction
 import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
@@ -99,6 +103,7 @@ private fun handleBranch(
         val reg = (branchIns as? OneRegisterInstruction)?.registerA
         if (reg != null) {
             val constIns = if (reg <= 15) "const/4 v$reg, 0x0" else "const/16 v$reg, 0x0"
+            requireNotJumpTarget(method, branchIndex, patchName)
             method.addInstructions(branchIndex, constIns)
             return true
         }
@@ -106,3 +111,24 @@ private fun handleBranch(
     println("[$patchName] Unexpected instruction '${resultIns.opcode}' after invoke for flag '$flagKey'.")
     return false
 }
+
+/**
+ * Ensures the injection point is not a jump target before inserting in front of
+ * an instruction that consumes a value (if-*, iput, return). Code inserted right
+ * after a move-result only covers that read path and does not need this check.
+ */
+internal fun requireNotJumpTarget(method: MutableMethod, index: Int, patchName: String) {
+    val instructions = method.implementation?.instructions ?: return
+    if (index !in instructions.indices) return
+    val targetLocation = instructions[index].location
+    if (instructions.any { isJumpTarget(it, targetLocation) }) {
+        error("[$patchName] Injection point $index in ${method.definingClass}->${method.name} is a jump target; the injected override would be skipped on that path.")
+    }
+}
+
+private fun isJumpTarget(instruction: BuilderInstruction, location: MethodLocation): Boolean =
+    when (instruction) {
+        is BuilderOffsetInstruction -> instruction.target.location == location
+        is BuilderSwitchPayload -> instruction.switchElements.any { it.target.location == location }
+        else -> false
+    }
