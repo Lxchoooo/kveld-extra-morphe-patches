@@ -115,6 +115,10 @@ private val liveBannerFingerprint = Fingerprint(
     strings = listOf("x_lite_livestream_pill_enabled"),
 )
 
+private val homeTopicsTabFlagFingerprint = Fingerprint(
+    strings = listOf("hometimeline_pinned_tabs_topics_enabled"),
+)
+
 
 @Suppress("unused")
 val twitterTimelineUiPatch = bytecodePatch(
@@ -846,6 +850,12 @@ val twitterTimelineUiPatch = bytecodePatch(
                 }
             } else {
                 error("[Timeline UI] Target group constant -868946867 not found in Lcom/x/home/tabbed/a;->f.")
+            }
+
+            if (neutralizeFlag(homeTopicsTabFlagFingerprint, "hometimeline_pinned_tabs_topics_enabled", "Timeline UI")) {
+                patched++
+            } else {
+                error("[Timeline UI] Failed to neutralize 'hometimeline_pinned_tabs_topics_enabled' flag.")
             }
         } else {
             println("[Timeline UI] Skipped timelineAddTab: disabled by patch option.")
