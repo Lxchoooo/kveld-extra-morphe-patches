@@ -215,7 +215,7 @@ val twitterTimelineUiPatch = bytecodePatch(
     val timelineAddTab by booleanOption(
         key = "timelineAddTab",
         default = true,
-        title = "Timeline Add Tab",
+        title = "Hide Timeline Add Tab",
         description = "Hide add tab (+) button in home timeline tab header.",
         required = false,
     )
