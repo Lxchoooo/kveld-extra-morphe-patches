@@ -15,6 +15,7 @@ import com.android.tools.smali.dexlib2.iface.instruction.Instruction
 import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 import com.android.tools.smali.dexlib2.iface.reference.Reference
+import com.android.tools.smali.dexlib2.immutable.ImmutableMethod
 import com.android.tools.smali.dexlib2.util.MethodUtil
 
 /**
@@ -156,6 +157,45 @@ fun MutableMethod.replaceWithReturnEmptyList() {
         move-result-object v0
         return-object v0
     """.trimIndent())
+}
+
+/**
+ * Wraps a method that has fewer than [scratch] free local registers so an injected prologue can use
+ * scratch registers without overwriting the method parameters (which breaks ART verification).
+ *
+ * The original body is moved verbatim into a new synthetic sibling method and the original method
+ * becomes a wrapper whose whole body is [wrapperSmali]; the wrapper runs with [scratch] extra local
+ * registers and delegates to the synthetic method for the untouched behavior.
+ *
+ * [wrapperSmali] must be injected with the label-aware API because another patch may insert its own
+ * prologue at index 0 of the same method afterwards, which shifts the wrapper body.
+ *
+ * Returns false when the method already has at least [scratch] free local registers, in which case the
+ * caller injects the prologue inline (the scratch registers are then real locals).
+ */
+fun MutableMethod.wrapWithScratchRegisters(
+    classDef: MutableClass,
+    syntheticName: String,
+    scratch: Int,
+    wrapperSmali: String,
+): Boolean {
+    val impl = implementation ?: return false
+    if (impl.registerCount - numberOfParameterRegisters >= scratch) {
+        return false
+    }
+
+    val originalRegisterCount = impl.registerCount
+    val originalInstructionCount = impl.instructions.count()
+
+    val synthetic = MutableMethod(ImmutableMethod.of(this))
+    synthetic.setName(syntheticName)
+    classDef.methods.add(synthetic)
+
+    clearTryBlocks()
+    ensureRegisterCount(originalRegisterCount + scratch)
+    removeInstructions(0, originalInstructionCount)
+    addInstructionsWithLabels(0, wrapperSmali)
+    return true
 }
 
 inline fun <reified T : Reference> Instruction.getReference(): T? =

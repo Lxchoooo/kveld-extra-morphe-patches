@@ -23,6 +23,7 @@ import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patches.shared.Constants
+import app.morphe.patches.shared.wrapWithScratchRegisters
 
 private val urtItemPresenterFingerprint = Fingerprint(
     definingClass = "Lcom/x/urt/b;",
@@ -61,188 +62,122 @@ val twitterRemoveAdsPatch = bytecodePatch(
     execute {
         var patched = 0
 
+        val adItemTestSmali = """
+            :rmad_cond_check_item
+            instance-of v1, v0, Lcom/x/models/timelines/items/l1;
+            if-nez v1, :rmad_cond_check_post
+            goto :rmad_cond_not_post
+
+            :rmad_cond_check_post
+            move-object v1, v0
+            check-cast v1, Lcom/x/models/timelines/items/l1;
+            invoke-virtual {v1}, Lcom/x/models/timelines/items/l1;->y()Lcom/x/models/df;
+            move-result-object v1
+            if-nez v1, :rmad_cond_suppress_ad
+
+            :rmad_cond_not_post
+            instance-of v1, v0, Lcom/x/models/timelines/items/a2;
+            if-nez v1, :rmad_cond_check_trend
+            goto :rmad_cond_not_trend
+
+            :rmad_cond_check_trend
+            move-object v1, v0
+            check-cast v1, Lcom/x/models/timelines/items/a2;
+            iget-object v1, v1, Lcom/x/models/timelines/items/a2;->a:Lcom/x/models/sf;
+            if-eqz v1, :rmad_cond_not_trend
+            invoke-virtual {v1}, Lcom/x/models/sf;->b()Lcom/x/models/df;
+            move-result-object v1
+            if-nez v1, :rmad_cond_suppress_ad
+
+            :rmad_cond_not_trend
+            instance-of v1, v0, Lcom/x/models/timelines/items/r1;
+            if-nez v1, :rmad_cond_check_rtb
+            goto :rmad_cond_not_rtb
+
+            :rmad_cond_check_rtb
+            move-object v1, v0
+            check-cast v1, Lcom/x/models/timelines/items/r1;
+            iget-object v1, v1, Lcom/x/models/timelines/items/r1;->j:Lcom/x/models/df;
+            if-nez v1, :rmad_cond_suppress_ad
+
+            :rmad_cond_not_rtb
+            instance-of v1, v0, Lcom/x/models/timelines/items/d2;
+            if-nez v1, :rmad_cond_check_user
+            goto :rmad_cond_not_user
+
+            :rmad_cond_check_user
+            move-object v1, v0
+            check-cast v1, Lcom/x/models/timelines/items/d2;
+            iget-object v1, v1, Lcom/x/models/timelines/items/d2;->h:Lcom/x/models/df;
+            if-nez v1, :rmad_cond_suppress_ad
+
+            :rmad_cond_not_user
+            instance-of v1, v0, Lcom/x/models/timelines/items/n0;
+            if-nez v1, :rmad_cond_check_event
+            goto :rmad_cond_not_event
+
+            :rmad_cond_check_event
+            move-object v1, v0
+            check-cast v1, Lcom/x/models/timelines/items/n0;
+            iget-object v1, v1, Lcom/x/models/timelines/items/n0;->a:Lcom/x/models/l2;
+            if-eqz v1, :rmad_cond_not_event
+            invoke-virtual {v1}, Lcom/x/models/l2;->a()Lcom/x/models/df;
+            move-result-object v1
+            if-nez v1, :rmad_cond_suppress_ad
+
+            :rmad_cond_not_event
+            invoke-interface {v0}, Lcom/x/models/timelines/items/p0;->c()Ljava/lang/String;
+            move-result-object v1
+            if-eqz v1, :rmad_cond_continue
+
+            :rmad_cond_check_entry_id
+            const-string v2, "promoted"
+            invoke-virtual {v1, v2}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
+            move-result v1
+            if-nez v1, :rmad_cond_suppress_ad
+            goto :rmad_cond_continue
+
+            :rmad_cond_suppress_ad
+            sget-object v0, Lcom/x/urt/e0;->a:Lcom/x/urt/e0;
+            return-object v0
+        """.trimIndent()
+
+        val inlineSmali = """
+            move-object/from16 v0, p2
+            if-nez v0, :rmad_cond_check_item
+            goto :rmad_cond_continue
+
+            $adItemTestSmali
+
+            :rmad_cond_continue
+            nop
+        """.trimIndent()
+
         // 1. Intercept timeline items before presenter dispatch in com.x.urt.b.a
-        urtItemPresenterFingerprint.method.addInstructionsWithLabels(
-            0,
-            """
-                move-object/from16 v0, p2
-                if-nez v0, :rmad_cond_check_item
-                goto :rmad_cond_continue
-
-                :rmad_cond_check_item
-                instance-of v1, v0, Lcom/x/models/timelines/items/l1;
-                if-nez v1, :rmad_cond_check_post
-                goto :rmad_cond_not_post
-
-                :rmad_cond_check_post
-                move-object v1, v0
-                check-cast v1, Lcom/x/models/timelines/items/l1;
-                invoke-virtual {v1}, Lcom/x/models/timelines/items/l1;->y()Lcom/x/models/df;
-                move-result-object v1
-                if-nez v1, :rmad_cond_suppress_ad
-
-                :rmad_cond_not_post
-                instance-of v1, v0, Lcom/x/models/timelines/items/a2;
-                if-nez v1, :rmad_cond_check_trend
-                goto :rmad_cond_not_trend
-
-                :rmad_cond_check_trend
-                move-object v1, v0
-                check-cast v1, Lcom/x/models/timelines/items/a2;
-                iget-object v1, v1, Lcom/x/models/timelines/items/a2;->a:Lcom/x/models/sf;
-                if-eqz v1, :rmad_cond_not_trend
-                invoke-virtual {v1}, Lcom/x/models/sf;->b()Lcom/x/models/df;
-                move-result-object v1
-                if-nez v1, :rmad_cond_suppress_ad
-
-                :rmad_cond_not_trend
-                instance-of v1, v0, Lcom/x/models/timelines/items/r1;
-                if-nez v1, :rmad_cond_check_rtb
-                goto :rmad_cond_not_rtb
-
-                :rmad_cond_check_rtb
-                move-object v1, v0
-                check-cast v1, Lcom/x/models/timelines/items/r1;
-                iget-object v1, v1, Lcom/x/models/timelines/items/r1;->j:Lcom/x/models/df;
-                if-nez v1, :rmad_cond_suppress_ad
-
-                :rmad_cond_not_rtb
-                instance-of v1, v0, Lcom/x/models/timelines/items/d2;
-                if-nez v1, :rmad_cond_check_user
-                goto :rmad_cond_not_user
-
-                :rmad_cond_check_user
-                move-object v1, v0
-                check-cast v1, Lcom/x/models/timelines/items/d2;
-                iget-object v1, v1, Lcom/x/models/timelines/items/d2;->h:Lcom/x/models/df;
-                if-nez v1, :rmad_cond_suppress_ad
-
-                :rmad_cond_not_user
-                instance-of v1, v0, Lcom/x/models/timelines/items/n0;
-                if-nez v1, :rmad_cond_check_event
-                goto :rmad_cond_not_event
-
-                :rmad_cond_check_event
-                move-object v1, v0
-                check-cast v1, Lcom/x/models/timelines/items/n0;
-                iget-object v1, v1, Lcom/x/models/timelines/items/n0;->a:Lcom/x/models/l2;
-                if-eqz v1, :rmad_cond_not_event
-                invoke-virtual {v1}, Lcom/x/models/l2;->a()Lcom/x/models/df;
-                move-result-object v1
-                if-nez v1, :rmad_cond_suppress_ad
-
-                :rmad_cond_not_event
-                invoke-interface {v0}, Lcom/x/models/timelines/items/p0;->c()Ljava/lang/String;
-                move-result-object v1
-                if-eqz v1, :rmad_cond_continue
-
-                :rmad_cond_check_entry_id
-                const-string v2, "promoted"
-                invoke-virtual {v1, v2}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
-                move-result v1
-                if-nez v1, :rmad_cond_suppress_ad
-                goto :rmad_cond_continue
-
-                :rmad_cond_suppress_ad
-                sget-object v0, Lcom/x/urt/e0;->a:Lcom/x/urt/e0;
-                return-object v0
-
-                :rmad_cond_continue
-                nop
-            """.trimIndent(),
-        )
+        urtItemPresenterFingerprint.method.addInstructionsWithLabels(0, inlineSmali)
         patched++
 
         // 2. Intercept thread reply items before presenter dispatch in com.x.postdetail.m.v
-        postDetailPresenterFingerprint.method.addInstructionsWithLabels(
-            0,
-            """
-                move-object/from16 v0, p2
-                if-nez v0, :rmad_cond_check_item
-                goto :rmad_cond_continue
+        val wrapperSmali = """
+            move-object/from16 v0, p2
+            if-nez v0, :rmad_cond_check_item
+            goto :rmad_cond_continue
 
-                :rmad_cond_check_item
-                instance-of v1, v0, Lcom/x/models/timelines/items/l1;
-                if-nez v1, :rmad_cond_check_post
-                goto :rmad_cond_not_post
+            $adItemTestSmali
 
-                :rmad_cond_check_post
-                move-object v1, v0
-                check-cast v1, Lcom/x/models/timelines/items/l1;
-                invoke-virtual {v1}, Lcom/x/models/timelines/items/l1;->y()Lcom/x/models/df;
-                move-result-object v1
-                if-nez v1, :rmad_cond_suppress_ad
+            :rmad_cond_continue
+            invoke-virtual {v3, v4, v5}, Lcom/x/postdetail/m;->morphePostDetailPresenterRemoveAds(ILcom/x/models/timelines/items/p0;)Lcom/x/presenter/a;
+            move-result-object v0
+            return-object v0
+        """.trimIndent()
 
-                :rmad_cond_not_post
-                instance-of v1, v0, Lcom/x/models/timelines/items/a2;
-                if-nez v1, :rmad_cond_check_trend
-                goto :rmad_cond_not_trend
-
-                :rmad_cond_check_trend
-                move-object v1, v0
-                check-cast v1, Lcom/x/models/timelines/items/a2;
-                iget-object v1, v1, Lcom/x/models/timelines/items/a2;->a:Lcom/x/models/sf;
-                if-eqz v1, :rmad_cond_not_trend
-                invoke-virtual {v1}, Lcom/x/models/sf;->b()Lcom/x/models/df;
-                move-result-object v1
-                if-nez v1, :rmad_cond_suppress_ad
-
-                :rmad_cond_not_trend
-                instance-of v1, v0, Lcom/x/models/timelines/items/r1;
-                if-nez v1, :rmad_cond_check_rtb
-                goto :rmad_cond_not_rtb
-
-                :rmad_cond_check_rtb
-                move-object v1, v0
-                check-cast v1, Lcom/x/models/timelines/items/r1;
-                iget-object v1, v1, Lcom/x/models/timelines/items/r1;->j:Lcom/x/models/df;
-                if-nez v1, :rmad_cond_suppress_ad
-
-                :rmad_cond_not_rtb
-                instance-of v1, v0, Lcom/x/models/timelines/items/d2;
-                if-nez v1, :rmad_cond_check_user
-                goto :rmad_cond_not_user
-
-                :rmad_cond_check_user
-                move-object v1, v0
-                check-cast v1, Lcom/x/models/timelines/items/d2;
-                iget-object v1, v1, Lcom/x/models/timelines/items/d2;->h:Lcom/x/models/df;
-                if-nez v1, :rmad_cond_suppress_ad
-
-                :rmad_cond_not_user
-                instance-of v1, v0, Lcom/x/models/timelines/items/n0;
-                if-nez v1, :rmad_cond_check_event
-                goto :rmad_cond_not_event
-
-                :rmad_cond_check_event
-                move-object v1, v0
-                check-cast v1, Lcom/x/models/timelines/items/n0;
-                iget-object v1, v1, Lcom/x/models/timelines/items/n0;->a:Lcom/x/models/l2;
-                if-eqz v1, :rmad_cond_not_event
-                invoke-virtual {v1}, Lcom/x/models/l2;->a()Lcom/x/models/df;
-                move-result-object v1
-                if-nez v1, :rmad_cond_suppress_ad
-
-                :rmad_cond_not_event
-                invoke-interface {v0}, Lcom/x/models/timelines/items/p0;->c()Ljava/lang/String;
-                move-result-object v1
-                if-eqz v1, :rmad_cond_continue
-
-                :rmad_cond_check_entry_id
-                const-string v2, "promoted"
-                invoke-virtual {v1, v2}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
-                move-result v1
-                if-nez v1, :rmad_cond_suppress_ad
-                goto :rmad_cond_continue
-
-                :rmad_cond_suppress_ad
-                sget-object v0, Lcom/x/urt/e0;->a:Lcom/x/urt/e0;
-                return-object v0
-
-                :rmad_cond_continue
-                nop
-            """.trimIndent(),
+        val wrapped = postDetailPresenterFingerprint.method.wrapWithScratchRegisters(
+            mutableClassDefBy(postDetailPresenterFingerprint.method.definingClass),
+            "morphePostDetailPresenterRemoveAds",
+            3,
+            wrapperSmali,
         )
+        if (!wrapped) postDetailPresenterFingerprint.method.addInstructionsWithLabels(0, inlineSmali)
         patched++
 
         // 3. Short-circuit Google Mobile Ads SDK initialization
