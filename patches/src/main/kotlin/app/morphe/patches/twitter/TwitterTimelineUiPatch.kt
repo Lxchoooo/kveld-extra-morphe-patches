@@ -28,6 +28,7 @@ import app.morphe.patcher.patch.booleanOption
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patches.shared.Constants
 import app.morphe.patches.shared.wrapWithScratchRegisters
+import com.android.tools.smali.dexlib2.AccessFlags
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.instruction.NarrowLiteralInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
@@ -879,8 +880,14 @@ val twitterTimelineUiPatch = bytecodePatch(
                 if (ifEqzIdx >= 0) {
                     val reg = (instructions[ifEqzIdx] as OneRegisterInstruction).registerA
                     val constIns = if (reg <= 15) "const/4 v$reg, 0x0" else "const/16 v$reg, 0x0"
-                    method.addInstructions(ifEqzIdx, constIns)
-                    patched++
+                    val paramRegs = method.parameterTypes.sumOf { if (it.toString() == "J" || it.toString() == "D") 2 else 1 } + (if (AccessFlags.STATIC.isSet(method.accessFlags)) 0 else 1)
+                    val registerCount = method.implementation!!.registerCount
+                    if (reg >= registerCount - paramRegs) {
+                        method.addInstructions(0, constIns)
+                        patched++
+                    } else {
+                        error("[Timeline UI] Top bar branch register v$reg is not a method parameter in Lcom/x/home/tabbed/a;->i.")
+                    }
                 } else {
                     error("[Timeline UI] Preceding if-eqz branch not found before follow button field in Lcom/x/home/tabbed/a;->i.")
                 }
