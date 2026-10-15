@@ -1,7 +1,7 @@
 {
-  "created_at": "2026-10-15T06:05:14",
-  "description": "## [1.15.4](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.15.3...v1.15.4) (2026-10-15)\n\n### Bug Fixes\n\n* **twitter:** update timeline ad suppression item models and descriptors for 12.34.0 ([1d2e5ff](https://github.com/kveld9/kveld-extra-morphe-patches/commit/1d2e5fffc46a232ee5ed8706d6ce0adafe168174))\n* **twitter:** update timeline recommendation filter fields for 12.34.0 ([7635555](https://github.com/kveld9/kveld-extra-morphe-patches/commit/763555582b6d5ee91404a2280516e13f1612ff7e))",
-  "download_url": "https://github.com/kveld9/kveld-extra-morphe-patches/releases/download/v1.15.4/patches-1.15.4.mpp",
+  "created_at": "2026-10-15T06:54:01",
+  "description": "## [1.16.0](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.15.4...v1.16.0) (2026-10-15)\n\n### Bug Fixes\n\n* **twitter:** prefix labels in TwitterRemoveAdsPatch with rmad_ ([a27098a](https://github.com/kveld9/kveld-extra-morphe-patches/commit/a27098ab698ebf610d88c931665363df8c5a3b48))\n* **twitter:** prefix labels in TwitterTimelineUiPatch with tlflt_ and tluid_ ([4184d29](https://github.com/kveld9/kveld-extra-morphe-patches/commit/4184d2960b86df2ae5104190c16e297e90f3cd8a))\n\n### New Features\n\n* **harness:** add smali member reference verifier for target DEX ([360d2bd](https://github.com/kveld9/kveld-extra-morphe-patches/commit/360d2bd84fc54e8c38f5fffa88e79e213144fafd))",
+  "download_url": "https://github.com/kveld9/kveld-extra-morphe-patches/releases/download/v1.16.0/patches-1.16.0.mpp",
   "signature_download_url": "",
-  "version": "1.15.4"
+  "version": "1.16.0"
 }
