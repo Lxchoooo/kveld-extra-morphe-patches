@@ -20,13 +20,16 @@ package app.morphe.patches.twitter
 
 import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
+import app.morphe.patcher.patch.BytecodePatchContext
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import app.morphe.patches.shared.Constants
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
+import com.android.tools.smali.dexlib2.iface.reference.FieldReference
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
+import com.android.tools.smali.dexlib2.iface.reference.StringReference
 
 private val premiumCheckFingerprint = Fingerprint(
     returnType = "Z",
@@ -58,6 +61,24 @@ private val videoTabDownloadFingerprint = Fingerprint(
     strings = listOf("download_video"),
 )
 
+private val videoMediaToStringFingerprint = Fingerprint(
+    name = "toString",
+    returnType = "Ljava/lang/String;",
+    strings = listOf(
+        "MediaContentVideo(mediaId=",
+        ", isDownloadable=",
+    ),
+)
+
+private val gifMediaToStringFingerprint = Fingerprint(
+    name = "toString",
+    returnType = "Ljava/lang/String;",
+    strings = listOf(
+        "MediaContentGif(mediaId=",
+        ", isDownloadable=",
+    ),
+)
+
 @Suppress("unused")
 val twitterUnlockVideoDownloadPatch = bytecodePatch(
     name = "Unlock Video Downloads",
@@ -86,6 +107,16 @@ val twitterUnlockVideoDownloadPatch = bytecodePatch(
         for ((fingerprint, siteLabel) in callSites) {
             patchCallSite(fingerprint.method, siteLabel, target)
             patched++
+        }
+
+        val mediaFingerprints = listOf(
+            videoMediaToStringFingerprint,
+            gifMediaToStringFingerprint,
+        )
+
+        for (fingerprint in mediaFingerprints) {
+            val field = resolveDownloadableField(fingerprint.method)
+            patched += patchConstructors(field)
         }
 
         println("[Unlock Video Downloads] Applied $patched hooks -> native video download unlocked.")
@@ -142,3 +173,93 @@ private fun isTargetMethod(
         ref.returnType == target.returnType &&
         ref.parameterTypes.map { it.toString() } == target.parameterTypes
 }
+
+private fun resolveDownloadableField(method: MutableMethod): FieldReference {
+    val definingClass = method.definingClass
+    val instructions = method.implementation?.instructions?.toList()
+        ?: error("[Unlock Video Downloads] toString method in '$definingClass' has no instructions.")
+
+    val stringIndex = instructions.indexOfFirst { ins ->
+        ((ins as? ReferenceInstruction)?.reference as? StringReference)?.string == ", isDownloadable="
+    }
+    if (stringIndex < 0) {
+        error("[Unlock Video Downloads] String ', isDownloadable=' not found in '$definingClass->toString'.")
+    }
+
+    return instructions.subList(stringIndex + 1, instructions.size)
+        .asSequence()
+        .filter { it.opcode == Opcode.IGET_BOOLEAN }
+        .mapNotNull { (it as? ReferenceInstruction)?.reference as? FieldReference }
+        .firstOrNull { it.definingClass == definingClass }
+        ?: error("[Unlock Video Downloads] Field 'isDownloadable' not found in '$definingClass->toString'.")
+}
+
+private fun BytecodePatchContext.patchConstructors(field: FieldReference): Int {
+    val definingClass = field.definingClass
+    val classDef = mutableClassDefBy(definingClass)
+    val fieldDescriptor = "${field.definingClass}->${field.name}:${field.type}"
+
+    val targetConstructors = classDef.methods.filter { method ->
+        method.name == "<init>" && writesField(method, field)
+    }
+    if (targetConstructors.isEmpty()) {
+        error("[Unlock Video Downloads] No constructors found writing '$fieldDescriptor' in '$definingClass'.")
+    }
+
+    for (method in targetConstructors) {
+        patchConstructorReturnVoids(method, fieldDescriptor)
+    }
+    return targetConstructors.size
+}
+
+private fun writesField(method: MutableMethod, target: FieldReference): Boolean {
+    val instructions = method.implementation?.instructions ?: return false
+    return instructions.any { ins ->
+        ins.opcode == Opcode.IPUT_BOOLEAN &&
+            matchesField((ins as? ReferenceInstruction)?.reference as? FieldReference, target)
+    }
+}
+
+private fun matchesField(ref: FieldReference?, target: FieldReference): Boolean {
+    if (ref == null) return false
+    return ref.definingClass == target.definingClass &&
+        ref.name == target.name &&
+        ref.type == target.type
+}
+
+private fun patchConstructorReturnVoids(
+    method: MutableMethod,
+    fieldDescriptor: String,
+) {
+    val instructions = method.implementation?.instructions?.toList()
+        ?: error("[Unlock Video Downloads] Constructor in '${method.definingClass}' has no instructions.")
+
+    val returnVoidIndices = instructions.indices
+        .filter { instructions[it].opcode == Opcode.RETURN_VOID }
+    if (returnVoidIndices.isEmpty()) {
+        error("[Unlock Video Downloads] Constructor in '${method.definingClass}' has no return-void.")
+    }
+
+    val scratch = scratchRegister(method)
+
+    for (index in returnVoidIndices.asReversed()) {
+        requireNotJumpTarget(method, index, "Unlock Video Downloads")
+        method.addInstructions(
+            index,
+            """
+                const/4 v$scratch, 0x1
+                iput-boolean v$scratch, p0, $fieldDescriptor
+            """.trimIndent(),
+        )
+    }
+}
+
+private fun scratchRegister(method: MutableMethod): Int {
+    val registerCount = method.implementation?.registerCount
+        ?: error("[Unlock Video Downloads] Constructor in '${method.definingClass}' has no implementation.")
+    val parameterRegisterCount = 1 + method.parameterTypes.sumOf { if (isWideType(it.toString())) 2 else 1 }
+    val thisRegister = registerCount - parameterRegisterCount
+    return if (thisRegister == 0) 1 else 0
+}
+
+private fun isWideType(type: String): Boolean = type == "J" || type == "D"

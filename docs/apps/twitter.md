@@ -139,7 +139,7 @@ Technical documentation and patch catalog for X (Twitter) on Android.
 
 19. **Unlock Video Downloads**:
     - **Objective**: Save videos and GIFs using the native download action without Premium.
-    - **How**: Forces the Premium check to pass only at the three native download entry points (media viewer, post menu, video tab); the Premium check itself and its other callers are untouched; downloads use the app's own downloader.
+    - **How**: Marks every video and GIF as downloadable so the native "Download video" option is shown, and lets the Premium check pass only at the three native download entry points (media viewer, post menu, video tab); the Premium check itself and its other callers stay untouched; downloads use the app's own downloader.
 
 ---
 
