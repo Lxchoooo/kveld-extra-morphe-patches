@@ -113,7 +113,7 @@ Add `kveld9/kveld-morphe-patches` as a second source in Morphe Manager (or via [
 
 <!-- PATCHES_START -->
 <details>
-<summary>Instagram&nbsp;&nbsp;•&nbsp;&nbsp;<b>4 patches</b></summary>
+<summary>Instagram&nbsp;&nbsp;•&nbsp;&nbsp;<b>3 patches</b></summary>
 <br>
 
 **Supported versions:**
@@ -126,12 +126,11 @@ Add `kveld9/kveld-morphe-patches` as a second source in Morphe Manager (or via [
 | **AR Effects Slimmer** | Strips ARCore native binaries (libarcore_sdk_c.so, libarcore_sdk_jni.so) and AR effect/face tracking asset models. WARNING: Disables camera AR filters, 3D face effects, and body/face tracking. |  |
 | **Block Crash & Diagnostics** | Neutralizes crash-dump uploaders, Lacrima detector broadcasts, debug diagnostics, carrier preload trackers, and lead-ads entrypoints. |  |
 | **Block Telemetry & Trackers** | Neutralizes Facebook Analytics2, DataTransport, FDID/PhoneId providers, and strips AD_ID permissions. |  |
-| **MLKit Vision Slimmer** | Disable MLKit component discovery and registrars. WARNING: this breaks in-app QR and barcode scanning. |  |
 
 </details>
 
 <details>
-<summary>X&nbsp;&nbsp;•&nbsp;&nbsp;<b>22 patches</b></summary>
+<summary>X&nbsp;&nbsp;•&nbsp;&nbsp;<b>21 patches</b></summary>
 <br>
 
 **Supported versions:**
@@ -142,7 +141,7 @@ Add `kveld9/kveld-morphe-patches` as a second source in Morphe Manager (or via [
 | Patch | Description | Options |
 |----------|----------------|-----------|
 | **Background Slimmer** | Disables background periodic jobs, home screen widgets, and companion services to reduce resource usage. |  |
-| **Block Telemetry & Trackers** | Blocks tracking services, analytics collection, and advertising identifiers. |  |
+| **Block Telemetry & Trackers** | Blocks tracking services, analytics collection, and advertising identifiers, redirects Braze and Sentry endpoints to 0.0.0.0, and purges Sentry manifest metadata. | • Block Payments & Anti-Fraud Telemetry |
 | **Block Update Screen** | Blocks the outdated app screen and suppresses in-app update prompts on launch. |  |
 | **Control Video Auto Scroll** | Prevents automatic scrolling to the next video in immersive view. |  |
 | **Custom Deep Links** | Opens supported custom and alternative domain links directly in the app (for shared link domains, see Share Links). | • Custom Link Hosts |
@@ -151,7 +150,6 @@ Add `kveld9/kveld-morphe-patches` as a second source in Morphe Manager (or via [
 | **Default Reply Sorting** | Opens replies on every post with the selected sort mode instead of Relevance. | • Reply Sort Mode |
 | **Disable Auto Refresh** | Stops the home timeline from automatically jumping to new posts. |  |
 | **Drawer Items** | Hides individual menu items, badges, and sidebar entries in the navigation drawer. | • Hide Profile<br>• Hide Premium<br>• Hide Communities<br>• Hide Bookmarks<br>• Hide Lists<br>• Hide Spaces<br>• Hide Creator Studio<br>• Hide Grok<br>• Hide Help Center |
-| **MLKit Vision Slimmer** | Disables machine learning vision components to reduce binary overhead (breaks QR and barcode scanning). |  |
 | **Navigation UI** | Customizes bottom navigation bar tabs, unread badges, and search surfaces. | • Hide Badges<br>• Hide FAB<br>• Hide FAB Menu<br>• Hide Navigation Bar<br>• Hide Grok Tab<br>• Hide Explore Tabs<br>• Hide Search Tab Items |
 | **No Shortened URL** | Expands t.co shortened URLs, removing the click-tracking intermediary. |  |
 | **Pause Search Suggestions** | Stops persisting search suggestions locally without breaking search. |  |
@@ -188,7 +186,7 @@ Add `kveld9/kveld-morphe-patches` as a second source in Morphe Manager (or via [
 </details>
 
 <details>
-<summary>CapCut&nbsp;&nbsp;•&nbsp;&nbsp;<b>12 patches</b></summary>
+<summary>CapCut&nbsp;&nbsp;•&nbsp;&nbsp;<b>11 patches</b></summary>
 <br>
 
 **Supported versions:**
@@ -203,10 +201,9 @@ Add `kveld9/kveld-morphe-patches` as a second source in Morphe Manager (or via [
 | **Bypass GeoBlock Region Restriction** | Forces CapCut GeoBlock config lists (cert, dock, entrance, page, scheme) to empty so region-blocked surfaces stay enabled. Server-refused content may still fail to load. |  |
 | **Bypass Signature Check** | Spoofs the official APK signature (SHA-256) for tamper telemetry, drops the server-driven signature blacklist, silences the abnormal-source toast, and disables the Godzilla inject-detect gate so re-signed builds are not blocked. |  |
 | **Bypass Unsafe Package Modal** | Replaces the unsafe-package modal fallback URL in the Lynx schema defaults with the real template portal URL so region-blocked or untrusted-client fallbacks open templates instead of the blocking security notice. |  |
-| **Locale Slimmer** | Strips unselected language string tables, resources, and asset JSON files from the APK. Base fallback and English are always preserved. | • Locales to keep |
+| **Locale Assets Slimmer** | Strips unselected CapCut asset locale bundles (assets/locales/*.json) from the APK. English is always preserved. For res/values-* string tables use the canonical universal Remove Extra Languages patch. | • Locales to keep |
 | **Native Bloat Slimmer** | Strips non-essential companion native libraries by zeroing bytes in-situ. Always zeroes AppLovin ad crash reporter. WARNING: Stripping speech recognition and synthesis engines (libspeech*.so) disables voice recognition, voiceover captions, and speech-to-text features. | • Trim Speech Engines (Breaks Voice Features) |
 | **Remove Watermark** | Forces CapCut watermark-removal gates to allow export without watermark (WatermarkBusinessFunction). |  |
-| **Screen Density Slimmer** | Strips unselected screen density assets and purges non-phone UI mode qualifiers. Launcher icons, nodpi/anydpi, and single-density orphans are always preserved. | • Target screen density |
 | **Unlock Premium** | Forces CapCut VIP gates to return true (SubscribeImpl, PayVipImpl, UserVipInfo, UserDetailInfo, VipUserServiceImpl, SubscribeCloudImpl) plus central account status flags (BusinessManager). Cloud-gated assets may still fail. |  |
 | **Unlock Premium Templates** | Marks premium template styles as available so locked template features stay usable. |  |
 | **Unlock Ultra HD Export** | Forces CapCut Ultra HD / high-resolution export gates to unlocked so 4K export options stay available. |  |
@@ -214,7 +211,7 @@ Add `kveld9/kveld-morphe-patches` as a second source in Morphe Manager (or via [
 </details>
 
 <details>
-<summary>Lightroom&nbsp;&nbsp;•&nbsp;&nbsp;<b>5 patches</b></summary>
+<summary>Lightroom&nbsp;&nbsp;•&nbsp;&nbsp;<b>3 patches</b></summary>
 <br>
 
 **Supported versions:**
@@ -225,15 +222,13 @@ Add `kveld9/kveld-morphe-patches` as a second source in Morphe Manager (or via [
 | Patch | Description | Options |
 |----------|----------------|-----------|
 | **Block Telemetry & Trackers** | Neutralizes Google AppMeasurement, Firebase Crashlytics, Branch attribution, and Adobe Creative SDK analytics dispatchers, redirects Adobe Edge and DTM endpoints to 0.0.0.0, strips advertising permissions, and injects analytics opt-out flags. |  |
-| **Lightroom Background Sync** | Disables WorkManager background sync services, scheduled jobs, and boot receiver. The WorkManager startup initializer is intentionally preserved because removing it prevents application boot. WARNING: Disabling WorkManager can affect background photo uploads, syncing, and exports. |  |
-| **Lightroom Junk Cleaner** | Purges non-functional build metadata, compiler properties, and duplicate license files from the APK root and META-INF. |  |
 | **Sideload Install Support** | Ensures compatibility for sideloaded lab installs by allowing local installer source checks to report success and completing Play Integrity token requests. Required for sideloaded lab installs: without it the app routes to the Play Store. |  |
 | **Unlock Premium Features** | Enables app features locked behind subscription paywalls by activating the internal Limited-Time Premium Unlock (LTPU) gate. Requires Sideload Install Support (applied automatically as dependency). |  |
 
 </details>
 
 <details>
-<summary>Moovit&nbsp;&nbsp;•&nbsp;&nbsp;<b>7 patches</b></summary>
+<summary>Moovit&nbsp;&nbsp;•&nbsp;&nbsp;<b>5 patches</b></summary>
 <br>
 
 **Supported versions:**
@@ -245,16 +240,14 @@ Add `kveld9/kveld-morphe-patches` as a second source in Morphe Manager (or via [
 |----------|----------------|-----------|
 | **Block Telemetry & Trackers** | Neutralizes AppsFlyer, Braze, and Inneractive DEX dispatchers, disables analytics services/providers, and strips advertising permissions. |  |
 | **Fix Google Maps** | Restores Google Maps rendering by spoofing the original package signature to Google Play Services. | • Google Maps Platform API key |
-| **Locale Slimmer** | Strips unselected language string tables and resources from base APK. Base fallback and English are always preserved. | • Locales to keep |
 | **Remove Ads** | Hides banner and inline ads and neutralizes ad unit ID lookups. |  |
-| **Screen Density Slimmer** | Strips unselected screen density assets and purges non-phone UI mode qualifiers. Launcher icons, nodpi/anydpi, and single-density orphans are always preserved. | • Target screen density |
 | **Suppress Paywalls** | Suppresses subscription paywalls, onboarding upgrade dialogs, and promotional cards. |  |
 | **Unlock Moovit+** | Unlocks Moovit+ premium subscription features locally, including Safe Ride and address search in favorites. |  |
 
 </details>
 
 <details>
-<summary>Copilot&nbsp;&nbsp;•&nbsp;&nbsp;<b>6 patches</b></summary>
+<summary>Copilot&nbsp;&nbsp;•&nbsp;&nbsp;<b>4 patches</b></summary>
 <br>
 
 **Supported versions:**
@@ -267,14 +260,12 @@ Add `kveld9/kveld-morphe-patches` as a second source in Morphe Manager (or via [
 | **Block Telemetry & Trackers** | Neutralizes Microsoft OneDS/Aria lifecycle, aggregated-metric and failure-logging dispatch methods, nullifies ad measurement platform identifiers (AIFA, AppSetId), rewrites default telemetry endpoints inside telemetry packages and custom blocked hosts unscoped to 0.0.0.0, disables cross-sell, Floodgate, HockeyApp and DataTransport components, and strips advertising permissions. | • Custom Blocked Hosts |
 | **Bypass Code Transparency** | Skips the code-transparency failure dialog and reports local verification success, unblocking sideloaded installs. |  |
 | **Copilot Companion Native Slimmer** | Strips optional companion native binaries (React Native, Hermes, SlimCV) via in-situ zeroing. WARNING: Hermes and React Native are load-bearing for React Native initialization - enabling this WILL crash Copilot React Native surfaces (Copilot chat host) with UnsatisfiedLinkError. The HockeyApp native exception handler (proven UnsatisfiedLinkError in OfficeApplication.onMAMCreate) and voice/dictation SDKs (libofficevoicesdk, libofficevoicetranscriptionsdk; proven dlopen FATAL on boot path) are load-bearing at startup and are therefore never stripped. |  |
-| **Copilot DPI Slimmer** | Strips drawables for unselected screen densities from Copilot base APK while preserving launcher icons and single-density assets. Non-phone UI mode qualifiers (watch, television, car, vrheadset) are purged from drawable/mipmap resources. WARNING: Displays matching stripped densities will scale preserved assets. | • Target screen density |
-| **Copilot Junk Cleaner** | Purges non-functional build metadata, properties, proto descriptors, and duplicate license notices from APK root and META-INF while strictly protecting runtime assets and signatures. |  |
 | **Disable Login Requirement** | Removes login requirement and FTUX paywall screens. Cloud-backed features still require sign-in server-side. |  |
 
 </details>
 
 <details>
-<summary>PowerPoint&nbsp;&nbsp;•&nbsp;&nbsp;<b>8 patches</b></summary>
+<summary>PowerPoint&nbsp;&nbsp;•&nbsp;&nbsp;<b>6 patches</b></summary>
 <br>
 
 **Supported versions:**
@@ -288,8 +279,6 @@ Add `kveld9/kveld-morphe-patches` as a second source in Morphe Manager (or via [
 | **Bypass Code Transparency** | Bypasses the code transparency checks. |  |
 | **Disable Login Requirement** | Removes login requirement and FTUX paywall screens. |  |
 | **PowerPoint Companion Native Slimmer** | Strips optional companion native binaries (React Native and Hermes JavaScript runtime stack) via in-situ zeroing. WARNING: stripped libraries are load-bearing for React Native initialization - enabling this WILL crash the app with UnsatisfiedLinkError when Copilot or other React Native surfaces start, not merely hide those features. |  |
-| **PowerPoint DPI Slimmer** | Strips drawables for unselected screen densities from PowerPoint base APK while preserving launcher icons and single-density assets. WARNING: Displays matching stripped densities will scale preserved assets. | • Target screen density |
-| **PowerPoint Locale Slimmer** | Strips unselected localized resource directories (res/values-<locale>/) from PowerPoint base APK. English (en, en-us) is always retained. WARNING: Application strings for stripped locales will fall back to English. | • Locales to keep |
 | **Remove Shared User ID** | Removes the sharedUserId attribute from the manifest to prevent installation conflicts. |  |
 | **Unlock 365 Family** | Unlocks Microsoft 365 Family subscription features locally. |  |
 

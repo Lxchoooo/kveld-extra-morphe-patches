@@ -1,3 +1,31 @@
+## [1.21.0](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.20.0...v1.21.0) (2026-10-16)
+
+### Bug Fixes
+
+* **twitter:** purge Sentry manifest metadata and redirect tracker endpoints ([bbfc560](https://github.com/kveld9/kveld-extra-morphe-patches/commit/bbfc560d3ed0e19724448d6fedd27f8e3eb61c6b))
+* **twitter:** show the download option on every video and GIF ([777f05d](https://github.com/kveld9/kveld-extra-morphe-patches/commit/777f05d649e14975b5f7efcc6ba3832d91ed5a68))
+* **twitter:** stop timeline refresh when reopening the app ([d2d8f6c](https://github.com/kveld9/kveld-extra-morphe-patches/commit/d2d8f6c5aeb7610c957fbd1bb85cf95752126697))
+
+### New Features
+
+* **twitter:** block Google Ads, DoubleClick, and opt-in payments telemetry ([643d59e](https://github.com/kveld9/kveld-extra-morphe-patches/commit/643d59e7dd37cc83a2b5bd7989458fc159991248))
+
+### Code Refactoring
+
+* **capcut:** remove redundant Screen Density Slimmer ([5fa88d2](https://github.com/kveld9/kveld-extra-morphe-patches/commit/5fa88d210cc5524f074935caaff2aad757ed3dd9))
+* **capcut:** scope Locale Slimmer to asset bundles only ([9f85e3b](https://github.com/kveld9/kveld-extra-morphe-patches/commit/9f85e3bf6286bc3d82de7231d6c3df9043c3623d))
+* **instagram:** remove redundant MLKit Vision Slimmer ([6eff44a](https://github.com/kveld9/kveld-extra-morphe-patches/commit/6eff44a524c8f166a4d3c448965f597d868c0b21))
+* **lrmobile:** remove redundant Background Sync ([704ddb5](https://github.com/kveld9/kveld-extra-morphe-patches/commit/704ddb5fccc28d63cdf6775a8de5d6104afef72e))
+* **lrmobile:** remove redundant Junk Cleaner ([9a029bb](https://github.com/kveld9/kveld-extra-morphe-patches/commit/9a029bbdb4f2560aa48f6c148344277b205b803e))
+* **moovit:** remove redundant Locale Slimmer ([eca83ff](https://github.com/kveld9/kveld-extra-morphe-patches/commit/eca83ffa6b69de75a87ee601f9e3765e0b7959d9))
+* **moovit:** remove redundant Screen Density Slimmer ([dadf25b](https://github.com/kveld9/kveld-extra-morphe-patches/commit/dadf25be835c162d6b272dd8a0ee24d0b98cf2d8))
+* **officehub:** remove redundant DPI Slimmer ([a79fa13](https://github.com/kveld9/kveld-extra-morphe-patches/commit/a79fa132837d8a611572e57a8e580fed2b2c1545))
+* **officehub:** remove redundant Junk Cleaner ([26b78b8](https://github.com/kveld9/kveld-extra-morphe-patches/commit/26b78b8aa904f01558cc535f3c738c5b6d213446))
+* **powerpoint:** remove redundant DPI Slimmer ([91b0db9](https://github.com/kveld9/kveld-extra-morphe-patches/commit/91b0db956faeaa848c6b38fef911d5bdf4b40f8f))
+* **powerpoint:** remove redundant Locale Slimmer ([2204a9e](https://github.com/kveld9/kveld-extra-morphe-patches/commit/2204a9e7a71e3999e5890954f4a515809672034d))
+* **twitter:** deduplicate tracker endpoint literals in Block Telemetry ([d8e91b3](https://github.com/kveld9/kveld-extra-morphe-patches/commit/d8e91b3ed5cb6da3489cb031354556278d80a055))
+* **twitter:** remove redundant MLKit Vision Slimmer ([29f73a7](https://github.com/kveld9/kveld-extra-morphe-patches/commit/29f73a70f0475f748a0fd396d947cb103d8b0474))
+
 ## [1.20.0](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.19.0...v1.20.0) (2026-10-16)
 
 ### New Features
