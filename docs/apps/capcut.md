@@ -25,7 +25,6 @@ Technical documentation and patch catalog for CapCut on Android.
 | **Block Telemetry & Trackers** | `bytecodePatch` | `true` (Enabled) | `CapCut Telemetry Manifest Purge` | Neutralizes Google AppMeasurement, AppsFlyer, and ByteDance AppLog event dispatchers. |
 | **CapCut Telemetry Manifest Purge** | `resourcePatch` | `false` (Opt-in) | None | Strips 6 advertising/tracking permissions, disables measurement/analytics/attribution components (AppMeasurement, AppLovin, Vungle, BDInstall, ByteDance AppLog Collector, LogService, Pangle), prunes analytics discovery registrars (MLKit/messaging/crashlytics preserved), injects 8 opt-out metadata flags. |
 | **Locale Slimmer** | `resourcePatch` | `false` (Opt-in) | None | Strips unselected res/values-* tables and assets/locales/*.json bundles via locales option (default en). Base fallback and English always preserved. |
-| **Screen Density Slimmer** | `resourcePatch` | `false` (Opt-in) | None | Strips unselected drawable/mipmap density assets and purges watch/television/car/vrheadset UI modes via density option (default xxhdpi). Launcher icons, nodpi/anydpi and single-density orphans preserved. |
 | **Bypass Effects Region Restriction** | `bytecodePatch` | `true` (Enabled) | None | Spoofs device_platform to "windows" and resets deviceId in EffectConfiguration to bypass ByteDance Shark WAF effect loading blocks. |
 | **Bypass GeoBlock Region Restriction** | `bytecodePatch` | `true` (Enabled) | None | Forces CapCut GeoBlock config lists (cert, dock, entrance, page, scheme) to empty so region-blocked surfaces stay enabled. Server-refused content may still fail to load. |
 | **Bypass Signature Check** | `bytecodePatch` | `true` (Enabled) | None | Spoofs official APK SHA-256 signature, suppresses signature blacklist and abnormal-source toasts, and disables Godzilla inject detection. |
@@ -90,11 +89,7 @@ Technical documentation and patch catalog for CapCut on Android.
    - **Objective**: Reduce package size by removing unneeded languages.
    - **How**: Deletes unselected values directories and JSON language bundles while preserving base and English fallbacks.
 
-2. **Screen Density Slimmer (`resourcePatch`)**:
-   - **Objective**: Reduce package size by removing unneeded display densities.
-   - **How**: Purges non-phone layout modes and strips non-target drawable folders while retaining launcher icons and single-density assets.
-
-3. **Native Bloat Slimmer (`rawResourcePatch`)**:
+2. **Native Bloat Slimmer (`rawResourcePatch`)**:
    - **Objective**: Reduce disk space by stripping unused native libraries.
    - **How**: Empties target crash reporter and optional speech recognition binaries directly within the native library directories.
 
@@ -104,11 +99,9 @@ Technical documentation and patch catalog for CapCut on Android.
 
 1. **Opt-in Status**:
    Telemetry and resource slimmer patches are opt-in and disabled by default.
-2. **Screen Density Slimmer**:
-   Stripping density resources may degrade visual assets or cause layout clipping on devices whose display densities differ from the preserved density.
-3. **Locale Slimmer**:
+2. **Locale Slimmer**:
    Application strings for stripped languages will fall back to base or English strings.
-4. **Native Bloat Slimmer**:
+3. **Native Bloat Slimmer**:
    Stripping speech recognition and synthesis engines disables voice effects, text-to-speech, and automatic captions.
 
 ---
