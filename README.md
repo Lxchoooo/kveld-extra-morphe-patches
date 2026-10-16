@@ -338,18 +338,18 @@ To use them, add `kveld9/kveld-morphe-patches` as a second source in Morphe Mana
 
 ### Application Guides
 
-| App | Guide | Description |
-| :--- | :--- | :--- |
-| Instagram | [Instagram Guide](docs/apps/instagram.md) | Download target, patch catalog, and known limitations for Instagram. |
-| X | [X Guide](docs/apps/twitter.md) | Download target, patch catalog, and known limitations for X. |
-| Moovit | [Moovit Guide](docs/apps/moovit.md) | Download target, patch catalog, and known limitations for Moovit. |
-| PowerPoint | [PowerPoint Guide](docs/apps/powerpoint.md) | Download target, patch catalog, and known limitations for Microsoft PowerPoint. |
-| Lightroom | [Lightroom Guide](docs/apps/lrmobile.md) | Download target, patch catalog, and known limitations for Adobe Lightroom. |
-| CapCut | [CapCut Guide](docs/apps/capcut.md) | Download target, patch catalog, and known limitations for CapCut. |
-| Copilot | [Copilot Guide](docs/apps/officehub.md) | Download target, patch catalog, and known limitations for Microsoft Copilot. |
-| Hevy | [Hevy Guide](docs/apps/hevy.md) | Download target, patch catalog, and known limitations for Hevy. |
-| NokoPrint | [NokoPrint Guide](docs/apps/nokoprint.md) | Download target, patch catalog, and known limitations for NokoPrint. |
-| Xiaomi Earbuds | [Xiaomi Earbuds Guide](docs/apps/xiaomi_earbuds.md) | Download target, patch catalog, and known limitations for Xiaomi Earbuds. |
+| App | Guide |
+| :--- | :--- |
+| Instagram | [Guide](docs/apps/instagram.md) |
+| X | [Guide](docs/apps/twitter.md) |
+| Moovit | [Guide](docs/apps/moovit.md) |
+| PowerPoint | [Guide](docs/apps/powerpoint.md) |
+| Lightroom | [Guide](docs/apps/lrmobile.md) |
+| CapCut | [Guide](docs/apps/capcut.md) |
+| Copilot | [Guide](docs/apps/officehub.md) |
+| Hevy | [Guide](docs/apps/hevy.md) |
+| NokoPrint | [Guide](docs/apps/nokoprint.md) |
+| Xiaomi Earbuds | [Guide](docs/apps/xiaomi_earbuds.md) |
 
 <p align="center"><a href="#top"><b>&uarr; Back to top</b></a></p>
 
