@@ -573,7 +573,58 @@ val twitterTimelineUiPatch = bytecodePatch(
                 return-object v0
             """.trimIndent()
 
+            val listFilterSmali = """
+                move-object/from16 v0, p1
+                if-eqz v0, :tldsc_cond_filter_end
+
+                new-instance v1, Ljava/util/ArrayList;
+                invoke-direct {v1}, Ljava/util/ArrayList;-><init>()V
+
+                invoke-interface {v0}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+                move-result-object v0
+
+                :tldsc_loop_start
+                invoke-interface {v0}, Ljava/util/Iterator;->hasNext()Z
+                move-result v2
+                if-eqz v2, :tldsc_loop_end
+
+                invoke-interface {v0}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+                move-result-object v2
+                check-cast v2, Lcom/x/models/timelines/items/p0;
+
+                instance-of v3, v2, Lcom/x/models/timelines/items/b1;
+                if-eqz v3, :tldsc_cond_add_item
+
+                move-object v3, v2
+                check-cast v3, Lcom/x/models/timelines/items/b1;
+
+                # Null-guard on b1->f before contains
+                iget-object v4, v3, Lcom/x/models/timelines/items/b1;->f:Ljava/lang/String;
+                if-eqz v4, :tldsc_cond_add_item
+
+                const-string v5, "relatedtweets"
+                invoke-virtual {v4, v5}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
+                move-result v5
+                if-nez v5, :tldsc_cond_drop_item
+
+                :tldsc_cond_add_item
+                invoke-interface {v1, v2}, Ljava/util/List;->add(Ljava/lang/Object;)Z
+                goto :tldsc_loop_start
+
+                :tldsc_cond_drop_item
+                goto :tldsc_loop_start
+
+                :tldsc_loop_end
+                move-object/from16 p1, v1
+
+                :tldsc_cond_filter_end
+                nop
+            """.trimIndent()
+
             val discBefore = patched
+            timelineItemFilterFingerprint.method.addInstructionsWithLabels(0, listFilterSmali)
+            patched++
+
             urtItemPresenterFingerprint.method.addInstructionsWithLabels(0, inlineSmali)
             patched++
 
