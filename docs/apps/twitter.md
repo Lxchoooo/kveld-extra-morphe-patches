@@ -42,6 +42,7 @@ Technical documentation and patch catalog for X (Twitter) on Android.
 | **Share Links** | `bytecodePatch` | `false` (Opt-in) | None | Replaces shared post links with a custom domain. |
 | **Show Sensitive Media** | `bytecodePatch` | `false` (Opt-in) | None | Displays sensitive media directly without tap-to-reveal blur warnings. |
 | **Timeline UI** | `bytecodePatch` | `true` (Enabled) | None | Customizes timeline surfaces including banners, recommendation carousels, and action buttons. |
+| **Unlock Video Downloads** | `bytecodePatch` | `true` (Enabled) | None | Lets you save videos and GIFs with the built-in download option without Premium. |
 
 ---
 
@@ -130,6 +131,10 @@ Technical documentation and patch catalog for X (Twitter) on Android.
 17. **Timeline UI**:
     - **Objective**: Clean up home timeline feeds.
     - **How**: Removes banner alerts, recommendation carousels, and video entrypoints.
+
+18. **Unlock Video Downloads**:
+    - **Objective**: Save videos and GIFs using the native download action without Premium.
+    - **How**: Forces the Premium check to pass only at the three native download entry points (media viewer, post menu, video tab); the Premium check itself and its other callers are untouched; downloads use the app's own downloader.
 
 ---
 
