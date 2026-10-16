@@ -109,7 +109,7 @@
 </details>
 
 <details>
-<summary>X&nbsp;&nbsp;•&nbsp;&nbsp;<b>19 patches</b></summary>
+<summary>X&nbsp;&nbsp;•&nbsp;&nbsp;<b>21 patches</b></summary>
 <br>
 
 **Supported versions:**
@@ -126,6 +126,7 @@
 | **Custom Deep Links** | Opens supported custom and alternative domain links directly in the app (for shared link domains, see Share Links). | • Custom Link Hosts |
 | **Custom Fonts** | Applies custom typography to post and profile text. | • Custom Font Path<br>• Custom Emoji Font Path |
 | **DM Debloat** | Hides call buttons and composer actions in direct message conversations. | • Hide DM Calls |
+| **Disable Auto Refresh** | Stops the home timeline from automatically jumping to new posts. |  |
 | **Drawer Items** | Hides individual menu items, badges, and sidebar entries in the navigation drawer. | • Hide Profile<br>• Hide Premium<br>• Hide Communities<br>• Hide Bookmarks<br>• Hide Lists<br>• Hide Spaces<br>• Hide Creator Studio<br>• Hide Grok<br>• Hide Help Center |
 | **MLKit Vision Slimmer** | Disables machine learning vision components to reduce binary overhead (breaks QR and barcode scanning). |  |
 | **Navigation UI** | Customizes bottom navigation bar tabs, unread badges, and search surfaces. | • Hide Badges<br>• Hide FAB<br>• Hide FAB Menu<br>• Hide Navigation Bar<br>• Hide Grok Tab<br>• Hide Explore Tabs<br>• Hide Search Tab Items |
@@ -138,6 +139,28 @@
 | **Share Links** | Customizes domain and format for shared post links (for opening custom links in app, see Custom Deep Links). | • Custom Sharing Domain<br>• Sharing Domain<br>• Legacy Share Links |
 | **Show Sensitive Media** | Displays sensitive media directly without requiring tap to reveal. |  |
 | **Timeline UI** | Customizes timeline surfaces including banners, recommendation carousels, and action buttons. | • Hide Banner<br>• Hide Promote Button<br>• Hide Nudge Button<br>• Hide Recommendation Items<br>• Hide Discover More<br>• Hide Recommended Users<br>• Hide Live Threads<br>• Hide Community Notes<br>• Hide Post Metrics<br>• Hide View Count<br>• Hide Inline Action Bar<br>• Hide Timeline Add Tab<br>• Hide Timeline Top Bar<br>• Hide Live Banner |
+| **Unlock Video Downloads** | Lets you save videos and GIFs with the app's built-in download option without Premium. |  |
+
+</details>
+
+<details>
+<summary>NokoPrint - WiFi, Bluetooth, USB&nbsp;&nbsp;•&nbsp;&nbsp;<b>7 patches</b></summary>
+<br>
+
+**Supported versions:**
+
+| 5.28.6 |
+| :---: |
+
+| Patch | Description | Options |
+|----------|----------------|-----------|
+| **Block Ads** | Blocks ad loaders and unlocks ad-free status. |  |
+| **Block Trackers** | Blocks analytics and ad tracking. |  |
+| **Remove Extra Files** | Deletes hidden ad files and trackers to shrink the app. |  |
+| **Remove Extra Stores** | Disables payment components for other app stores you do not use. |  |
+| **Safer Connections** | Uses trusted certificates while keeping printer downloads working. |  |
+| **Skip Welcome Screen** | Skips the first-launch popup (the About menu still works). |  |
+| **Stop Background Sync** | Stops background tasks that drain the battery. |  |
 
 </details>
 
@@ -246,6 +269,49 @@
 | **PowerPoint Locale Slimmer** | Strips unselected localized resource directories (res/values-<locale>/) from PowerPoint base APK. English (en, en-us) is always retained. WARNING: Application strings for stripped locales will fall back to English. | • Locales to keep |
 | **Remove Shared User ID** | Removes the sharedUserId attribute from the manifest to prevent installation conflicts. |  |
 | **Unlock 365 Family** | Unlocks Microsoft 365 Family subscription features locally. |  |
+
+</details>
+
+<details>
+<summary>Hevy - Gym Log Workout Tracker&nbsp;&nbsp;•&nbsp;&nbsp;<b>4 patches</b></summary>
+<br>
+
+**Supported versions:**
+
+| 3.1.14 |
+| :---: |
+
+| Patch | Description | Options |
+|----------|----------------|-----------|
+| **Block Trackers** | Blocks crash reporting, ad attribution and referral tracking. |  |
+| **Remove Extra Files** | Deletes tutorial videos, editor stickers and junk to shrink the app. |  |
+| **Stop Background Sync** | Stops background sync tasks and alarms that drain the battery. |  |
+| **Unlock Pro** | Unlocks Pro features stored on the device (routines, folders, charts). Server-limited items may still need a subscription. |  |
+
+</details>
+
+<details>
+<summary>Xiaomi Earbuds&nbsp;&nbsp;•&nbsp;&nbsp;<b>11 patches</b></summary>
+<br>
+
+**Supported versions:**
+
+| 1.38.0i |
+| :---: |
+
+| Patch | Description | Options |
+|----------|----------------|-----------|
+| **Block Trackers** | Stops analytics and usage reporting. |  |
+| **Device Privacy Guard** | Hides hardware IDs and lets Bluetooth work without location. |  |
+| **Offline Only** | Fully disconnects the app from the internet. Pair your earbuds first. |  |
+| **Run on Rooted Devices** | Lets the app run on rooted phones and network tools without crashing. |  |
+| **Safer Connections** | Blocks unencrypted traffic and disables certificate pinning. |  |
+| **Show All Models** | Shows every earbud model for pairing. |  |
+| **Skip Popups & Tutorials** | Skips startup agreements, tutorials, and promo banners. |  |
+| **Stop Background Activity** | Stops persistent notifications and background battery drain. |  |
+| **Unlock Sound Features** | Enables spatial audio and hearing features on all devices. |  |
+| **Unlock for Other Phones** | Enables full features on Samsung, Pixel, and other non-Xiaomi phones. |  |
+| **Update Without Account** | Lets guests check and install earbud firmware updates. |  |
 
 </details>
 

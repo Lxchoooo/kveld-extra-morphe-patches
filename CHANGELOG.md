@@ -1,3 +1,15 @@
+## [1.19.0](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.18.0...v1.19.0) (2026-10-16)
+
+### Bug Fixes
+
+* **twitter:** hide empty Discover More section in reply threads ([a4c7c19](https://github.com/kveld9/kveld-extra-morphe-patches/commit/a4c7c19ad562fcde944cff65632c4ee761121544))
+
+### New Features
+
+* add Hevy, NokoPrint and Xiaomi Earbuds (migrated from main repo) ([da9f835](https://github.com/kveld9/kveld-extra-morphe-patches/commit/da9f835854a5c43232457ec9021bc09aea13c02a))
+* **twitter:** download videos and GIFs without Premium ([1536948](https://github.com/kveld9/kveld-extra-morphe-patches/commit/1536948098b054bbfd8c8decab35b0bd27a02918))
+* **twitter:** stop the timeline from refreshing to new posts on its own ([93fbe09](https://github.com/kveld9/kveld-extra-morphe-patches/commit/93fbe09e8bd854e736221b64452d506385aea3fa))
+
 ## [1.18.0](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.17.0...v1.18.0) (2026-10-16)
 
 ### Bug Fixes
