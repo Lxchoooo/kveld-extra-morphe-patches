@@ -34,6 +34,7 @@ Technical documentation and patch catalog for CapCut on Android.
 | **Native Bloat Slimmer** | `rawResourcePatch` | `false` (Opt-in) | None | Zeroes AppLovin crash-reporter .so in-situ across arm64-v8a/armeabi-v7a; optional trimSpeechEngines toggle zeroes speech .so libs (breaks voice features). |
 | **Remove Watermark** | `bytecodePatch` | `true` (Enabled) | None | Allows exporting videos without watermark by bypassing watermark-removal entitlement gates. |
 | **Unlock Ultra HD Export** | `bytecodePatch` | `true` (Enabled) | None | Enables Ultra HD and 4K video export options by unlocking high-resolution export eligibility gates. |
+| **Unlock Premium Templates** | `bytecodePatch` | `true` (Enabled) | None | Marks premium template styles as available so locked template features stay usable. |
 
 ---
 
@@ -78,6 +79,10 @@ Technical documentation and patch catalog for CapCut on Android.
 8. **Unlock Ultra HD Export**:
    - **Objective**: Keep Ultra HD and 4K video export options available during export.
    - **How**: Forces template export Ultra HD availability and feature gates to return true, bypassing high-resolution export restrictions.
+
+9. **Unlock Premium Templates**:
+   - **Objective**: Keep locked premium template styles and features usable in the template editor.
+   - **How**: Overrides template purchase feature flags in the template view-model, forcing access and style availability gates to return true while disabling purchase restrictions.
 
 ### C. Resource and Binary Debloat Axes
 
