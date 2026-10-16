@@ -28,6 +28,7 @@ Technical documentation and patch catalog for X (Twitter) on Android.
 | **Control Video Auto Scroll** | `bytecodePatch` | `false` (Opt-in) | None | Prevents automatic scrolling to the next video in immersive media view. |
 | **Custom Deep Links** | `resourcePatch` | `false` (Opt-in) | None | Registers intent filters to open supported domains in the app. |
 | **Custom Fonts** | `bytecodePatch` | `false` (Opt-in) | None | Applies custom typography to post and profile text. |
+| **Default Reply Sorting** | `bytecodePatch` | `false` (Opt-in) | None | Opens replies on every post with the selected sort mode (Likes by default) instead of Relevance. |
 | **Disable Auto Refresh** | `bytecodePatch` | `false` (Opt-in) | None | Stops the home timeline from automatically jumping to new posts. |
 | **DM Debloat** | `bytecodePatch` | `false` (Opt-in) | None | Hides call buttons and composer actions in direct message conversations. |
 | **Drawer Items** | `bytecodePatch` | `false` (Opt-in) | None | Hides navigation drawer items including Grok, Premium, and secondary shortcuts. |
@@ -80,59 +81,63 @@ Technical documentation and patch catalog for X (Twitter) on Android.
    - **Objective**: Apply user-selected typography to application text.
    - **How**: Replaces font asset paths with configured font file paths.
 
-5. **Disable Auto Refresh**:
+5. **Default Reply Sorting**:
+   - **Objective**: Open replies sorted by the selected mode (Likes, Recency, or Relevance) instead of always by Relevance; the app does not remember the sort chosen in the reply-sorting sheet.
+   - **How**: Rewrites the three hard-coded `Relevance` reads of the ranking-mode enum (repository seed, Compose UI-state seed, conversation prefetch) to the selected mode; all three sites are resolved before any is rewritten.
+
+6. **Disable Auto Refresh**:
    - **Objective**: Prevent the home timeline from automatically jumping to new posts.
    - **How**: Bypasses the timeline scroll-to-top navigation call on update and keeps the reading position on startup.
 
-6. **DM Debloat**:
+7. **DM Debloat**:
    - **Objective**: Simplify direct message conversation headers.
    - **How**: Toggles conversation action flags to hide call buttons and composer actions.
 
-7. **Drawer Items**:
+8. **Drawer Items**:
    - **Objective**: Declutter the side navigation drawer and sidebar surfaces.
    - **How**: Hides configured navigation entries including Grok assistant, Premium, and secondary shortcuts.
 
-8. **Navigation UI**:
+9. **Navigation UI**:
    - **Objective**: Customize navigation bars, floating buttons, and tabs.
    - **How**: Adjusts layout flags to hide unread badges, floating action buttons, and secondary tabs (drawer and sidebar toggles are centralized under Drawer Items).
 
-9. **No Shortened URL**:
-   - **Objective**: Bypass t.co link redirection and click tracking.
-   - **How**: Replaces shortened link destinations with their full original target URLs.
+10. **No Shortened URL**:
+    - **Objective**: Bypass t.co link redirection and click tracking.
+    - **How**: Replaces shortened link destinations with their full original target URLs.
 
-10. **Pause Search Suggestions**:
+11. **Pause Search Suggestions**:
     - **Objective**: Stop storing recent search entries without breaking active search.
     - **How**: Suppresses local caching of search queries.
 
-11. **Post & Profile UI**:
+12. **Post & Profile UI**:
     - **Objective**: Remove unwanted action buttons from posts and profiles.
     - **How**: Hides Grok post actions and profile buttons, and toggles profile header tabs.
 
-12. **Remove Ads**:
+13. **Remove Ads**:
     - **Objective**: Remove promoted posts and sponsored content.
     - **How**: Filters out promoted tweets and advertising objects in timeline adapters.
 
-13. **Remove Premium Upsell**:
+14. **Remove Premium Upsell**:
     - **Objective**: Eliminate subscription prompts and badges.
     - **How**: Hides verification upsell pills and premium upgrade banners (drawer Premium entry is owned by Drawer Items).
 
-14. **Round Off Numbers**:
+15. **Round Off Numbers**:
     - **Objective**: Show exact metric counts on posts and profiles.
     - **How**: Disables number abbreviation formatting routines.
 
-15. **Share Links**:
+16. **Share Links**:
     - **Objective**: Clean and customize links when sharing posts (outbound).
     - **How**: Replaces shared link domains with configured custom domains (inbound link opening is handled by Custom Deep Links).
 
-16. **Show Sensitive Media**:
+17. **Show Sensitive Media**:
     - **Objective**: View sensitive media without manual tap-to-reveal prompts.
     - **How**: Sets sensitive media warning flags to display media directly.
 
-17. **Timeline UI**:
+18. **Timeline UI**:
     - **Objective**: Clean up home timeline feeds.
     - **How**: Removes banner alerts, recommendation carousels, and video entrypoints.
 
-18. **Unlock Video Downloads**:
+19. **Unlock Video Downloads**:
     - **Objective**: Save videos and GIFs using the native download action without Premium.
     - **How**: Forces the Premium check to pass only at the three native download entry points (media viewer, post menu, video tab); the Premium check itself and its other callers are untouched; downloads use the app's own downloader.
 
