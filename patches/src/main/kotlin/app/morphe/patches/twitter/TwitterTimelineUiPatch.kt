@@ -56,6 +56,12 @@ private val focalPostStateFingerprint = Fingerprint(
     strings = listOf("FocalPostState(timelinePostState="),
 )
 
+private val focalPostHeaderFingerprint = Fingerprint(
+    definingClass = "Lcom/x/urt/items/post/a2;",
+    name = "a",
+    returnType = "V",
+)
+
 private val timelineItemFilterFingerprint = Fingerprint(
     strings = listOf("surface_filter"),
 )
@@ -414,6 +420,20 @@ val twitterTimelineUiPatch = bytecodePatch(
                 initMethod.addInstructions(index, constIns)
                 patched++
             }
+
+            // Null follow button state at composable entry instead of in state constructor (which crashed).
+            val headerMethod = focalPostHeaderFingerprint.method
+            val followParamIndex = headerMethod.parameterTypes.indexOfFirst { it.toString() == "Lcom/x/models/p2;" }
+            if (followParamIndex < 0) {
+                error("[Timeline UI] Follow button state parameter not found in focal post header.")
+            }
+
+            val followParamRegister = headerMethod.parameterTypes
+                .take(followParamIndex)
+                .sumOf { if (it.toString() == "J" || it.toString() == "D") 2 else 1 }
+
+            headerMethod.addInstructions(0, "const/16 p$followParamRegister, 0x0")
+            patched++
         } else {
             println("[Timeline UI] Skipped: Hide Nudge Button disabled.")
         }
