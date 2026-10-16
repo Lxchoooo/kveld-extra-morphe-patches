@@ -46,13 +46,13 @@
 ![](images/divider-purple.svg)
 
 1. **Install Morphe Manager**: Download and install the latest release of [Morphe Manager](https://github.com/morphe-app/morphe-manager) on your Android device.
-2. **Download Target APK**: Download the supported APK or APKM bundle for your target application, matching the exact version listed in the [Supported Targets & Downloads](#supported-targets--downloads) table.
+2. **Download Target APK**: Download the supported APK or APKM bundle for your target application, matching the exact version listed in its [Application Guide](#application-guides) (section 1, Target & Compatibility).
 3. **Add Patch Source**: Add this repository as a custom patch source in Morphe Manager:
    - Use the one-click [Add Patch Source](https://morphe.software/add-source?github=kveld9/kveld-extra-morphe-patches) action, or manually enter `kveld9/kveld-extra-morphe-patches` in Morphe Manager under **Settings > Sources**.
 4. **Patch & Install**: Open Morphe Manager, select the downloaded target APK/APKM, select your desired patches, tap **Patch**, and install the resulting build.
 
 > [!NOTE]
-> Root access is not required. Morphe modifies application packages directly in userland. Always use the exact target version specified in the table below to satisfy compile-time fingerprint assertions.
+> Root access is not required. Morphe modifies application packages directly in userland. Always use the exact target version specified in the app's guide to satisfy compile-time fingerprint assertions.
 
 <p align="center"><a href="#top"><b>&uarr; Back to top</b></a></p>
 
