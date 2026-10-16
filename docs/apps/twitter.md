@@ -23,7 +23,7 @@ Technical documentation and patch catalog for X (Twitter) on Android.
 | Patch Name | Typology | Default State | Dependencies | Description |
 | :--- | :--- | :--- | :--- | :--- |
 | **Background Slimmer** | `resourcePatch` | `false` (Opt-in) | None | Disables background WorkManager tasks, widgets, and Cast/NFC companion services to reduce resource usage. |
-| **Block Telemetry & Trackers** | `bytecodePatch` | `true` (Enabled) | None | Blocks telemetry collection, redirects Braze and Sentry endpoints to 0.0.0.0, and purges tracking and Sentry configuration from manifest. |
+| **Block Telemetry & Trackers** | `bytecodePatch` | `true` (Enabled) | None | Blocks telemetry collection, redirects Braze, Sentry, Google Ads/DoubleClick, and Firebase Crashlytics remote settings endpoints to 0.0.0.0, and purges tracking and Sentry configuration from manifest. Includes opt-in toggle to block X Payments telemetry. |
 | **Block Update Screen** | `bytecodePatch` | `true` (Enabled) | None | Blocks outdated app warning screens and suppresses update prompts on launch. |
 | **Control Video Auto Scroll** | `bytecodePatch` | `false` (Opt-in) | None | Prevents automatic scrolling to the next video in immersive media view. |
 | **Custom Deep Links** | `resourcePatch` | `false` (Opt-in) | None | Registers intent filters to open supported domains in the app. |
@@ -67,7 +67,7 @@ Technical documentation and patch catalog for X (Twitter) on Android.
 
 1. **Block Telemetry & Trackers**:
    - **Objective**: Stop runtime metric and event submission, redirect tracker endpoints, and strip tracking components.
-   - **How**: Injects immediate returns into measurement and performance tracking methods; redirects Braze API base URLs and Sentry ingest endpoints to `http://0.0.0.0`; automatically executes internal manifest purge to strip advertising permissions, disable analytics services, and purge Sentry auto-initialization metadata.
+   - **How**: Injects immediate returns into measurement and performance tracking methods; redirects Braze API base URLs, Sentry ingest endpoints, Google Ads/DoubleClick, and Firebase Crashlytics remote settings endpoints to `http://0.0.0.0`; provides an opt-in toggle (`blockPaymentsTelemetry`, default `false`) to redirect Plaid, ScribeUp, and anti-fraud financial endpoints; automatically executes internal manifest purge to strip advertising permissions, disable analytics services, and purge Sentry auto-initialization metadata.
 
 2. **Block Update Screen**:
    - **Objective**: Prevent outdated-app blocking screens on launch.
@@ -149,6 +149,8 @@ Technical documentation and patch catalog for X (Twitter) on Android.
    Disabling MLKit component discovery breaks in-app QR and barcode scanning.
 2. **DM Debloat**:
    Neutralizing the calling flag disables direct message outgoing call entrypoints.
+3. **Block Telemetry & Trackers (`blockPaymentsTelemetry`)**:
+   Enabling the opt-in `blockPaymentsTelemetry` option redirects Plaid, ScribeUp, and anti-fraud telemetry endpoints to `http://0.0.0.0`, which disables X Payments and banking verification features.
 
 ---
 

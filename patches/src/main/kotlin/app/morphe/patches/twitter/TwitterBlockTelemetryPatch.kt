@@ -4,6 +4,7 @@ import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.morphe.patcher.patch.BytecodePatchContext
+import app.morphe.patcher.patch.booleanOption
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.patch.resourcePatch
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
@@ -369,6 +370,28 @@ private val sentryEndpointFingerprint = Fingerprint(
     ),
 )
 
+private val googleAdsTargetUrls = setOf(
+    "https://googleads.g.doubleclick.net",
+    "https://pubads.g.doubleclick.net",
+    "https://static.doubleclick.net",
+    "https://firebase-settings.crashlytics.com/spi/v2/platforms/android/gmp/",
+    "https://app-measurement.com/a",
+    "https://app-measurement.com/s/d",
+)
+
+private val googleAdsEndpointFingerprint = Fingerprint(strings = listOf("https://googleads.g.doubleclick.net"))
+private val pubAdsEndpointFingerprint = Fingerprint(strings = listOf("https://pubads.g.doubleclick.net"))
+private val crashlyticsSettingsFingerprint = Fingerprint(strings = listOf("https://firebase-settings.crashlytics.com/spi/v2/platforms/android/gmp/"))
+private val appMeasurementEndpointFingerprint = Fingerprint(strings = listOf("https://app-measurement.com/a"))
+
+private val paymentsTargetUrls = setOf(
+    "https://analytics.plaid.com/sentry/api/",
+    "https://api.scribeup.io",
+)
+
+private val plaidAnalyticsFingerprint = Fingerprint(strings = listOf("https://analytics.plaid.com/sentry/api/"))
+private val scribeupEndpointFingerprint = Fingerprint(strings = listOf("https://api.scribeup.io"))
+
 @Suppress("unused")
 val twitterBlockTelemetryPatch = bytecodePatch(
     name = "Block Telemetry & Trackers",
@@ -377,6 +400,13 @@ val twitterBlockTelemetryPatch = bytecodePatch(
 ) {
     compatibleWith(Constants.COMPATIBILITY_TWITTER)
     dependsOn(twitterTelemetryResourcePatch)
+
+    val blockPaymentsTelemetry by booleanOption(
+        key = "blockPaymentsTelemetry",
+        default = false,
+        title = "Block Payments & Anti-Fraud Telemetry",
+        description = "Redirects Plaid, ScribeUp, and financial anti-fraud telemetry endpoints to 0.0.0.0. WARNING: Enabling this disables X Payments and banking verification features.",
+    )
 
     execute {
         val hookedMethods = mutableListOf<String>()
@@ -444,10 +474,53 @@ val twitterBlockTelemetryPatch = bytecodePatch(
             error("[Block Telemetry & Trackers] Failed to redirect Sentry ingest endpoints: no target const-string instructions found.")
         }
 
+        // Google Ads, DoubleClick, Crashlytics settings, and AppMeasurement redirection
+        val googleAdsFingerprints = listOf(
+            googleAdsEndpointFingerprint,
+            pubAdsEndpointFingerprint,
+            crashlyticsSettingsFingerprint,
+            appMeasurementEndpointFingerprint,
+        )
+        val googleAdsMethods = googleAdsFingerprints.flatMap { fp ->
+            (fp.matchAllOrNull() ?: emptyList()).map { it.method }.ifEmpty {
+                listOf(fp.method)
+            }
+        }.distinct()
+        var googleAdsRewrites = 0
+        for (method in googleAdsMethods) {
+            googleAdsRewrites += replaceStringLiteralsInMethod(method, googleAdsTargetUrls, "http://0.0.0.0")
+        }
+        if (googleAdsRewrites == 0) {
+            error("[Block Telemetry & Trackers] Failed to redirect Google Ads and Crashlytics endpoints: no target const-string instructions found.")
+        }
+
+        // Payments & Anti-Fraud Telemetry redirection
+        if (blockPaymentsTelemetry == true) {
+            val paymentsFingerprints = listOf(
+                plaidAnalyticsFingerprint,
+                scribeupEndpointFingerprint,
+            )
+            val paymentsMethods = paymentsFingerprints.flatMap { fp ->
+                (fp.matchAllOrNull() ?: emptyList()).map { it.method }.ifEmpty {
+                    listOf(fp.method)
+                }
+            }.distinct()
+            var paymentsRewrites = 0
+            for (method in paymentsMethods) {
+                paymentsRewrites += replaceStringLiteralsInMethod(method, paymentsTargetUrls, "http://0.0.0.0")
+            }
+            if (paymentsRewrites == 0) {
+                error("[Block Telemetry & Trackers] Failed to redirect X Payments endpoints: no target const-string instructions found.")
+            }
+            println("[Block Telemetry & Trackers] Redirected X Payments and financial telemetry endpoints to 0.0.0.0.")
+        } else {
+            println("[Block Telemetry & Trackers] Preserved X Payments telemetry: blockPaymentsTelemetry option disabled.")
+        }
+
         val removedNullChecks = removePerfGetInstanceNullChecks()
 
         println("[Block Telemetry & Trackers] Neutralized ${hookedMethods.size} telemetry dispatch methods: ${hookedMethods.joinToString(", ")}.")
-        println("[Block Telemetry & Trackers] Redirected Braze base URLs and Sentry ingest endpoints to 0.0.0.0.")
+        println("[Block Telemetry & Trackers] Redirected Braze, Google Ads/DoubleClick, and Sentry ingest endpoints to 0.0.0.0.")
         println("[Block Telemetry & Trackers] Removed $removedNullChecks Firebase Performance getInstance() null checks (registrar purged).")
     }
 }
