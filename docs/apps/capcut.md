@@ -78,7 +78,7 @@ Technical documentation and patch catalog for CapCut on Android.
 
 8. **Unlock Ultra HD Export**:
    - **Objective**: Keep Ultra HD and 4K video export options available during export.
-   - **How**: Forces template export Ultra HD availability and feature gates to return true, bypassing high-resolution export restrictions.
+   - **How**: Forces template export Ultra HD availability and feature gates to return true, bypassing high-resolution export restrictions. This also enables HD in flows that consult these gates even when a stored per-template HD preference is off.
 
 9. **Unlock Premium Templates**:
    - **Objective**: Keep locked premium template styles and features usable in the template editor.
