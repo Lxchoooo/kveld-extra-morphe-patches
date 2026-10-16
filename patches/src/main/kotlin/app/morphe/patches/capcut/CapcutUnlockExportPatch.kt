@@ -1,6 +1,7 @@
 package app.morphe.patches.capcut
 
 import app.morphe.patcher.Fingerprint
+import com.android.tools.smali.dexlib2.AccessFlags
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patches.shared.Constants
@@ -10,6 +11,7 @@ private object TemplateExportUltraHdUtilsCFingerprint : Fingerprint(
     name = "c",
     returnType = "Z",
     parameters = listOf(),
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.STATIC),
 )
 
 private object TemplateExportUltraHdUtilsDFingerprint : Fingerprint(
@@ -17,6 +19,7 @@ private object TemplateExportUltraHdUtilsDFingerprint : Fingerprint(
     name = "d",
     returnType = "Z",
     parameters = listOf(),
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.STATIC),
 )
 
 private object TemplateExportUltraHdUtilsEFingerprint : Fingerprint(
@@ -24,6 +27,7 @@ private object TemplateExportUltraHdUtilsEFingerprint : Fingerprint(
     name = "e",
     returnType = "Z",
     parameters = listOf(),
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.STATIC),
 )
 
 private object TemplateExportUltraHdUtilsJFingerprint : Fingerprint(
@@ -31,6 +35,7 @@ private object TemplateExportUltraHdUtilsJFingerprint : Fingerprint(
     name = "j",
     returnType = "Z",
     parameters = listOf(),
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.STATIC),
 )
 
 private object TemplateExportUltraHdUtilsQFingerprint : Fingerprint(
@@ -38,6 +43,7 @@ private object TemplateExportUltraHdUtilsQFingerprint : Fingerprint(
     name = "q",
     returnType = "Z",
     parameters = listOf(),
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.STATIC),
 )
 
 @Suppress("unused")

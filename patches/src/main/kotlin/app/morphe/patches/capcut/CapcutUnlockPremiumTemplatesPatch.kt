@@ -1,6 +1,7 @@
 package app.morphe.patches.capcut
 
 import app.morphe.patcher.Fingerprint
+import com.android.tools.smali.dexlib2.AccessFlags
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patches.shared.Constants
@@ -10,6 +11,7 @@ private object CutSamePurchaseViewModelU6Fingerprint : Fingerprint(
     name = "u6",
     returnType = "Z",
     parameters = listOf(),
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
 )
 
 private object CutSamePurchaseViewModelX6Fingerprint : Fingerprint(
@@ -17,6 +19,7 @@ private object CutSamePurchaseViewModelX6Fingerprint : Fingerprint(
     name = "x6",
     returnType = "Z",
     parameters = listOf(),
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
 )
 
 private object CutSamePurchaseViewModelW6Fingerprint : Fingerprint(
@@ -24,6 +27,7 @@ private object CutSamePurchaseViewModelW6Fingerprint : Fingerprint(
     name = "w6",
     returnType = "Z",
     parameters = listOf(),
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
 )
 
 private object CutSamePurchaseViewModelZ6Fingerprint : Fingerprint(
@@ -31,6 +35,7 @@ private object CutSamePurchaseViewModelZ6Fingerprint : Fingerprint(
     name = "z6",
     returnType = "Z",
     parameters = listOf(),
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
 )
 
 private object CutSamePurchaseViewModelA6Fingerprint : Fingerprint(
@@ -38,6 +43,7 @@ private object CutSamePurchaseViewModelA6Fingerprint : Fingerprint(
     name = "A6",
     returnType = "Z",
     parameters = listOf(),
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
 )
 
 @Suppress("unused")
