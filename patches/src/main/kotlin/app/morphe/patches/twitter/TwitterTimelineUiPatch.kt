@@ -88,6 +88,10 @@ private val communityNotesFingerprint = Fingerprint(
     strings = listOf("birdwatch_consumption_enabled"),
 )
 
+private val canonicalPostToStringFingerprint = Fingerprint(
+    strings = listOf("CanonicalPost(id="),
+)
+
 private val inlineActionBarItemFingerprint = Fingerprint(
     definingClass = "Lcom/x/inlineactionbar/g;",
     name = "invoke",
@@ -725,6 +729,89 @@ val twitterTimelineUiPatch = bytecodePatch(
             } else {
                 error("[Timeline UI] Failed to neutralize 'birdwatch_consumption_enabled' flag.")
             }
+
+            // Flag only controls the drawer entry; null post model fields to hide notes on posts.
+            val classDescriptor = canonicalPostToStringFingerprint.method.definingClass
+            val classDef = mutableClassDefBy(classDescriptor)
+
+            val toStringMethod = canonicalPostToStringFingerprint.method
+            val toStringInstructions = toStringMethod.implementation?.instructions?.toList()
+                ?: error("[Timeline UI] toString in '$classDescriptor' has no instructions.")
+
+            var communityNoteFieldName: String? = null
+            var tombstoneCommunityNoteFieldName: String? = null
+
+            for (i in toStringInstructions.indices) {
+                val ins = toStringInstructions[i]
+                if (ins.opcode == Opcode.CONST_STRING || ins.opcode == Opcode.CONST_STRING_JUMBO) {
+                    val str = ((ins as? ReferenceInstruction)?.reference as? StringReference)?.string
+                    when (str) {
+                        ", communityNote=" -> {
+                            for (j in (i + 1)..minOf(i + 5, toStringInstructions.lastIndex)) {
+                                val nextIns = toStringInstructions[j]
+                                if (nextIns.opcode == Opcode.IGET_OBJECT) {
+                                    communityNoteFieldName = ((nextIns as? ReferenceInstruction)?.reference as? FieldReference)?.name
+                                    break
+                                }
+                            }
+                        }
+                        ", tombstoneCommunityNote=" -> {
+                            for (j in (i + 1)..minOf(i + 5, toStringInstructions.lastIndex)) {
+                                val nextIns = toStringInstructions[j]
+                                if (nextIns.opcode == Opcode.IGET_OBJECT) {
+                                    tombstoneCommunityNoteFieldName = ((nextIns as? ReferenceInstruction)?.reference as? FieldReference)?.name
+                                    break
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (communityNoteFieldName == null) {
+                error("[Timeline UI] communityNote field not found in '$classDescriptor'.")
+            }
+            if (tombstoneCommunityNoteFieldName == null) {
+                error("[Timeline UI] tombstoneCommunityNote field not found in '$classDescriptor'.")
+            }
+
+            var notesNulled = 0
+            for (method in classDef.methods) {
+                if (method.name != "<init>") continue
+                val instructions = method.implementation?.instructions?.toList() ?: continue
+
+                val targetIndices = mutableListOf<Int>()
+                for ((index, ins) in instructions.withIndex()) {
+                    if (ins.opcode == Opcode.IPUT_OBJECT) {
+                        val fieldRef = (ins as? ReferenceInstruction)?.reference as? FieldReference
+                        if (fieldRef?.definingClass == classDescriptor &&
+                            (fieldRef.name == communityNoteFieldName || fieldRef.name == tombstoneCommunityNoteFieldName)
+                        ) {
+                            targetIndices.add(index)
+                        }
+                    }
+                }
+
+                targetIndices.sortByDescending { it }
+
+                for (index in targetIndices) {
+                    val reg = (instructions[index] as? TwoRegisterInstruction)?.registerA
+                        ?: error("[Timeline UI] Failed to resolve register for iput-object in '$classDescriptor'.")
+                    val constIns = when {
+                        reg <= 15 -> "const/4 v$reg, 0x0"
+                        reg <= 255 -> "const/16 v$reg, 0x0"
+                        else -> error("[Timeline UI] Community note register v$reg out of range in '$classDescriptor'.")
+                    }
+                    method.addInstructions(index, constIns)
+                    notesNulled++
+                }
+            }
+
+            if (notesNulled == 0) {
+                error("[Timeline UI] No community note field writes found in '$classDescriptor'.")
+            }
+            patched++
+            println("[Timeline UI] Nulled $notesNulled community note field writes in '$classDescriptor'.")
         } else {
             println("[Timeline UI] Skipped hideCommunityNotes: disabled by patch option.")
         }
