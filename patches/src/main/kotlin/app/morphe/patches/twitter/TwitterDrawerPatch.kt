@@ -22,6 +22,7 @@ import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.patch.BytecodePatchContext
 import app.morphe.patcher.patch.booleanOption
 import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.resourcePatch
 import app.morphe.patches.shared.Constants
 
 private val drawerDiscountPillFingerprint = Fingerprint(
@@ -33,6 +34,58 @@ private val sideBarFingerprint = Fingerprint(
 )
 
 
+private val drawerIconIds = mutableMapOf<String, Int>()
+
+private val drawerIconNames = setOf(
+    "ic_vector_feedback_stroke",
+    "ic_vector_help_circle",
+    "ic_vector_person_stroke",
+    "ic_vector_verified_stroke",
+    "ic_vector_communities_stroke",
+    "ic_vector_bookmark_stroke",
+    "ic_vector_lists_stroke",
+    "ic_vector_spaces_stroke",
+    "ic_vector_rocket_stroke",
+)
+
+// Resolve drawer icon IDs by name because X renumbers resources on every release.
+private val twitterDrawerIconIdsPatch = resourcePatch {
+    compatibleWith(Constants.COMPATIBILITY_TWITTER)
+
+    execute {
+        val publicXml = get("res/values/public.xml")
+        if (!publicXml.exists()) {
+            error("[Drawer Items] res/values/public.xml not found; cannot resolve drawer icon IDs.")
+        }
+
+        val nameRegex = Regex("""name="([^"]+)"""")
+        val idRegex = Regex("""id="(0x[0-9a-fA-F]+)"""")
+
+        drawerIconIds.clear()
+        publicXml.useLines { lines ->
+            for (line in lines) {
+                if (!line.contains("""type="drawable"""")) continue
+                val name = nameRegex.find(line)?.groupValues?.get(1) ?: continue
+                if (name in drawerIconNames) {
+                    val id = idRegex.find(line)?.groupValues?.get(1) ?: continue
+                    drawerIconIds[name] = java.lang.Long.decode(id).toInt()
+                }
+            }
+        }
+
+        val missing = drawerIconNames.filter { it !in drawerIconIds }
+        if (missing.isNotEmpty()) {
+            error("[Drawer Items] Drawable '${missing.joinToString(", ")}' not found in public.xml.")
+        }
+
+        println("[Drawer Items] Resolved ${drawerIconIds.size} drawer icon IDs.")
+    }
+}
+
+private fun drawerIconId(name: String): Int =
+    drawerIconIds[name] ?: error("[Drawer Items] Unresolved drawer icon ID: $name")
+
+
 @Suppress("unused")
 val twitterDrawerPatch = bytecodePatch(
     name = "Drawer Items",
@@ -40,6 +93,7 @@ val twitterDrawerPatch = bytecodePatch(
     default = false,
 ) {
     compatibleWith(Constants.COMPATIBILITY_TWITTER)
+    dependsOn(twitterDrawerIconIdsPatch)
 
     val hideProfile by booleanOption(
         key = "hideProfile",
@@ -152,11 +206,11 @@ val twitterDrawerPatch = bytecodePatch(
                 move-object/from16 v0, p1
                 if-eqz v0, :cond_keep_p
                 iget v1, v0, Lcom/x/icons/b;->a:I
-                const v2, 2131231765
+                const v2, ${drawerIconId("ic_vector_feedback_stroke")}
                 if-ne v1, v2, :cond_check_p_feedback
                 return-void
                 :cond_check_p_feedback
-                const v2, 2131231848
+                const v2, ${drawerIconId("ic_vector_help_circle")}
                 if-ne v1, v2, :cond_keep_p
                 return-void
                 :cond_keep_p
@@ -170,7 +224,7 @@ val twitterDrawerPatch = bytecodePatch(
         if (hideProfile ?: true) {
             val label = "check_q_${qChecks.size}"
             qChecks.add("""
-                const v2, 2131232081
+                const v2, ${drawerIconId("ic_vector_person_stroke")}
                 if-ne v1, v2, :$label
                 return-void
                 :$label
@@ -179,7 +233,7 @@ val twitterDrawerPatch = bytecodePatch(
         if (hidePremium ?: true) {
             val label = "check_q_${qChecks.size}"
             qChecks.add("""
-                const v2, 2131232424
+                const v2, ${drawerIconId("ic_vector_verified_stroke")}
                 if-ne v1, v2, :$label
                 return-void
                 :$label
@@ -188,7 +242,7 @@ val twitterDrawerPatch = bytecodePatch(
         if (hideCommunities ?: true) {
             val label = "check_q_${qChecks.size}"
             qChecks.add("""
-                const v2, 2131231666
+                const v2, ${drawerIconId("ic_vector_communities_stroke")}
                 if-ne v1, v2, :$label
                 return-void
                 :$label
@@ -197,7 +251,7 @@ val twitterDrawerPatch = bytecodePatch(
         if (hideBookmarks ?: true) {
             val label = "check_q_${qChecks.size}"
             qChecks.add("""
-                const v2, 2131231531
+                const v2, ${drawerIconId("ic_vector_bookmark_stroke")}
                 if-ne v1, v2, :$label
                 return-void
                 :$label
@@ -206,7 +260,7 @@ val twitterDrawerPatch = bytecodePatch(
         if (hideLists ?: true) {
             val label = "check_q_${qChecks.size}"
             qChecks.add("""
-                const v2, 2131231902
+                const v2, ${drawerIconId("ic_vector_lists_stroke")}
                 if-ne v1, v2, :$label
                 return-void
                 :$label
@@ -215,7 +269,7 @@ val twitterDrawerPatch = bytecodePatch(
         if (hideSpaces ?: true) {
             val label = "check_q_${qChecks.size}"
             qChecks.add("""
-                const v2, 2131232265
+                const v2, ${drawerIconId("ic_vector_spaces_stroke")}
                 if-ne v1, v2, :$label
                 return-void
                 :$label
@@ -224,7 +278,7 @@ val twitterDrawerPatch = bytecodePatch(
         if (hideCreatorStudio ?: true) {
             val label = "check_q_${qChecks.size}"
             qChecks.add("""
-                const v2, 2131232183
+                const v2, ${drawerIconId("ic_vector_rocket_stroke")}
                 if-ne v1, v2, :$label
                 return-void
                 :$label
