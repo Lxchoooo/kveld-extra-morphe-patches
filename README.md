@@ -383,7 +383,7 @@ For bug reports, patch inquiries, or feature proposals, open an issue using the 
 | **Release Notes** | [Changelog](CHANGELOG.md) / [Releases](https://github.com/kveld9/kveld-extra-morphe-patches/releases) | Detailed history of releases and patch changes. |
 
 > [!NOTE]
-> This repository is a companion collection for standalone applications. For YouTube, YouTube Music, and other primary targets, visit the main patch repository: **[kveld-morphe-patches](https://github.com/kveld9/kveld-morphe-patches)**.
+> This repository is a companion collection for standalone applications. For Brave, Gboard Lite, TikTok, and other primary targets, visit the main patch repository: **[kveld-morphe-patches](https://github.com/kveld9/kveld-morphe-patches)**.
 
 <p align="center"><a href="#top"><b>&uarr; Back to top</b></a></p>
 
