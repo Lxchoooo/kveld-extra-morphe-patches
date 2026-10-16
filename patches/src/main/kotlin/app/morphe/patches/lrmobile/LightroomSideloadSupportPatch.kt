@@ -40,7 +40,7 @@ private object LicenseActivityOnStartFingerprint : Fingerprint(
 )
 
 private object RequestIntegrityTokenFingerprint : Fingerprint(
-    definingClass = "Lkw/m;",
+    definingClass = "Ljw/m;",
     name = "l",
     returnType = "V",
     parameters = listOf(

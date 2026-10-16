@@ -100,18 +100,18 @@ object Constants {
     )
 
     const val LRMOBILE_PACKAGE_NAME = "com.adobe.lrmobile"
-    const val LRMOBILE_TARGET_VERSION = "11.6.11"
-    const val LRMOBILE_INPUT_SHA256 = "ac21530d2889f6565cf1e14b0c6417953e156ed198a00c631e5a736b4ffa4851"
+    const val LRMOBILE_TARGET_VERSION = "11.6.01"
+    const val LRMOBILE_INPUT_SHA256 = "292dc10e127bf2ecaf99a32ddc1d4d87308c3e79e4c640fb33ec80522affaf52"
 
     val COMPATIBILITY_LRMOBILE = Compatibility(
         name = "Lightroom",
         packageName = LRMOBILE_PACKAGE_NAME,
-        apkFileType = ApkFileType.XAPK,
+        apkFileType = ApkFileType.APK,
         appIconColor = 0x001C34,
         targets = listOf(
             AppTarget(
                 version = LRMOBILE_TARGET_VERSION,
-                description = "Download com.adobe.lrmobile v\$LRMOBILE_TARGET_VERSION (XAPK) arm64-v8a versionCode 711106110 from Uptodown",
+                description = "Download com.adobe.lrmobile v\$LRMOBILE_TARGET_VERSION (APK) arm64-v8a nodpi from Uptodown",
             )
         )
     )
