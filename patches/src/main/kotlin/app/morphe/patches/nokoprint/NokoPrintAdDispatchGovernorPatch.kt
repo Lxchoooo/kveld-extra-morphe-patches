@@ -7,6 +7,7 @@ import app.morphe.patcher.extensions.InstructionExtensions.removeInstructions
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.patch.resourcePatch
 import app.morphe.patches.shared.Constants
+import app.morphe.patches.shared.clearTryBlocks
 import org.w3c.dom.Element
 
 private val nokoPrintAdManifestResourcePatch = resourcePatch(
@@ -172,6 +173,7 @@ val nokoPrintAdDispatchGovernorPatch = bytecodePatch(
             parameters = listOf("Lcom/google/android/material/carousel/d;", "Lcom/nokoprint/m4;", "Ljava/util/Hashtable;"),
             returnType = "V",
         ).method.apply {
+            clearTryBlocks()
             val count = implementation?.instructions?.count() ?: 0
             if (count > 0) {
                 removeInstructions(0, count)
@@ -199,6 +201,7 @@ val nokoPrintAdDispatchGovernorPatch = bytecodePatch(
             parameters = listOf("Lcom/nokoprint/m4;", "Lcom/nokoprint/m;"),
             returnType = "V",
         ).method.apply {
+            clearTryBlocks()
             val count = implementation?.instructions?.count() ?: 0
             if (count > 0) {
                 removeInstructions(0, count)
@@ -225,6 +228,7 @@ val nokoPrintAdDispatchGovernorPatch = bytecodePatch(
             parameters = listOf("Lcom/nokoprint/m4;", "Ljava/util/Hashtable;", "Landroidx/compose/runtime/b1;"),
             returnType = "V",
         ).method.apply {
+            clearTryBlocks()
             val count = implementation?.instructions?.count() ?: 0
             if (count > 0) {
                 removeInstructions(0, count)
