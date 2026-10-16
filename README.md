@@ -109,7 +109,7 @@
 </details>
 
 <details>
-<summary>X&nbsp;&nbsp;•&nbsp;&nbsp;<b>21 patches</b></summary>
+<summary>X&nbsp;&nbsp;•&nbsp;&nbsp;<b>22 patches</b></summary>
 <br>
 
 **Supported versions:**
@@ -126,6 +126,7 @@
 | **Custom Deep Links** | Opens supported custom and alternative domain links directly in the app (for shared link domains, see Share Links). | • Custom Link Hosts |
 | **Custom Fonts** | Applies custom typography to post and profile text. | • Custom Font Path<br>• Custom Emoji Font Path |
 | **DM Debloat** | Hides call buttons and composer actions in direct message conversations. | • Hide DM Calls |
+| **Default Reply Sorting** | Opens replies on every post with the selected sort mode instead of Relevance. | • Reply Sort Mode |
 | **Disable Auto Refresh** | Stops the home timeline from automatically jumping to new posts. |  |
 | **Drawer Items** | Hides individual menu items, badges, and sidebar entries in the navigation drawer. | • Hide Profile<br>• Hide Premium<br>• Hide Communities<br>• Hide Bookmarks<br>• Hide Lists<br>• Hide Spaces<br>• Hide Creator Studio<br>• Hide Grok<br>• Hide Help Center |
 | **MLKit Vision Slimmer** | Disables machine learning vision components to reduce binary overhead (breaks QR and barcode scanning). |  |

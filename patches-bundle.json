@@ -1,7 +1,7 @@
 {
-  "created_at": "2026-10-16T19:00:08",
-  "description": "## [1.19.0](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.18.0...v1.19.0) (2026-10-16)\n\n### Bug Fixes\n\n* **twitter:** hide empty Discover More section in reply threads ([a4c7c19](https://github.com/kveld9/kveld-extra-morphe-patches/commit/a4c7c19ad562fcde944cff65632c4ee761121544))\n\n### New Features\n\n* add Hevy, NokoPrint and Xiaomi Earbuds (migrated from main repo) ([da9f835](https://github.com/kveld9/kveld-extra-morphe-patches/commit/da9f835854a5c43232457ec9021bc09aea13c02a))\n* **twitter:** download videos and GIFs without Premium ([1536948](https://github.com/kveld9/kveld-extra-morphe-patches/commit/1536948098b054bbfd8c8decab35b0bd27a02918))\n* **twitter:** stop the timeline from refreshing to new posts on its own ([93fbe09](https://github.com/kveld9/kveld-extra-morphe-patches/commit/93fbe09e8bd854e736221b64452d506385aea3fa))",
-  "download_url": "https://github.com/kveld9/kveld-extra-morphe-patches/releases/download/v1.19.0/patches-1.19.0.mpp",
+  "created_at": "2026-10-16T21:49:23",
+  "description": "## [1.20.0](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.19.0...v1.20.0) (2026-10-16)\n\n### New Features\n\n* **twitter:** open replies sorted by Likes instead of Relevance ([2881af3](https://github.com/kveld9/kveld-extra-morphe-patches/commit/2881af3868164ec6cd6d0545f7ba6474d2f613b7)), closes [#12](https://github.com/kveld9/kveld-extra-morphe-patches/issues/12)",
+  "download_url": "https://github.com/kveld9/kveld-extra-morphe-patches/releases/download/v1.20.0/patches-1.20.0.mpp",
   "signature_download_url": "",
-  "version": "1.19.0"
+  "version": "1.20.0"
 }

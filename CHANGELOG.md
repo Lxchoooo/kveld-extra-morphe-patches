@@ -1,3 +1,9 @@
+## [1.20.0](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.19.0...v1.20.0) (2026-10-16)
+
+### New Features
+
+* **twitter:** open replies sorted by Likes instead of Relevance ([2881af3](https://github.com/kveld9/kveld-extra-morphe-patches/commit/2881af3868164ec6cd6d0545f7ba6474d2f613b7)), closes [#12](https://github.com/kveld9/kveld-extra-morphe-patches/issues/12)
+
 ## [1.19.0](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.18.0...v1.19.0) (2026-10-16)
 
 ### Bug Fixes
