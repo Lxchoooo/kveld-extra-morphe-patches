@@ -73,15 +73,7 @@
 
 ![](images/divider-purple.svg)
 
-| App | Package | Target Version | Variant | Download Source | Guide |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| Instagram | `com.instagram.android` | 447.0.0.55.81 | APKM bundle | [APKMirror](https://www.apkmirror.com/apk/instagram/instagram-instagram/instagram-447-0-0-55-81-release/) | Instagram Guide |
-| X | `com.twitter.android` | 12.34.0-prod.01 | APKM bundle (`arm64-v8a`) | [APKMirror](https://www.apkmirror.com/apk/x-corp/twitter/x-12-34-0-prod-01-release/) | X Guide |
-| Moovit | `com.tranzmate` | 5.201.1.1809 | APKM bundle (`arm64-v8a`) | [APKMirror](https://www.apkmirror.com/apk/moovit/moovit-bus-train-live-info/moovit-your-transit-tracker-5-201-1-1809-release/) | Moovit Guide |
-| PowerPoint | `com.microsoft.office.powerpoint` | 16.0.20527.20034 | APKM bundle | [APKMirror](https://www.apkmirror.com/apk/microsoft-corporation/powerpoint/microsoft-powerpoint-16-0-20527-20034-release/) | PowerPoint Guide |
-| Lightroom | `com.adobe.lrmobile` | 11.6.01 | APK (`arm64-v8a`, PairIP-free variant) | [Uptodown](https://adobe-lightroom-mobile.uptodown.com/android) | Lightroom Guide |
-| CapCut | `com.lemon.lvoverseas` | 19.8.0 | APK (`arm64-v8a`, `armeabi-v7a`, `nodpi`) | [APKMirror](https://www.apkmirror.com/apk/bytedance-pte-ltd/capcut/capcut-video-editor-19-8-0-release) | CapCut Guide |
-| Copilot | `com.microsoft.office.officehubrow` | 16.0.20527.20022 | APKM bundle (`arm64-v8a`) | [APKMirror](https://www.apkmirror.com/apk/microsoft-corporation/microsoft-copilot/microsoft-copilot-16-0-20527-20022-release/) | Copilot Guide |
+Each app targets exactly one version, the latest supported release. See the [Patch Catalog](#patch-catalog) for the per-app supported version, and each [Application Guide](#application-guides) (section 1, Target & Compatibility) for package name, exact version, variant, and download source. Always use the exact version listed there.
 
 <p align="center"><a href="#top"><b>&uarr; Back to top</b></a></p>
 
@@ -361,7 +353,7 @@ To use them, add `kveld9/kveld-morphe-patches` as a second source in Morphe Mana
 Before proposing new features, review the [Project Scope](docs/out-of-scope.md). Every patch change must pass the in-situ verification gate with 0 failed patches, 0 fingerprint mismatches, and 0 smali compile errors:
 
 ```bash
-./gradlew runPatchTest -Papp=<targetApp>   # e.g. instagram, twitter, moovit, powerpoint, lrmobile, capcut, officehub, hevy, nokoprint, xiaomi_earbuds
+./gradlew runPatchTest -Papp=<targetApp>   # targetApp is the app id (see docs/apps/)
 ./gradlew check
 ```
 
@@ -405,7 +397,7 @@ For bug reports, patch inquiries, or feature proposals, open an issue using the 
 
 ![](images/divider-purple.svg)
 
-**kveld9 Extra Patches** is an independent, community-driven open-source project and is not affiliated, associated, authorized, endorsed by, or in any way officially connected with Meta Platforms, Inc., X Corp., Moovit, Microsoft Corporation, Adobe Inc., ByteDance Ltd., Hevy App, NokoPrint LLC, Xiaomi Inc., or any of their subsidiaries or affiliates.
+**kveld9 Extra Patches** is an independent, community-driven open-source project and is not affiliated, associated, authorized, endorsed by, or in any way officially connected with any of the respective app publishers or their subsidiaries or affiliates.
 
 All product names, logos, brands, and registered trademarks mentioned in this repository are the property of their respective holders. Their inclusion does not imply affiliation with or endorsement by them.
 
