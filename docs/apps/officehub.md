@@ -26,7 +26,6 @@ Technical documentation and patch catalog for Microsoft Copilot (OfficeHub) on A
 | **Copilot Telemetry Manifest Purge** | `resourcePatch` | `false` (Opt-in) | None | Strips advertising and tracking permissions, disables DataTransport, cross-sell, and HockeyApp components, and injects opt-out metadata in AndroidManifest.xml. |
 | **Bypass Code Transparency** | `bytecodePatch` | `true` (Enabled) | None | Skips the code-transparency failure dialog and reports local verification success, unblocking sideloaded installs. |
 | **Disable Login Requirement** | `bytecodePatch` | `true` (Enabled) | None | Removes login requirement and FTUX paywall screens. Cloud-backed features still require sign-in server-side. |
-| **Copilot Junk Cleaner** | `rawResourcePatch` | `false` (Opt-in) | None | Purges non-functional build metadata, properties, proto descriptors, and duplicate license notices from APK root and META-INF while strictly protecting runtime assets and signatures. |
 | **Copilot Companion Native Slimmer** | `rawResourcePatch` | `false` (Opt-in) | None | Strips optional companion native binaries (React Native, Hermes, SlimCV) via in-situ zeroing. |
 
 ---
@@ -55,11 +54,7 @@ Technical documentation and patch catalog for Microsoft Copilot (OfficeHub) on A
 
 ### C. Resource and Native Slimming Axes
 
-1. **Copilot Junk Cleaner (`rawResourcePatch`)**:
-   - **Objective**: Strip extraneous build metadata and unused license notices from the APK.
-   - **How**: Deletes build properties, proto definitions, and redundant license texts from root and metadata directories while protecting executable assets.
-
-2. **Copilot Companion Native Slimmer (`rawResourcePatch`)**:
+1. **Copilot Companion Native Slimmer (`rawResourcePatch`)**:
    - **Objective**: Reduce package footprint by removing optional companion native libraries.
    - **How**: Empties companion native binaries in-situ across target architectures while preserving boot-critical voice and exception handler binaries.
 
@@ -76,3 +71,9 @@ Technical documentation and patch catalog for Microsoft Copilot (OfficeHub) on A
 
 1. **Cloud-Backed Features**:
    Cloud-backed features still require sign-in server-side.
+
+---
+
+## 6. Canonical Universal Patches
+
+The generic maintenance patches removed from this guide (screen densities, packaging leftovers) are covered by the universal patches in the canonical collection [kveld-morphe-patches](https://github.com/kveld9/kveld-morphe-patches): `Remove Unused Screen Sizes` and `Clean App Packaging`. For further generic maintenance (languages, background sync, native trackers, telemetry) that collection also provides `Remove Extra Languages`, `Stop Background Sync`, `Remove Tracking Libraries` and `Block Trackers`. Add that source in Morphe Manager alongside this one to use them; universal patches apply to any APK, including Copilot.
