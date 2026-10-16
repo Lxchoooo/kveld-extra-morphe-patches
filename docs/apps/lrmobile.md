@@ -24,7 +24,6 @@ Technical documentation and patch catalog for Adobe Lightroom on Android.
 | :--- | :--- | :--- | :--- | :--- |
 | **Block Telemetry & Trackers** | `bytecodePatch` | `true` (Enabled) | `Lightroom Telemetry Manifest Purge` | Neutralizes Google AppMeasurement, Firebase Crashlytics, Branch attribution, and Adobe Creative SDK analytics dispatchers, redirects Adobe Edge and DTM endpoints to 0.0.0.0, strips advertising permissions, and injects analytics opt-out flags. |
 | **Lightroom Telemetry Manifest Purge** | `resourcePatch` | `false` (Opt-in) | None | Strips advertising and tracking permissions and injects opt-out metadata in AndroidManifest.xml. Analytics components are preserved to allow application boot. |
-| **Lightroom Junk Cleaner** | `rawResourcePatch` | `false` (Opt-in) | None | Purges non-functional build metadata, compiler properties, and duplicate license files from the APK root and META-INF. |
 | **Sideload Install Support** | `bytecodePatch` | `true` (Enabled) | None | Ensures compatibility for sideloaded lab installs by allowing local installer source checks to report success and completing Play Integrity token requests. |
 | **Unlock Premium Features** | `bytecodePatch` | `true` (Enabled) | `Sideload Install Support` | Enables app features locked behind subscription paywalls by activating the internal Limited-Time Premium Unlock (LTPU) gate. |
 
@@ -50,12 +49,6 @@ Technical documentation and patch catalog for Adobe Lightroom on Android.
    - **Objective**: Enable subscription-only editing tools locally.
    - **How**: Forces the internal limited-time premium unlock gate check to return true.
 
-### B. Cleaning (`rawResourcePatch`)
-
-1. **Lightroom Junk Cleaner**:
-   - **Objective**: Reduce package overhead by removing superfluous build files.
-   - **How**: Deletes build metadata, properties, proto files, and redundant license texts from root and metadata directories while protecting executable assets.
-
 ---
 
 ## 4. Behavioral Hazards Warning
@@ -69,3 +62,9 @@ Technical documentation and patch catalog for Adobe Lightroom on Android.
 
 1. **Sideload Install Support Requirement**:
    Without Sideload Install Support, sideloaded lab installs route directly to the Play Store.
+
+---
+
+## 6. Canonical Universal Patches
+
+The generic maintenance patches removed from this guide (background sync, packaging leftovers) are covered by the universal patches in the canonical collection [kveld-morphe-patches](https://github.com/kveld9/kveld-morphe-patches): `Stop Background Sync` and `Clean App Packaging`. For further generic maintenance (languages, screen densities, native trackers, telemetry) that collection also provides `Remove Extra Languages`, `Remove Unused Screen Sizes`, `Remove Tracking Libraries` and `Block Trackers`. Add that source in Morphe Manager alongside this one to use them; universal patches apply to any APK, including Lightroom. Note that `Stop Background Sync` carries the same warning as the removed patch: disabling WorkManager can affect background photo uploads, syncing, and exports.
