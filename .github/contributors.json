@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "_comment": "Rows mirrored from kveld-morphe-patches are frozen as customText so their canonical issue links survive syncs with --repo kveld9/kveld-extra-morphe-patches. New credits for this repo's own issues use structured contributions entries.",
+  "ignoredIssues": [],
+  "contributors": [
+    {
+      "username": "Lxchoooo",
+      "customText": "Testing: Daily patch testing, runtime APK validation, and bug diagnostics."
+    },
+    {
+      "username": "Diego694",
+      "customText": "Testing: Daily patch testing, runtime APK validation, and bug diagnostics."
+    },
+    {
+      "username": "ll0r3nt3",
+      "customText": "Feature request: Proposed DPI Resource Slimmer feature request ([#16](https://github.com/kveld9/kveld-morphe-patches/issues/16))."
+    },
+    {
+      "username": "aidenking2102-dotcom",
+      "customText": "Feature request: Proposed TikTok Feed Ad Blocker ([#23](https://github.com/kveld9/kveld-morphe-patches/issues/23)), Playback Speed Setter ([#25](https://github.com/kveld9/kveld-morphe-patches/issues/25)), and Floating Ad Pendant / Sticker Blocker ([#33](https://github.com/kveld9/kveld-morphe-patches/issues/33)) feature requests."
+    },
+    {
+      "username": "mparvezalam808",
+      "customText": "Feature request: Proposed TikTok Always show publish date, Copy comments without username, Fix Google login, and Show seekbar ([#35](https://github.com/kveld9/kveld-morphe-patches/issues/35)) and TikTok Custom offline videos limit ([#40](https://github.com/kveld9/kveld-morphe-patches/issues/40)) feature requests."
+    },
+    {
+      "username": "raxelbyte",
+      "customText": "Feature request: Proposed Gboard Lite Clipboard Enhancements feature request ([#17](https://github.com/kveld9/kveld-morphe-patches/issues/17))."
+    },
+    {
+      "username": "rafipasya",
+      "customText": "Feature request: Proposed TikTok Auto-translate comments feature request ([#48](https://github.com/kveld9/kveld-morphe-patches/issues/48))."
+    },
+    {
+      "username": "Fahry-a",
+      "customText": "Feature request: Proposed Brave ARMv7a (32-bit) architecture support feature request ([#50](https://github.com/kveld9/kveld-morphe-patches/issues/50))."
+    },
+    {
+      "username": "marcoodhb",
+      "customText": "Feature request: Proposed TikTok Disable double tap to like feature request ([#55](https://github.com/kveld9/kveld-morphe-patches/issues/55))."
+    },
+    {
+      "username": "miyqwx-dev",
+      "customText": "Feature request: Proposed Gboard Lite Hide Incognito Icon toggle feature request."
+    },
+    {
+      "username": "rdx011",
+      "customText": "Feature request: Proposed Gboard Lite Decouple keyboard vibration from system touch feedback feature request ([#69](https://github.com/kveld9/kveld-morphe-patches/issues/69))."
+    }
+  ]
+}
