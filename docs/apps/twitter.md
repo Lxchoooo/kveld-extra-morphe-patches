@@ -82,7 +82,7 @@ Technical documentation and patch catalog for X (Twitter) on Android.
 
 6. **Disable Auto Refresh**:
    - **Objective**: Prevent the home timeline from automatically jumping to new posts.
-   - **How**: Bypasses the timeline scroll-to-top navigation call on update and keeps the reading position on startup.
+   - **How**: Skips automatic timeline fetches in the event dispatcher, the background refresh worker, and the tab-selection callback (live updates, resume/startup reloads, and viewport-triggered refreshes), keeping the reading position; manual pull-to-refresh and pagination keep working.
 
 7. **DM Debloat**:
    - **Objective**: Simplify direct message conversation headers.
