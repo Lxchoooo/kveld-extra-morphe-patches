@@ -30,7 +30,7 @@ Technical documentation and patch catalog for CapCut on Android.
 | **Bypass GeoBlock Region Restriction** | `bytecodePatch` | `true` (Enabled) | None | Forces CapCut GeoBlock config lists (cert, dock, entrance, page, scheme) to empty so region-blocked surfaces stay enabled. Server-refused content may still fail to load. |
 | **Bypass Signature Check** | `bytecodePatch` | `true` (Enabled) | None | Spoofs official APK SHA-256 signature, suppresses signature blacklist and abnormal-source toasts, and disables Godzilla inject detection. |
 | **Bypass Unsafe Package Modal** | `bytecodePatch` | `true` (Enabled) | None | Rewrites Lynx schema default fallback URL from unsafe-package modal to template portal to bypass security notice dialogs. |
-| **Unlock Premium** | `bytecodePatch` | `true` (Enabled) | None | Forces VIP and subscription gates to return true (SubscribeImpl, PayVipImpl, UserVipInfo, UserDetailInfo, VipUserServiceImpl, SubscribeCloudImpl). |
+| **Unlock Premium** | `bytecodePatch` | `true` (Enabled) | None | Forces VIP and subscription gates to return true (SubscribeImpl, PayVipImpl, UserVipInfo, UserDetailInfo, VipUserServiceImpl, SubscribeCloudImpl), plus central account-status flags. |
 | **Native Bloat Slimmer** | `rawResourcePatch` | `false` (Opt-in) | None | Zeroes AppLovin crash-reporter .so in-situ across arm64-v8a/armeabi-v7a; optional trimSpeechEngines toggle zeroes speech .so libs (breaks voice features). |
 | **Remove Watermark** | `bytecodePatch` | `true` (Enabled) | None | Allows exporting videos without watermark by bypassing watermark-removal entitlement gates. |
 | **Unlock Ultra HD Export** | `bytecodePatch` | `true` (Enabled) | None | Enables Ultra HD and 4K video export options by unlocking high-resolution export eligibility gates. |
@@ -70,7 +70,7 @@ Technical documentation and patch catalog for CapCut on Android.
 
 6. **Unlock Premium**:
    - **Objective**: Enable VIP editing capabilities and premium user interface elements locally.
-   - **How**: Forces subscription status and VIP account entitlement checks to return true.
+   - **How**: Forces subscription status and VIP account entitlement checks to return true, including central account-status flags.
 
 7. **Remove Watermark**:
    - **Objective**: Allow exporting videos without watermark by unlocking watermark removal options.

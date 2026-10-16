@@ -70,10 +70,46 @@ private object SubscribeCloudImplIsVipFingerprint : Fingerprint(
     parameters = listOf(),
 )
 
+private object BusinessManagerBFingerprint : Fingerprint(
+    definingClass = "Lcom/lemon/lv/clipmonetize/wrapper/BusinessManager;",
+    name = "B",
+    returnType = "Z",
+)
+
+private object BusinessManagerYFingerprint : Fingerprint(
+    definingClass = "Lcom/lemon/lv/clipmonetize/wrapper/BusinessManager;",
+    name = "y",
+    returnType = "Z",
+)
+
+private object BusinessManagerXFingerprint : Fingerprint(
+    definingClass = "Lcom/lemon/lv/clipmonetize/wrapper/BusinessManager;",
+    name = "x",
+    returnType = "Z",
+)
+
+private object BusinessManagerVFingerprint : Fingerprint(
+    definingClass = "Lcom/lemon/lv/clipmonetize/wrapper/BusinessManager;",
+    name = "v",
+    returnType = "Z",
+)
+
+private object BusinessManagerAFingerprint : Fingerprint(
+    definingClass = "Lcom/lemon/lv/clipmonetize/wrapper/BusinessManager;",
+    name = "A",
+    returnType = "Z",
+)
+
+private object BusinessManagerTFingerprint : Fingerprint(
+    definingClass = "Lcom/lemon/lv/clipmonetize/wrapper/BusinessManager;",
+    name = "T",
+    returnType = "Z",
+)
+
 @Suppress("unused")
 val capcutUnlockPremiumPatch = bytecodePatch(
     name = "Unlock Premium",
-    description = "Forces CapCut VIP gates to return true (SubscribeImpl, PayVipImpl, UserVipInfo, UserDetailInfo, VipUserServiceImpl, SubscribeCloudImpl). Cloud-gated assets may still fail.",
+    description = "Forces CapCut VIP gates to return true (SubscribeImpl, PayVipImpl, UserVipInfo, UserDetailInfo, VipUserServiceImpl, SubscribeCloudImpl) plus central account status flags (BusinessManager). Cloud-gated assets may still fail.",
     default = true,
 ) {
     compatibleWith(Constants.COMPATIBILITY_CAPCUT)
@@ -100,6 +136,12 @@ val capcutUnlockPremiumPatch = bytecodePatch(
         forceTrue(UserDetailInfoGetFlagFingerprint)
         forceTrue(VipUserServiceImplIsVipFingerprint)
         forceTrue(SubscribeCloudImplIsVipFingerprint)
+        forceTrue(BusinessManagerBFingerprint)
+        forceTrue(BusinessManagerYFingerprint)
+        forceTrue(BusinessManagerXFingerprint)
+        forceTrue(BusinessManagerVFingerprint)
+        forceTrue(BusinessManagerAFingerprint)
+        forceTrue(BusinessManagerTFingerprint)
 
         println("[Unlock Premium] Applied $patched hooks -> VIP gates forced to true.")
     }
