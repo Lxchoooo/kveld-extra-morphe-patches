@@ -10,7 +10,7 @@
 <h1 align="center">kveld9 Extra Patches</h1>
 
 <p align="center">
-  Standalone, app-specific patches for Instagram, X, Moovit, PowerPoint, Lightroom, CapCut, and Copilot for use with the <b><a href="https://morphe.software">Morphe</a></b> patcher framework.<br>
+  Standalone, app-specific patches for Instagram, X, Moovit, PowerPoint, Lightroom, CapCut, Copilot, Hevy, NokoPrint, and Xiaomi Earbuds for use with the <b><a href="https://morphe.software">Morphe</a></b> patcher framework.<br>
   Companion to the main collection: <a href="https://github.com/kveld9/kveld-morphe-patches">kveld-morphe-patches</a>.
 </p>
 
@@ -278,6 +278,9 @@
 | Lightroom | [Lightroom Guide](docs/apps/lrmobile.md) | Download target, patch catalog, and known limitations for Adobe Lightroom. |
 | CapCut | [CapCut Guide](docs/apps/capcut.md) | Download target, patch catalog, and known limitations for CapCut. |
 | Copilot | [Copilot Guide](docs/apps/officehub.md) | Download target, patch catalog, and known limitations for Microsoft Copilot. |
+| Hevy | [Hevy Guide](docs/apps/hevy.md) | Download target, patch catalog, and known limitations for Hevy. |
+| NokoPrint | [NokoPrint Guide](docs/apps/nokoprint.md) | Download target, patch catalog, and known limitations for NokoPrint. |
+| Xiaomi Earbuds | [Xiaomi Earbuds Guide](docs/apps/xiaomi_earbuds.md) | Download target, patch catalog, and known limitations for Xiaomi Earbuds. |
 
 <p align="center"><a href="#top"><b>&uarr; Back to top</b></a></p>
 
@@ -289,7 +292,7 @@
 Before proposing new features, review the [Project Scope](docs/out-of-scope.md). Every patch change must pass the in-situ verification gate with 0 failed patches, 0 fingerprint mismatches, and 0 smali compile errors:
 
 ```bash
-./gradlew runPatchTest -Papp=<targetApp>   # e.g. instagram, twitter, moovit, powerpoint, lrmobile, capcut, officehub
+./gradlew runPatchTest -Papp=<targetApp>   # e.g. instagram, twitter, moovit, powerpoint, lrmobile, capcut, officehub, hevy, nokoprint, xiaomi_earbuds
 ./gradlew check
 ```
 
@@ -320,7 +323,7 @@ For bug reports, patch inquiries, or feature proposals, open an issue using the 
 
 ![](images/divider-purple.svg)
 
-**kveld9 Extra Patches** is an independent, community-driven open-source project and is not affiliated, associated, authorized, endorsed by, or in any way officially connected with Meta Platforms, Inc., X Corp., Moovit, Microsoft Corporation, Adobe Inc., ByteDance Ltd., or any of their subsidiaries or affiliates.
+**kveld9 Extra Patches** is an independent, community-driven open-source project and is not affiliated, associated, authorized, endorsed by, or in any way officially connected with Meta Platforms, Inc., X Corp., Moovit, Microsoft Corporation, Adobe Inc., ByteDance Ltd., Hevy App, NokoPrint LLC, Xiaomi Inc., or any of their subsidiaries or affiliates.
 
 All product names, logos, brands, and registered trademarks mentioned in this repository are the property of their respective holders. Their inclusion does not imply affiliation with or endorsement by them.
 

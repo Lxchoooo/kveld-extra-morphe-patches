@@ -118,17 +118,76 @@ enum class TargetApp(
         patchDirectoryPart = "officehub",
         referenceSha256 = Constants.OFFICEHUB_INPUT_SHA256,
     ),
+    HEVY(
+        id = "hevy",
+        appName = "Hevy",
+        packageName = Constants.HEVY_PACKAGE_NAME,
+        candidateFilenames = listOf(
+            "com.hevy_${Constants.HEVY_TARGET_VERSION}.apk",
+            "com.hevy_${Constants.HEVY_TARGET_VERSION}.apkm",
+        ),
+        filePattern = Regex("(?i).*hevy.*\\.(?:apk|apkm)$"),
+        patchDirectoryPart = "hevy",
+        referenceSha256 = Constants.HEVY_INPUT_SHA256,
+    ),
+    NOKOPRINT(
+        id = "nokoprint",
+        appName = "NokoPrint",
+        packageName = Constants.NOKOPRINT_PACKAGE_NAME,
+        candidateFilenames = listOf(
+            "nokoprint_${Constants.NOKOPRINT_TARGET_VERSION}_orig.xapk",
+            "NokoPrint+-+Print+from+Phone_${Constants.NOKOPRINT_TARGET_VERSION}_APKPure.xapk",
+            "com.nokoprint_${Constants.NOKOPRINT_TARGET_VERSION}.xapk",
+            "com.nokoprint_${Constants.NOKOPRINT_TARGET_VERSION}.apk",
+            "nokoprint_${Constants.NOKOPRINT_TARGET_VERSION}.apk",
+            "nokoprint.xapk",
+            "nokoprint.apk",
+        ),
+        filePattern = Regex("(?i).*nokoprint.*\\.(?:apk|xapk)$"),
+        patchDirectoryPart = "nokoprint",
+        referenceSha256 = Constants.NOKOPRINT_INPUT_SHA256,
+    ),
+    XIAOMI_EARBUDS(
+        id = "xiaomi_earbuds",
+        appName = "Xiaomi Earbuds",
+        packageName = Constants.XIAOMI_EARBUDS_PACKAGE_NAME,
+        candidateFilenames = listOf(
+            "Xiaomi+Earbuds_${Constants.XIAOMI_EARBUDS_TARGET_VERSION}_APKPure.xapk",
+            "Xiaomi+Earbuds_${Constants.XIAOMI_EARBUDS_TARGET_VERSION}.xapk",
+            "com.mi.earphone_${Constants.XIAOMI_EARBUDS_TARGET_VERSION}.xapk",
+            "com.mi.earphone_${Constants.XIAOMI_EARBUDS_TARGET_VERSION}.apkm",
+            "com.mi.earphone_${Constants.XIAOMI_EARBUDS_TARGET_VERSION}.apk",
+            "xiaomi_earbuds.xapk",
+            "xiaomi_earbuds.apkm",
+            "xiaomi_earbuds.apk",
+            "earphone.xapk",
+            "earphone.apkm",
+            "earphone.apk",
+        ),
+        filePattern = Regex("(?i).*(?:earphone|earbuds).*\\.(?:apk|apkm|xapk)$"),
+        patchDirectoryPart = "xiaomi",
+        referenceSha256 = Constants.XIAOMI_EARBUDS_INPUT_SHA256,
+    ),
     ;
 
     companion object {
         fun fromId(raw: String): TargetApp? {
             val normalized = raw.trim().lowercase().replace("-", "_")
             return entries.firstOrNull { it.id == normalized }
+                ?: when (normalized) {
+                    "earbuds", "earphone", "xiaomi" -> XIAOMI_EARBUDS
+                    else -> null
+                }
         }
 
         fun fromFileName(fileName: String): TargetApp? {
             val lower = fileName.lowercase()
-            return entries.firstOrNull { lower.contains(it.id) || it.filePattern.containsMatchIn(fileName) }
+            return when {
+                lower.contains("hevy") -> HEVY
+                lower.contains("nokoprint") -> NOKOPRINT
+                lower.contains("earphone") || lower.contains("earbuds") -> XIAOMI_EARBUDS
+                else -> entries.firstOrNull { lower.contains(it.id) || it.filePattern.containsMatchIn(fileName) }
+            }
         }
     }
 }

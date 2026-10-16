@@ -105,6 +105,37 @@ APP_SPECS: List[Dict[str, Any]] = [
         "path_prefix": "/apk/microsoft-corporation/office-mobile-2/",
         "allow_beta": False,
     },
+    {
+        "id": "hevy",
+        "name": "Hevy",
+        "package_name": "com.hevy",
+        "constant_key": "HEVY_TARGET_VERSION",
+        "source_type": "apkmirror",
+        "source_name": "APKMirror",
+        "source_url": "https://www.apkmirror.com/apk/hevy-gym-workout-tracker/hevy-gym-log-workout-tracker/",
+        "path_prefix": "/apk/hevy-gym-workout-tracker/hevy-gym-log-workout-tracker/hevy-gym-log-workout-tracker-",
+        "allow_beta": False,
+    },
+    {
+        "id": "nokoprint",
+        "name": "NokoPrint",
+        "package_name": "com.nokoprint",
+        "constant_key": "NOKOPRINT_TARGET_VERSION",
+        "source_type": "apkpure",
+        "source_name": "APKPure",
+        "source_url": "https://apkpure.com/nokoprint-wifi-bluetooth-usb/com.nokoprint",
+        "allow_beta": False,
+    },
+    {
+        "id": "xiaomi-earbuds",
+        "name": "Xiaomi Earbuds",
+        "package_name": "com.mi.earphone",
+        "constant_key": "XIAOMI_EARBUDS_TARGET_VERSION",
+        "source_type": "apkpure",
+        "source_name": "APKPure",
+        "source_url": "https://apkpure.com/xiaomi-earbuds/com.mi.earphone",
+        "allow_beta": False,
+    },
 ]
 
 
