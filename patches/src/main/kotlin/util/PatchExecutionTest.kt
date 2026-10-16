@@ -99,7 +99,7 @@ enum class TargetApp(
         appName = "CapCut",
         packageName = Constants.CAPCUT_PACKAGE_NAME,
         candidateFilenames = listOf(
-            "com.lemon.lvoverseas_19.7.0-19701600_minAPI23(arm64-v8a,armeabi-v7a)(nodpi)_apkmirror.com.apk",
+            "com.lemon.lvoverseas_19.8.0-19800002_minAPI23(arm64-v8a,armeabi-v7a)(nodpi)_apkmirror.com.apk",
             "capcut_${Constants.CAPCUT_TARGET_VERSION}.apk"
         ),
         filePattern = Regex("(?i).*(?:capcut|lemon\\.lvoverseas).*\\.(?:apk|apkm|xapk)$"),
