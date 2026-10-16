@@ -24,7 +24,7 @@ Technical documentation and patch catalog for CapCut on Android.
 | :--- | :--- | :--- | :--- | :--- |
 | **Block Telemetry & Trackers** | `bytecodePatch` | `true` (Enabled) | `CapCut Telemetry Manifest Purge` | Neutralizes Google AppMeasurement, AppsFlyer, and ByteDance AppLog event dispatchers. |
 | **CapCut Telemetry Manifest Purge** | `resourcePatch` | `false` (Opt-in) | None | Strips 6 advertising/tracking permissions, disables measurement/analytics/attribution components (AppMeasurement, AppLovin, Vungle, BDInstall, ByteDance AppLog Collector, LogService, Pangle), prunes analytics discovery registrars (MLKit/messaging/crashlytics preserved), injects 8 opt-out metadata flags. |
-| **Locale Slimmer** | `resourcePatch` | `false` (Opt-in) | None | Strips unselected res/values-* tables and assets/locales/*.json bundles via locales option (default en). Base fallback and English always preserved. |
+| **Locale Assets Slimmer** | `resourcePatch` | `false` (Opt-in) | None | Strips unselected assets/locales/*.json bundles via locales option (default en). English always preserved. res/values-* tables are covered by the canonical universal Remove Extra Languages patch. |
 | **Bypass Effects Region Restriction** | `bytecodePatch` | `true` (Enabled) | None | Spoofs device_platform to "windows" and resets deviceId in EffectConfiguration to bypass ByteDance Shark WAF effect loading blocks. |
 | **Bypass GeoBlock Region Restriction** | `bytecodePatch` | `true` (Enabled) | None | Forces CapCut GeoBlock config lists (cert, dock, entrance, page, scheme) to empty so region-blocked surfaces stay enabled. Server-refused content may still fail to load. |
 | **Bypass Signature Check** | `bytecodePatch` | `true` (Enabled) | None | Spoofs official APK SHA-256 signature, suppresses signature blacklist and abnormal-source toasts, and disables Godzilla inject detection. |
@@ -85,9 +85,9 @@ Technical documentation and patch catalog for CapCut on Android.
 
 ### C. Resource and Binary Debloat Axes
 
-1. **Locale Slimmer (`resourcePatch`)**:
-   - **Objective**: Reduce package size by removing unneeded languages.
-   - **How**: Deletes unselected values directories and JSON language bundles while preserving base and English fallbacks.
+1. **Locale Assets Slimmer (`resourcePatch`)**:
+   - **Objective**: Reduce package size by removing unneeded CapCut asset language bundles.
+   - **How**: Deletes unselected `assets/locales/*.json` files while preserving English. `res/values-*` string tables are left to the canonical universal Remove Extra Languages patch.
 
 2. **Native Bloat Slimmer (`rawResourcePatch`)**:
    - **Objective**: Reduce disk space by stripping unused native libraries.
@@ -99,8 +99,8 @@ Technical documentation and patch catalog for CapCut on Android.
 
 1. **Opt-in Status**:
    Telemetry and resource slimmer patches are opt-in and disabled by default.
-2. **Locale Slimmer**:
-   Application strings for stripped languages will fall back to base or English strings.
+2. **Locale Assets Slimmer**:
+   Asset language bundles for stripped languages will fall back to English. res/values-* tables are untouched by this patch.
 3. **Native Bloat Slimmer**:
    Stripping speech recognition and synthesis engines disables voice effects, text-to-speech, and automatic captions.
 
@@ -114,3 +114,9 @@ Technical documentation and patch catalog for CapCut on Android.
    The unsafe package modal dialog is bypassed on initial startup, but may reappear when accessing screens where remote verdicts are evaluated.
 3. **Cloud VIP Assets**:
    Remote cloud-hosted VIP assets and server-validated processing remain locked.
+
+---
+
+## 6. Canonical Universal Patches
+
+The generic maintenance patches removed from this guide (screen densities, `res/values-*` languages) are covered by the universal patches in the canonical collection [kveld-morphe-patches](https://github.com/kveld9/kveld-morphe-patches): `Remove Unused Screen Sizes` and `Remove Extra Languages`. For further generic maintenance (packaging leftovers, background sync, native trackers, telemetry) that collection also provides `Clean App Packaging`, `Stop Background Sync`, `Remove Tracking Libraries` and `Block Trackers`. Add that source in Morphe Manager alongside this one to use them; universal patches apply to any APK, including CapCut.

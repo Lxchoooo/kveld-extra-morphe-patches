@@ -8,8 +8,8 @@ import java.io.File
 
 @Suppress("unused")
 val capcutLocaleSlimmerPatch = resourcePatch(
-    name = "Locale Slimmer",
-    description = "Strips unselected language string tables, resources, and asset JSON files from the APK. Base fallback and English are always preserved.",
+    name = "Locale Assets Slimmer",
+    description = "Strips unselected CapCut asset locale bundles (assets/locales/*.json) from the APK. English is always preserved. For res/values-* string tables use the canonical universal Remove Extra Languages patch.",
     default = false,
 ) {
     compatibleWith(Constants.COMPATIBILITY_CAPCUT)
@@ -29,87 +29,51 @@ val capcutLocaleSlimmerPatch = resourcePatch(
             get(".")
         }
 
-        val resDir = File(apkRoot, "res")
         val assetsLocalesDir = File(apkRoot, "assets/locales")
 
-        val hasRes = resDir.exists() && resDir.isDirectory
-        val hasAssetsLocales = assetsLocalesDir.exists() && assetsLocalesDir.isDirectory
-
-        if (!hasRes && !hasAssetsLocales) {
-            println("[CapCut Locale Slimmer] Skipped: res and assets/locales directories not found.")
+        if (!assetsLocalesDir.exists() || !assetsLocalesDir.isDirectory) {
+            println("[CapCut Locale Assets Slimmer] Skipped: assets/locales directory not found.")
             return@execute
         }
 
         val selectedLocales = LocaleUtils.parseTargetLocales(targetLocales, defaultLocales = setOf("en", "en-us"))
 
         var savedBytes = 0L
-        var strippedResDirsCount = 0
         var strippedAssetFilesCount = 0
 
-        // Axis 1A: Android Resource Table (res/values-*/)
-        if (hasRes) {
-            val targetResDirs = LocaleUtils.resolveResourceDirectories(resDir)
-            for (rDir in targetResDirs) {
-                val subDirs = rDir.listFiles { f -> f.isDirectory } ?: continue
+        // CapCut Asset Localization Bundles (assets/locales/*.json).
+        // res/values-* string tables are intentionally not touched here:
+        // they are covered by the canonical universal Remove Extra Languages patch.
+        val jsonFiles = assetsLocalesDir.listFiles { f -> f.isFile && f.extension.equals("json", ignoreCase = true) }
+        if (jsonFiles != null) {
+            for (file in jsonFiles) {
+                val baseName = file.nameWithoutExtension.lowercase()
 
-                for (dir in subDirs) {
-                    // Only process values directories (e.g. values-es, values-b+es+419)
-                    if (!dir.name.startsWith("values")) continue
+                // English fallback is strictly preserved
+                if (baseName == "en" || baseName.startsWith("en-") || baseName.startsWith("en_")) {
+                    continue
+                }
 
-                    // Base fallback (e.g. "values") must never be stripped
-                    if (dir.name == "values") continue
+                // Extract base language prefix (e.g. "es-419" -> "es", "ar-arab" -> "ar")
+                val langPrefix = baseName.substringBefore("-").substringBefore("_")
+                if (baseName in selectedLocales || langPrefix in selectedLocales) {
+                    continue
+                }
 
-                    // Extract languages; directories without language qualifiers (e.g. values-night, values-v31) are preserved
-                    val languages = LocaleUtils.extractResourceLanguages(dir.name)
-                    if (languages.isEmpty()) continue
-
-                    // Preserve if any extracted language matches the user's selected locales
-                    if (languages.any { it in selectedLocales }) continue
-
-                    // Unselected locale directory: calculate size and delete recursively
-                    val dirSize = dir.walkTopDown().filter { it.isFile }.sumOf { it.length() }
-                    if (dir.deleteRecursively()) {
-                        savedBytes += dirSize
-                        strippedResDirsCount++
-                    }
+                val fileSize = file.length()
+                if (file.delete()) {
+                    savedBytes += fileSize
+                    strippedAssetFilesCount++
                 }
             }
         }
 
-        // Axis 1B: CapCut Asset Localization Bundles (assets/locales/*.json)
-        if (hasAssetsLocales) {
-            val jsonFiles = assetsLocalesDir.listFiles { f -> f.isFile && f.extension.equals("json", ignoreCase = true) }
-            if (jsonFiles != null) {
-                for (file in jsonFiles) {
-                    val baseName = file.nameWithoutExtension.lowercase()
-
-                    // English fallback is strictly preserved
-                    if (baseName == "en" || baseName.startsWith("en-") || baseName.startsWith("en_")) {
-                        continue
-                    }
-
-                    // Extract base language prefix (e.g. "es-419" -> "es", "ar-arab" -> "ar")
-                    val langPrefix = baseName.substringBefore("-").substringBefore("_")
-                    if (baseName in selectedLocales || langPrefix in selectedLocales) {
-                        continue
-                    }
-
-                    val fileSize = file.length()
-                    if (file.delete()) {
-                        savedBytes += fileSize
-                        strippedAssetFilesCount++
-                    }
-                }
-            }
-        }
-
-        val totalStripped = strippedResDirsCount + strippedAssetFilesCount
-        if (totalStripped == 0) {
-            println("[CapCut Locale Slimmer] No unselected locale files found to strip (retained locales: ${selectedLocales.sorted().joinToString(", ")}).")
+        if (strippedAssetFilesCount == 0) {
+            println("[CapCut Locale Assets Slimmer] No unselected asset locale files found to strip (retained locales: ${selectedLocales.sorted().joinToString(", ")}).")
             return@execute
         }
 
         val savedFormatted = LocaleUtils.formatBytes(savedBytes)
-        println("[CapCut Locale Slimmer] Stripped $totalStripped unselected locale items ($strippedResDirsCount res dirs, $strippedAssetFilesCount asset files) -> Saved $savedFormatted (retained locales: ${selectedLocales.sorted().joinToString(", ")})")
+        println("[CapCut Locale Assets Slimmer] Stripped $strippedAssetFilesCount unselected asset locale files -> Saved $savedFormatted (retained locales: ${selectedLocales.sorted().joinToString(", ")})")
     }
 }
