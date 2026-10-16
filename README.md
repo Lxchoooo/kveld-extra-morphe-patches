@@ -90,18 +90,9 @@
 
 ![](images/divider-purple.svg)
 
-This source ships app-specific patches only. Generic maintenance already covered elsewhere lives in the canonical collection [kveld-morphe-patches](https://github.com/kveld9/kveld-morphe-patches) as universal patches that apply to any APK, including every target in this repo:
+This source ships app-specific patches only. Generic maintenance that works on any app (unused languages, screen sizes, packaging leftovers, background activity, common trackers) lives in the companion collection [kveld-morphe-patches](https://github.com/kveld9/kveld-morphe-patches) as universal patches, and applies to every app in this repo as well.
 
-| Universal Patch | Covers |
-| :--- | :--- |
-| `Remove Unused Screen Sizes` | Screen density slimming (replaces the removed per-app Density Slimmers) |
-| `Remove Extra Languages` | Language slimming for `res/*` tables (replaces the removed per-app Locale Slimmers; CapCut keeps a dedicated `Locale Assets Slimmer` for its `assets/locales/*.json` bundles) |
-| `Clean App Packaging` | Build leftovers and duplicate files (replaces the removed per-app Junk Cleaners) |
-| `Stop Background Sync` | Background schedulers and boot wakeups (replaces the removed Lightroom Background Sync) |
-| `Block Trackers` (enable its `disableMlKit` option) | Generic telemetry plus MLKit (replaces the removed per-app MLKit Vision Slimmers) |
-| `Remove Tracking Libraries` | Tracking and crash-reporting native libraries |
-
-Add `kveld9/kveld-morphe-patches` as a second source in Morphe Manager (or via [one-click](https://morphe.software/add-source?github=kveld9/kveld-morphe-patches)) to use them alongside this collection.
+To use them, add `kveld9/kveld-morphe-patches` as a second source in Morphe Manager (or via [one-click](https://morphe.software/add-source?github=kveld9/kveld-morphe-patches)) alongside this collection.
 
 <p align="center"><a href="#top"><b>&uarr; Back to top</b></a></p>
 
