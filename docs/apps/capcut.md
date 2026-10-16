@@ -32,6 +32,7 @@ Technical documentation and patch catalog for CapCut on Android.
 | **Bypass Unsafe Package Modal** | `bytecodePatch` | `true` (Enabled) | None | Rewrites Lynx schema default fallback URL from unsafe-package modal to template portal to bypass security notice dialogs. |
 | **Unlock Premium** | `bytecodePatch` | `true` (Enabled) | None | Forces VIP and subscription gates to return true (SubscribeImpl, PayVipImpl, UserVipInfo, UserDetailInfo, VipUserServiceImpl, SubscribeCloudImpl). |
 | **Native Bloat Slimmer** | `rawResourcePatch` | `false` (Opt-in) | None | Zeroes AppLovin crash-reporter .so in-situ across arm64-v8a/armeabi-v7a; optional trimSpeechEngines toggle zeroes speech .so libs (breaks voice features). |
+| **Remove Watermark** | `bytecodePatch` | `true` (Enabled) | None | Allows exporting videos without watermark by bypassing watermark-removal entitlement gates. |
 
 ---
 
@@ -68,6 +69,10 @@ Technical documentation and patch catalog for CapCut on Android.
 6. **Unlock Premium**:
    - **Objective**: Enable VIP editing capabilities and premium user interface elements locally.
    - **How**: Forces subscription status and VIP account entitlement checks to return true.
+
+7. **Remove Watermark**:
+   - **Objective**: Allow exporting videos without watermark by unlocking watermark removal options.
+   - **How**: Overrides watermark eligibility checks and scene removal gates to allow export without watermarks, and disables the default-on brand watermark flag.
 
 ### C. Resource and Binary Debloat Axes
 
