@@ -23,7 +23,7 @@ Technical documentation and patch catalog for X (Twitter) on Android.
 | Patch Name | Typology | Default State | Dependencies | Description |
 | :--- | :--- | :--- | :--- | :--- |
 | **Background Slimmer** | `resourcePatch` | `false` (Opt-in) | None | Disables background WorkManager tasks, widgets, and Cast/NFC companion services to reduce resource usage. |
-| **Block Telemetry & Trackers** | `bytecodePatch` | `true` (Enabled) | None | Blocks telemetry collection, tracker SDKs, and analytics services across bytecode and manifest. |
+| **Block Telemetry & Trackers** | `bytecodePatch` | `true` (Enabled) | None | Blocks telemetry collection, redirects Braze and Sentry endpoints to 0.0.0.0, and purges tracking and Sentry configuration from manifest. |
 | **Block Update Screen** | `bytecodePatch` | `true` (Enabled) | None | Blocks outdated app warning screens and suppresses update prompts on launch. |
 | **Control Video Auto Scroll** | `bytecodePatch` | `false` (Opt-in) | None | Prevents automatic scrolling to the next video in immersive media view. |
 | **Custom Deep Links** | `resourcePatch` | `false` (Opt-in) | None | Registers intent filters to open supported domains in the app. |
@@ -66,8 +66,8 @@ Technical documentation and patch catalog for X (Twitter) on Android.
 ### B. Bytecode Modification Layer (`bytecodePatch`)
 
 1. **Block Telemetry & Trackers**:
-   - **Objective**: Stop runtime metric and event submission, and strip tracking components.
-   - **How**: Injects immediate returns into measurement and performance tracking methods; automatically executes internal manifest purge to strip advertising permissions and disable analytics services.
+   - **Objective**: Stop runtime metric and event submission, redirect tracker endpoints, and strip tracking components.
+   - **How**: Injects immediate returns into measurement and performance tracking methods; redirects Braze API base URLs and Sentry ingest endpoints to `http://0.0.0.0`; automatically executes internal manifest purge to strip advertising permissions, disable analytics services, and purge Sentry auto-initialization metadata.
 
 2. **Block Update Screen**:
    - **Objective**: Prevent outdated-app blocking screens on launch.

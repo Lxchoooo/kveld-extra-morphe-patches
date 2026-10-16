@@ -7,8 +7,11 @@ import app.morphe.patcher.patch.BytecodePatchContext
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.patch.resourcePatch
 import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
+import app.morphe.patches.shared.ANDROID_XML_NAMESPACE
 import app.morphe.patches.shared.Constants
+import app.morphe.patches.shared.childrenNamed
 import app.morphe.patches.shared.disableComponentsByName
+import app.morphe.patches.shared.removeChildren
 import app.morphe.patches.shared.removeComponentDiscoveryRegistrarsWhere
 import app.morphe.patches.shared.setApplicationMetaData
 import app.morphe.patches.shared.stripPermissionsWhere
@@ -22,10 +25,11 @@ import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.RegisterRangeInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.TwoRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
+import com.android.tools.smali.dexlib2.iface.reference.StringReference
 
 private val twitterTelemetryResourcePatch = resourcePatch(
     name = "Block Telemetry Manifest Purge",
-    description = "Strips tracking/advertising permissions, disables analytics services and receivers, and injects opt-out metadata in AndroidManifest.xml.",
+    description = "Strips tracking/advertising permissions, disables analytics services and receivers, purges Sentry initialization metadata, and injects opt-out metadata in AndroidManifest.xml.",
     default = false,
 ) {
     compatibleWith(Constants.COMPATIBILITY_TWITTER)
@@ -74,9 +78,15 @@ private val twitterTelemetryResourcePatch = resourcePatch(
             "google_analytics_default_allow_ad_personalization_signals" to "false",
         )
 
+        val sentryMetadataNames = setOf(
+            "io.sentry.dsn",
+            "io.sentry.send-default-pii",
+        )
+
         var removedPermissions = 0
         var disabledComponents = 0
         var removedRegistrars = 0
+        var removedSentryMetadata = 0
         var injectedMetadata = 0
 
         document(manifestFile.absolutePath).use { doc ->
@@ -106,7 +116,15 @@ private val twitterTelemetryResourcePatch = resourcePatch(
                     matchesKeyword && !isExcluded
                 }
 
-                // 4. Inject declarative SDK opt-out metadata flags
+                // 4. Remove Sentry auto-initialization metadata
+                val sentryMetaElements = application.childrenNamed("meta-data").filter { meta ->
+                    val name = meta.getAttribute("android:name").ifBlank { meta.getAttributeNS(ANDROID_XML_NAMESPACE, "name") }
+                    name in sentryMetadataNames
+                }
+                application.removeChildren(sentryMetaElements)
+                removedSentryMetadata = sentryMetaElements.size
+
+                // 5. Inject declarative SDK opt-out metadata flags
                 optOutMetadata.forEach { (name, value) ->
                     application.setApplicationMetaData(name, value)
                     injectedMetadata++
@@ -114,7 +132,7 @@ private val twitterTelemetryResourcePatch = resourcePatch(
             }
         }
 
-        println("[Block Telemetry & Trackers] Stripped $removedPermissions permissions, disabled $disabledComponents tracking components, removed $removedRegistrars discovery registrars, and injected $injectedMetadata opt-out flags in AndroidManifest.xml.")
+        println("[Block Telemetry & Trackers] Stripped $removedPermissions permissions, disabled $disabledComponents tracking components, removed $removedRegistrars discovery registrars, removed $removedSentryMetadata Sentry metadata entries, and injected $injectedMetadata opt-out flags in AndroidManifest.xml.")
     }
 }
 
@@ -308,68 +326,53 @@ private val traceIncrementMetricFingerprint = Fingerprint(
     returnType = "V",
 )
 
-private val brazeInitFingerprint = Fingerprint(
-    strings = listOf("Braze SDK Initializing"),
+private fun replaceStringLiteralsInMethod(
+    method: MutableMethod,
+    targetStrings: Set<String>,
+    replacementString: String = "http://0.0.0.0",
+): Int {
+    val instructions = method.implementation?.instructions?.toList() ?: return 0
+    var count = 0
+    for ((index, instruction) in instructions.withIndex().reversed()) {
+        val opcode = instruction.opcode
+        if (opcode != Opcode.CONST_STRING && opcode != Opcode.CONST_STRING_JUMBO) continue
+        val ref = (instruction as? ReferenceInstruction)?.reference as? StringReference ?: continue
+        if (ref.string in targetStrings) {
+            val register = (instruction as? OneRegisterInstruction)?.registerA ?: continue
+            val op = if (register > 255) "const-string/jumbo" else "const-string"
+            method.replaceInstruction(index, "$op v$register, \"${replacementString.replace("\"", "\\\"")}\"")
+            count++
+        }
+    }
+    return count
+}
+
+private val brazeTargetUrls = setOf(
+    "https://sdk.iad-01.braze.com/api/v3/",
+    "https://sondheim.braze.com/api/v3/",
 )
 
-private val brazeConfigFingerprint = Fingerprint(
-    strings = listOf("Configuring Braze SDK"),
+private val brazeBaseUrlFingerprint = Fingerprint(
+    strings = listOf(
+        "https://sdk.iad-01.braze.com/api/v3/",
+        "https://sondheim.braze.com/api/v3/",
+    ),
 )
 
-private val brazeApiKeyFingerprint = Fingerprint(
-    strings = listOf("subscriptions_braze_api_key"),
-)
-
-private val brazeEndpointFingerprint = Fingerprint(
-    strings = listOf("subscriptions_braze_endpoint"),
-)
-
-private val sentryDsnFingerprint = Fingerprint(
-    strings = listOf("io.sentry.dsn"),
+private val sentryTargetUrls = setOf(
+    "https://o438986.ingest.sentry.io/api/5405103/store/?sentry_key=524610463d1141a58e7f57053dc7ef87",
 )
 
 private val sentryEndpointFingerprint = Fingerprint(
-    strings = listOf("o794212.ingest.us.sentry.io"),
+    strings = listOf(
+        "https://o438986.ingest.sentry.io/api/5405103/store/?sentry_key=524610463d1141a58e7f57053dc7ef87",
+    ),
 )
-
-private fun evaluateSafeVoidDispatcher(method: Method): Pair<Boolean, String> {
-    if (method.name == "<init>" || method.name == "<clinit>") {
-        return false to "constructor (${method.name})"
-    }
-    if (method.returnType != "V") {
-        return false to "non-void return type '${method.returnType}'"
-    }
-    val callbackParams = method.parameterTypes.map { it.toString() }.filter { param ->
-        param.contains("Callback", ignoreCase = true) ||
-            param.contains("Listener", ignoreCase = true) ||
-            param.contains("Continuation", ignoreCase = true) ||
-            param.contains("Observer", ignoreCase = true) ||
-            param.contains("Handler", ignoreCase = true)
-    }
-    if (callbackParams.isNotEmpty()) {
-        return false to "has callback/listener/continuation parameters (${callbackParams.joinToString()})"
-    }
-    val lifecycleNames = setOf(
-        "onCreate", "onStart", "onResume", "onPause", "onStop", "onDestroy",
-        "onReceive", "onBind", "onStartCommand", "attachBaseContext",
-    )
-    if (method.name in lifecycleNames) {
-        return false to "lifecycle method '${method.name}'"
-    }
-    val definingClass = method.definingClass
-    if (definingClass.startsWith("Lcom/sardine/") ||
-        definingClass.startsWith("Lcom/plaid/") ||
-        definingClass.startsWith("Lcom/persona/")
-    ) {
-        return false to "fraud/risk or auth SDK class '$definingClass'"
-    }
-    return true to "safe"
-}
 
 @Suppress("unused")
 val twitterBlockTelemetryPatch = bytecodePatch(
     name = "Block Telemetry & Trackers",
-    description = "Blocks tracking services, analytics collection, and advertising identifiers.",
+    description = "Blocks tracking services, analytics collection, and advertising identifiers, redirects Braze and Sentry endpoints to 0.0.0.0, and purges Sentry manifest metadata.",
     default = true,
 ) {
     compatibleWith(Constants.COMPATIBILITY_TWITTER)
@@ -377,8 +380,6 @@ val twitterBlockTelemetryPatch = bytecodePatch(
 
     execute {
         val hookedMethods = mutableListOf<String>()
-        val appliedHooks = mutableListOf<String>()
-        val skippedHooks = mutableListOf<String>()
 
         // Google AppMeasurement
         hookVoidMethod(
@@ -386,7 +387,6 @@ val twitterBlockTelemetryPatch = bytecodePatch(
             hookedMethods = hookedMethods,
             label = "AppMeasurement.logEventInternal",
         )
-        appliedHooks.add("AppMeasurement.logEventInternal")
 
         // Firebase Performance
         hookVoidMethod(
@@ -394,98 +394,60 @@ val twitterBlockTelemetryPatch = bytecodePatch(
             hookedMethods = hookedMethods,
             label = "Trace.start",
         )
-        appliedHooks.add("Trace.start")
         hookVoidMethod(
             fingerprint = traceStopFingerprint,
             hookedMethods = hookedMethods,
             label = "Trace.stop",
         )
-        appliedHooks.add("Trace.stop")
         hookVoidMethod(
             fingerprint = tracePutAttributeFingerprint,
             hookedMethods = hookedMethods,
             label = "Trace.putAttribute",
         )
-        appliedHooks.add("Trace.putAttribute")
         hookVoidMethod(
             fingerprint = traceRemoveAttributeFingerprint,
             hookedMethods = hookedMethods,
             label = "Trace.removeAttribute",
         )
-        appliedHooks.add("Trace.removeAttribute")
         hookVoidMethod(
             fingerprint = tracePutMetricFingerprint,
             hookedMethods = hookedMethods,
             label = "Trace.putMetric",
         )
-        appliedHooks.add("Trace.putMetric")
         hookVoidMethod(
             fingerprint = traceIncrementMetricFingerprint,
             hookedMethods = hookedMethods,
             label = "Trace.incrementMetric",
         )
-        appliedHooks.add("Trace.incrementMetric")
 
-        // Braze SDK String Anchors (best-effort: applied only when a safe void dispatcher resolves)
-        val brazeRequiredAnchors = listOf(
-            "Braze SDK Initializing" to brazeInitFingerprint,
-            "Configuring Braze SDK" to brazeConfigFingerprint,
-        )
-        val brazeBestEffortAnchors = listOf(
-            "subscriptions_braze_api_key" to brazeApiKeyFingerprint,
-            "subscriptions_braze_endpoint" to brazeEndpointFingerprint,
-        )
-
-        for ((label, fp) in brazeRequiredAnchors) {
-            val sdkMatches = (fp.matchAllOrNull() ?: emptyList()).filter { it.method.definingClass.startsWith("Lcom/braze/") }
-            val method = sdkMatches.map { it.method }.firstOrNull { evaluateSafeVoidDispatcher(it).first }
-            if (method == null) {
-                skippedHooks.add("Braze ($label: no safe void dispatcher - best-effort)")
-                println("[Block Telemetry & Trackers] Skipped Braze anchor '$label': no safe void dispatcher (best-effort).")
-                continue
-            }
-            method.addInstructions(0, "return-void")
-            val hookLabel = "Braze ($label -> ${method.definingClass}->${method.name})"
-            hookedMethods.add(hookLabel)
-            appliedHooks.add(hookLabel)
+        // Braze base URL redirection
+        val brazeMethods = (brazeBaseUrlFingerprint.matchAllOrNull() ?: emptyList()).map { it.method }.ifEmpty {
+            listOf(brazeBaseUrlFingerprint.method)
+        }
+        var brazeRewrites = 0
+        for (method in brazeMethods) {
+            brazeRewrites += replaceStringLiteralsInMethod(method, brazeTargetUrls, "http://0.0.0.0")
+        }
+        if (brazeRewrites == 0) {
+            error("[Block Telemetry & Trackers] Failed to redirect Braze base URLs: no target const-string instructions found.")
         }
 
-        for ((label, fp) in brazeBestEffortAnchors) {
-            val method = (fp.matchAllOrNull() ?: emptyList()).map { it.method }.firstOrNull { evaluateSafeVoidDispatcher(it).first }
-            if (method == null) {
-                skippedHooks.add("Braze ($label: no safe void dispatcher - best-effort)")
-                println("[Block Telemetry & Trackers] Skipped Braze anchor '$label': no safe void dispatcher (best-effort).")
-                continue
-            }
-            method.addInstructions(0, "return-void")
-            val hookLabel = "Braze ($label -> ${method.definingClass}->${method.name})"
-            hookedMethods.add(hookLabel)
-            appliedHooks.add(hookLabel)
+        // Sentry ingest endpoint redirection
+        val sentryMethods = (sentryEndpointFingerprint.matchAllOrNull() ?: emptyList()).map { it.method }.ifEmpty {
+            listOf(sentryEndpointFingerprint.method)
         }
-
-        // Sentry Telemetry Reconnaissance & Consumers (report-only: no first-party SDK, DSN may be manifest-only)
-        val sentryAnchors = listOf(
-            "io.sentry.dsn" to sentryDsnFingerprint,
-            "o794212.ingest.us.sentry.io" to sentryEndpointFingerprint,
-        )
-
-        for ((label, fp) in sentryAnchors) {
-            val method = (fp.matchAllOrNull() ?: emptyList()).map { it.method }.firstOrNull { evaluateSafeVoidDispatcher(it).first }
-            if (method == null) {
-                skippedHooks.add("Sentry ($label: no safe void consumer - report-only)")
-                println("[Block Telemetry & Trackers] Sentry anchor '$label': no safe void consumer found (report-only).")
-                continue
-            }
-            method.addInstructions(0, "return-void")
-            val hookLabel = "Sentry ($label -> ${method.definingClass}->${method.name})"
-            hookedMethods.add(hookLabel)
-            appliedHooks.add(hookLabel)
+        var sentryRewrites = 0
+        for (method in sentryMethods) {
+            sentryRewrites += replaceStringLiteralsInMethod(method, sentryTargetUrls, "http://0.0.0.0")
+        }
+        if (sentryRewrites == 0) {
+            error("[Block Telemetry & Trackers] Failed to redirect Sentry ingest endpoints: no target const-string instructions found.")
         }
 
         val removedNullChecks = removePerfGetInstanceNullChecks()
 
         println("[Block Telemetry & Trackers] Neutralized ${hookedMethods.size} telemetry dispatch methods: ${hookedMethods.joinToString(", ")}.")
-        println("[Block Telemetry & Trackers] Telemetry hooks summary -> applied: ${appliedHooks.size} (${appliedHooks.joinToString(", ")}), skipped: ${skippedHooks.size} (${skippedHooks.joinToString("; ")}).")
+        println("[Block Telemetry & Trackers] Redirected Braze base URLs and Sentry ingest endpoints to 0.0.0.0.")
         println("[Block Telemetry & Trackers] Removed $removedNullChecks Firebase Performance getInstance() null checks (registrar purged).")
     }
 }
