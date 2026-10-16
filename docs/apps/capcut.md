@@ -33,6 +33,7 @@ Technical documentation and patch catalog for CapCut on Android.
 | **Unlock Premium** | `bytecodePatch` | `true` (Enabled) | None | Forces VIP and subscription gates to return true (SubscribeImpl, PayVipImpl, UserVipInfo, UserDetailInfo, VipUserServiceImpl, SubscribeCloudImpl). |
 | **Native Bloat Slimmer** | `rawResourcePatch` | `false` (Opt-in) | None | Zeroes AppLovin crash-reporter .so in-situ across arm64-v8a/armeabi-v7a; optional trimSpeechEngines toggle zeroes speech .so libs (breaks voice features). |
 | **Remove Watermark** | `bytecodePatch` | `true` (Enabled) | None | Allows exporting videos without watermark by bypassing watermark-removal entitlement gates. |
+| **Unlock Ultra HD Export** | `bytecodePatch` | `true` (Enabled) | None | Enables Ultra HD and 4K video export options by unlocking high-resolution export eligibility gates. |
 
 ---
 
@@ -73,6 +74,10 @@ Technical documentation and patch catalog for CapCut on Android.
 7. **Remove Watermark**:
    - **Objective**: Allow exporting videos without watermark by unlocking watermark removal options.
    - **How**: Overrides watermark eligibility checks and scene removal gates to allow export without watermarks, and disables the default-on brand watermark flag.
+
+8. **Unlock Ultra HD Export**:
+   - **Objective**: Keep Ultra HD and 4K video export options available during export.
+   - **How**: Forces template export Ultra HD availability and feature gates to return true, bypassing high-resolution export restrictions.
 
 ### C. Resource and Binary Debloat Axes
 
