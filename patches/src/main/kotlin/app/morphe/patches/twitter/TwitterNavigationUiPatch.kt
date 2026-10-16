@@ -24,13 +24,26 @@ import app.morphe.patcher.patch.BytecodePatchContext
 import app.morphe.patcher.patch.booleanOption
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patches.shared.Constants
+import com.android.tools.smali.dexlib2.Opcode
+import com.android.tools.smali.dexlib2.iface.instruction.FiveRegisterInstruction
+import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
+import com.android.tools.smali.dexlib2.iface.instruction.RegisterRangeInstruction
+import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 
 private val badgesFingerprint = Fingerprint(
     strings = listOf("grok_android_tab_badge_enabled"),
 )
 
-private val fabFingerprint = Fingerprint(
-    strings = listOf("android_composer_fab_always_visible_enabled"),
+private val fabVisibilityFingerprint = Fingerprint(
+    definingClass = "Lcom/x/ui/common/i3;",
+    name = "d",
+    returnType = "V",
+    parameters = listOf(
+        "Landroidx/compose/ui/Modifier;",
+        "Landroidx/compose/runtime/internal/e;",
+        "Landroidx/compose/runtime/Composer;",
+        "I",
+    ),
 )
 
 private val fabMenuFingerprint = Fingerprint(
@@ -137,11 +150,35 @@ val twitterNavigationUiPatch = bytecodePatch(
 
         // 2. hideFab
         if (hideFab ?: true) {
-            if (neutralizeFlag(fabFingerprint, "android_composer_fab_always_visible_enabled", "Navigation UI")) {
-                patched++
-            } else {
-                error("[Navigation UI] Failed to neutralize 'android_composer_fab_always_visible_enabled' flag.")
+            // The always-visible flag defaults to false, so the FAB is hidden by
+            // forcing its AnimatedVisibility to false.
+            val method = fabVisibilityFingerprint.method
+            val instructions = method.implementation!!.instructions.toList()
+            val targetIndex = instructions.indexOfFirst { ins ->
+                (ins.opcode == Opcode.INVOKE_STATIC || ins.opcode == Opcode.INVOKE_STATIC_RANGE) &&
+                    ((ins as? ReferenceInstruction)?.reference as? MethodReference)?.let { ref ->
+                        ref.returnType == "V" &&
+                            ref.parameterTypes.take(2).map { it.toString() } == listOf("Z", "Landroidx/compose/ui/Modifier;")
+                    } == true
             }
+            if (targetIndex < 0) {
+                error("[Navigation UI] FAB visibility call not found in '${method.definingClass}'.")
+            }
+
+            val instruction = instructions[targetIndex]
+            val reg = when (instruction.opcode) {
+                Opcode.INVOKE_STATIC_RANGE -> (instruction as RegisterRangeInstruction).startRegister
+                Opcode.INVOKE_STATIC -> (instruction as FiveRegisterInstruction).registerC
+                else -> error("[Navigation UI] Unexpected opcode '${instruction.opcode}'.")
+            }
+
+            val constIns = when {
+                reg <= 15 -> "const/4 v$reg, 0x0"
+                reg <= 255 -> "const/16 v$reg, 0x0"
+                else -> error("[Navigation UI] FAB visibility register v$reg out of range.")
+            }
+            method.addInstructions(targetIndex, constIns)
+            patched++
         } else {
             println("[Navigation UI] Skipped hideFab: disabled by patch option.")
         }
