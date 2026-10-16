@@ -40,6 +40,12 @@ private val profileGrokHeaderInitFingerprint = Fingerprint(
     strings = listOf("grok_android_imagine_cta_profile_enabled"),
 )
 
+private val profileGrokHeaderResumeFingerprint = Fingerprint(
+    name = "onResume",
+    returnType = "V",
+    strings = listOf("grok_android_imagine_cta_profile_enabled"),
+)
+
 private val profileTabsFingerprint = Fingerprint(
     strings = listOf("x_lite_profile_connect_tabs_enabled"),
 )
@@ -105,6 +111,12 @@ val twitterPostProfileUiPatch = bytecodePatch(
 
             // 2. In header init, neutralize the flag
             if (neutralizeFlag(profileGrokHeaderInitFingerprint, "grok_android_imagine_cta_profile_enabled", "Post & Profile UI")) {
+                patched++
+                ok = true
+            }
+
+            // 3. On header resume, neutralize the flag (the CTA reloads on every resume)
+            if (neutralizeFlag(profileGrokHeaderResumeFingerprint, "grok_android_imagine_cta_profile_enabled", "Post & Profile UI")) {
                 patched++
                 ok = true
             }
