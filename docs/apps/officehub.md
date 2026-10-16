@@ -26,7 +26,6 @@ Technical documentation and patch catalog for Microsoft Copilot (OfficeHub) on A
 | **Copilot Telemetry Manifest Purge** | `resourcePatch` | `false` (Opt-in) | None | Strips advertising and tracking permissions, disables DataTransport, cross-sell, and HockeyApp components, and injects opt-out metadata in AndroidManifest.xml. |
 | **Bypass Code Transparency** | `bytecodePatch` | `true` (Enabled) | None | Skips the code-transparency failure dialog and reports local verification success, unblocking sideloaded installs. |
 | **Disable Login Requirement** | `bytecodePatch` | `true` (Enabled) | None | Removes login requirement and FTUX paywall screens. Cloud-backed features still require sign-in server-side. |
-| **Copilot DPI Slimmer** | `resourcePatch` | `false` (Opt-in) | None | Strips drawables for unselected screen densities from Copilot base APK while preserving launcher icons and single-density assets. Non-phone UI mode qualifiers (watch, television, car, vrheadset) are purged. |
 | **Copilot Junk Cleaner** | `rawResourcePatch` | `false` (Opt-in) | None | Purges non-functional build metadata, properties, proto descriptors, and duplicate license notices from APK root and META-INF while strictly protecting runtime assets and signatures. |
 | **Copilot Companion Native Slimmer** | `rawResourcePatch` | `false` (Opt-in) | None | Strips optional companion native binaries (React Native, Hermes, SlimCV) via in-situ zeroing. |
 
@@ -56,15 +55,11 @@ Technical documentation and patch catalog for Microsoft Copilot (OfficeHub) on A
 
 ### C. Resource and Native Slimming Axes
 
-1. **Copilot DPI Slimmer (`resourcePatch`)**:
-   - **Objective**: Reduce package size by discarding unused screen density drawables.
-   - **How**: Removes non-phone UI mode qualifiers and strips unselected density directories while preserving application icons and single-density assets.
-
-2. **Copilot Junk Cleaner (`rawResourcePatch`)**:
+1. **Copilot Junk Cleaner (`rawResourcePatch`)**:
    - **Objective**: Strip extraneous build metadata and unused license notices from the APK.
    - **How**: Deletes build properties, proto definitions, and redundant license texts from root and metadata directories while protecting executable assets.
 
-3. **Copilot Companion Native Slimmer (`rawResourcePatch`)**:
+2. **Copilot Companion Native Slimmer (`rawResourcePatch`)**:
    - **Objective**: Reduce package footprint by removing optional companion native libraries.
    - **How**: Empties companion native binaries in-situ across target architectures while preserving boot-critical voice and exception handler binaries.
 
@@ -74,8 +69,6 @@ Technical documentation and patch catalog for Microsoft Copilot (OfficeHub) on A
 
 1. **Copilot Companion Native Slimmer**:
    Hermes and React Native are load-bearing for React Native initialization. Enabling this will crash Copilot React Native surfaces (Copilot chat host) with `UnsatisfiedLinkError`.
-2. **Copilot DPI Slimmer**:
-   Displays matching stripped densities will scale preserved assets.
 
 ---
 
