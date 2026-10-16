@@ -18,14 +18,21 @@
 package app.morphe.patches.twitter
 
 import app.morphe.patcher.Fingerprint
+import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.patch.BytecodePatchContext
 import app.morphe.patcher.patch.booleanOption
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patches.shared.Constants
 
-private val dmCallFingerprint = Fingerprint(
-    returnType = "Z",
-    strings = listOf("xcall_xchat_enabled"),
+private val dmCallButtonsFingerprint = Fingerprint(
+    definingClass = "Lcom/x/dm/chat/composables/u0;",
+    name = "d",
+    returnType = "V",
+    parameters = listOf(
+        "Lcom/x/dms/components/chat/v4;", "Z", "Lkotlin/jvm/functions/Function0;",
+        "Lkotlin/jvm/functions/Function1;", "Landroidx/compose/ui/Modifier;",
+        "Landroidx/compose/runtime/Composer;", "I",
+    ),
 )
 
 @Suppress("unused")
@@ -47,14 +54,12 @@ val twitterDmDebloatPatch = bytecodePatch(
     execute {
         var patched = 0
 
-        // Call buttons (unified xchat calling pipeline hides both together)
+        // Call buttons are hidden by forcing the composable's show-calls parameter to false.
         if (hideDmCalls ?: true) {
-            if (neutralizeFlag(dmCallFingerprint, "xcall_xchat_enabled", "DM Debloat")) {
-                patched++
-                println("[DM Debloat] Neutralized 'xcall_xchat_enabled': unified xchat pipeline hides both audio and video call header buttons together.")
-            } else {
-                error("[DM Debloat] Failed to neutralize 'xcall_xchat_enabled' flag.")
-            }
+            val method = dmCallButtonsFingerprint.method
+            method.addInstructions(0, "const/16 p1, 0x0")
+            patched++
+            println("[DM Debloat] Hid audio and video call buttons in '${method.definingClass}'.")
         } else {
             println("[DM Debloat] Skipped call buttons: hideDmCalls disabled by patch option.")
         }
