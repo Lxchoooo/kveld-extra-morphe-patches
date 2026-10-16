@@ -1,15 +1,17 @@
+<a name="top"></a>
 <p align="center">
-  <a href="https://github.com/kveld9/kveld-extra-morphe-patches/releases/latest"><img src="https://img.shields.io/github/v/release/kveld9/kveld-extra-morphe-patches?color=7928CA&label=Release&logo=github&style=flat-square" alt="Latest Release" /></a>
-  <a href="https://github.com/kveld9/kveld-extra-morphe-patches/releases"><img src="https://img.shields.io/github/downloads/kveld9/kveld-extra-morphe-patches/total?style=flat-square&logo=github" alt="Total Downloads" /></a>
-  <img src="https://img.shields.io/badge/Runtime-Morphe_Patcher_1.8.0-8A2BE2?style=flat-square" alt="Runtime" />
-  <img src="https://img.shields.io/badge/License-GPLv3-blue?style=flat-square" alt="License" />
+  <a href="https://github.com/kveld9/kveld-extra-morphe-patches/releases/latest"><img src="https://img.shields.io/github/v/release/kveld9/kveld-extra-morphe-patches?color=8A2BE2&label=Release&logo=github&style=flat-square" alt="Latest Release" /></a>
+  <a href="https://github.com/kveld9/kveld-extra-morphe-patches/stargazers"><img src="https://img.shields.io/github/stars/kveld9/kveld-extra-morphe-patches?color=8A2BE2&style=flat-square&logo=github" alt="GitHub stars" /></a>
+  <a href="https://github.com/kveld9/kveld-extra-morphe-patches/releases"><img src="https://img.shields.io/github/downloads/kveld9/kveld-extra-morphe-patches/total?color=8A2BE2&style=flat-square&logo=github" alt="Total Downloads" /></a>
+  <img src="https://img.shields.io/badge/Build_Engine-Morphe_Patcher-8A2BE2?style=flat-square" alt="Build engine: Morphe patcher" />
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-GPLv3-8A2BE2?style=flat-square" alt="License: GNU GPLv3" /></a>
 </p>
 
 <h1 align="center">kveld9 Extra Patches</h1>
 
 <p align="center">
-  Standalone, app-specific patches for use with the <b><a href="https://morphe.software">Morphe</a></b> patcher framework.
-  Companion to <a href="https://github.com/kveld9/kveld-morphe-patches">kveld-morphe-patches</a>.
+  Standalone, app-specific patches for Instagram, X, Moovit, PowerPoint, Lightroom, CapCut, and Copilot for use with the <b><a href="https://morphe.software">Morphe</a></b> patcher framework.<br>
+  Companion to the main collection: <a href="https://github.com/kveld9/kveld-morphe-patches">kveld-morphe-patches</a>.
 </p>
 
 <p align="center">
@@ -22,14 +24,52 @@
 
 ---
 
+## Table of Contents
+
+![](images/divider-purple.svg)
+
+- [Quick Start](#quick-start)
+- [Key Advantages](#key-advantages)
+- [Supported Targets & Downloads](#supported-targets--downloads)
+- [Patch Catalog](#patch-catalog)
+- [Documentation & Guides](#documentation--guides)
+- [Contributing & Feature Requests](#contributing--feature-requests)
+- [Community & Support](#community--support)
+- [Legal Disclaimer](#legal-disclaimer)
+- [License](#license)
+
+<a name="quick-start"></a>
+## Quick Start
+
+![](images/divider-purple.svg)
+
+1. **Install Morphe Manager**: Download and install the latest release of [Morphe Manager](https://github.com/morphe-app/morphe-manager) on your Android device.
+2. **Download Target APK**: Download the supported APK or APKM bundle for your target application, matching the exact version listed in the [Supported Targets & Downloads](#supported-targets--downloads) table.
+3. **Add Patch Source**: Add this repository as a custom patch source in Morphe Manager:
+   - Use the one-click [Add Patch Source](https://morphe.software/add-source?github=kveld9/kveld-extra-morphe-patches) action, or manually enter `kveld9/kveld-extra-morphe-patches` in Morphe Manager under **Settings > Sources**.
+4. **Patch & Install**: Open Morphe Manager, select the downloaded target APK/APKM, select your desired patches, tap **Patch**, and install the resulting build.
+
+> [!NOTE]
+> Root access is not required. Morphe modifies application packages directly in userland. Always use the exact target version specified in the table below to satisfy compile-time fingerprint assertions.
+
+<p align="center"><a href="#top"><b>&uarr; Back to top</b></a></p>
+
+<a name="key-advantages"></a>
 ## Key Advantages
+
+![](images/divider-purple.svg)
 
 - **Zero Runtime Overhead**: compile-time Dalvik bytecode manipulation and XML transformation without background daemons, proxy servers, or Xposed frameworks.
 - **Client-Side Telemetry Neutralization**: disables tracking, analytics, and crash reporting at method call sites and manifest components instead of fragile network-level blackholing.
 - **Rootless & Standalone**: operates directly on userland APKs and APKM split bundles; no Magisk, KernelSU, or root privileges required.
 - **Strict Upstream Parity**: each app targets exactly one version, the latest supported release, with exact fingerprint assertions.
 
-## Supported Apps
+<p align="center"><a href="#top"><b>&uarr; Back to top</b></a></p>
+
+<a name="supported-targets--downloads"></a>
+## Supported Targets & Downloads
+
+![](images/divider-purple.svg)
 
 | App | Package | Target Version | Variant | Download Source | Guide |
 | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -41,7 +81,13 @@
 | CapCut | `com.lemon.lvoverseas` | 19.8.0 | APK (`arm64-v8a`, `armeabi-v7a`, `nodpi`) | [APKMirror](https://www.apkmirror.com/apk/bytedance-pte-ltd/capcut/capcut-video-editor-19-8-0-release) | CapCut Guide |
 | Copilot | `com.microsoft.office.officehubrow` | 16.0.20527.20022 | APKM bundle (`arm64-v8a`) | [APKMirror](https://www.apkmirror.com/apk/microsoft-corporation/microsoft-copilot/microsoft-copilot-16-0-20527-20022-release/) | Copilot Guide |
 
-## Patches
+<p align="center"><a href="#top"><b>&uarr; Back to top</b></a></p>
+
+<a name="patch-catalog"></a>
+## Patch Catalog
+
+![](images/divider-purple.svg)
+
 
 <!-- PATCHES_START -->
 <details>
@@ -202,39 +248,86 @@
 
 <!-- PATCHES_END -->
 
-## Documentation
+<p align="center"><a href="#top"><b>&uarr; Back to top</b></a></p>
 
-| Guide | Description |
+<a name="documentation--guides"></a>
+## Documentation & Guides
+
+![](images/divider-purple.svg)
+
+### General Documentation
+
+| Document | Description |
 | :--- | :--- |
 | [Building & Development](docs/building.md) | Toolchain prerequisites, Gradle build tasks, in-situ patching gate, and catalog synchronization. |
 | [Project Scope](docs/out-of-scope.md) | Compile-time invariants, single-version policy, and rejected feature categories. |
-| [CapCut Guide](docs/apps/capcut.md) | Download target, patch catalog, and known limitations for CapCut. |
-| [Copilot Guide](docs/apps/officehub.md) | Download target, patch catalog, and known limitations for Microsoft Copilot. |
-| [Instagram Guide](docs/apps/instagram.md) | Download target, patch catalog, and known limitations for Instagram. |
-| [Lightroom Guide](docs/apps/lrmobile.md) | Download target, patch catalog, and known limitations for Adobe Lightroom. |
-| [Moovit Guide](docs/apps/moovit.md) | Download target, patch catalog, and known limitations for Moovit. |
-| [PowerPoint Guide](docs/apps/powerpoint.md) | Download target, patch catalog, and known limitations for Microsoft PowerPoint. |
-| [X Guide](docs/apps/twitter.md) | Download target, patch catalog, and known limitations for X. |
+| [Security Policy](SECURITY.md) | Vulnerability disclosure procedures and supported security models. |
+| [Changelog](CHANGELOG.md) | Complete history of changes, patch updates, and releases. |
 
-## Contributing
+### Application Guides
+
+| App | Guide | Description |
+| :--- | :--- | :--- |
+| Instagram | [Instagram Guide](docs/apps/instagram.md) | Download target, patch catalog, and known limitations for Instagram. |
+| X | [X Guide](docs/apps/twitter.md) | Download target, patch catalog, and known limitations for X. |
+| Moovit | [Moovit Guide](docs/apps/moovit.md) | Download target, patch catalog, and known limitations for Moovit. |
+| PowerPoint | [PowerPoint Guide](docs/apps/powerpoint.md) | Download target, patch catalog, and known limitations for Microsoft PowerPoint. |
+| Lightroom | [Lightroom Guide](docs/apps/lrmobile.md) | Download target, patch catalog, and known limitations for Adobe Lightroom. |
+| CapCut | [CapCut Guide](docs/apps/capcut.md) | Download target, patch catalog, and known limitations for CapCut. |
+| Copilot | [Copilot Guide](docs/apps/officehub.md) | Download target, patch catalog, and known limitations for Microsoft Copilot. |
+
+<p align="center"><a href="#top"><b>&uarr; Back to top</b></a></p>
+
+<a name="contributing--feature-requests"></a>
+## Contributing & Feature Requests
+
+![](images/divider-purple.svg)
 
 Before proposing new features, review the [Project Scope](docs/out-of-scope.md). Every patch change must pass the in-situ verification gate with 0 failed patches, 0 fingerprint mismatches, and 0 smali compile errors:
 
 ```bash
-./gradlew runPatchTest -Papp=<targetApp>   # e.g. instagram, twitter, moovit, powerpoint
+./gradlew runPatchTest -Papp=<targetApp>   # e.g. instagram, twitter, moovit, powerpoint, lrmobile, capcut, officehub
 ./gradlew check
 ```
 
+For bug reports, patch inquiries, or feature proposals, open an issue using the templates:
+- [Submit an Issue or Feature Request](https://github.com/kveld9/kveld-extra-morphe-patches/issues/new/choose)
+
+<p align="center"><a href="#top"><b>&uarr; Back to top</b></a></p>
+
+<a name="community--support"></a>
 ## Community & Support
 
-- Telegram Support Group: [t.me/kveldmorphe](https://t.me/kveldmorphe)
+![](images/divider-purple.svg)
 
+| Channel / Resource | Link | Description |
+| :--- | :--- | :--- |
+| **Telegram Support** | [t.me/kveldmorphe](https://t.me/kveldmorphe) | Official community discussion, updates, and support group. |
+| **Issue Tracker** | [GitHub Issues](https://github.com/kveld9/kveld-extra-morphe-patches/issues/new/choose) | Bug reports and feature proposals using structured templates. |
+| **Security Policy** | [SECURITY.md](SECURITY.md) | Reporting security vulnerabilities and disclosure guidelines. |
+| **Release Notes** | [Changelog](CHANGELOG.md) / [Releases](https://github.com/kveld9/kveld-extra-morphe-patches/releases) | Detailed history of releases and patch changes. |
+
+> [!NOTE]
+> This repository is a companion collection for standalone applications. For YouTube, YouTube Music, and other primary targets, visit the main patch repository: **[kveld-morphe-patches](https://github.com/kveld9/kveld-morphe-patches)**.
+
+<p align="center"><a href="#top"><b>&uarr; Back to top</b></a></p>
+
+<a name="legal-disclaimer"></a>
 ## Legal Disclaimer
 
-**kveld9 Extra Patches** is an independent, community-driven open-source project and is not affiliated, associated, authorized, endorsed by, or in any way officially connected with Meta Platforms, Inc., X Corp., Tranzit (Moovit), Microsoft Corporation, or any of their subsidiaries or affiliates.
+![](images/divider-purple.svg)
+
+**kveld9 Extra Patches** is an independent, community-driven open-source project and is not affiliated, associated, authorized, endorsed by, or in any way officially connected with Meta Platforms, Inc., X Corp., Moovit, Microsoft Corporation, Adobe Inc., ByteDance Ltd., or any of their subsidiaries or affiliates.
 
 All product names, logos, brands, and registered trademarks mentioned in this repository are the property of their respective holders. Their inclusion does not imply affiliation with or endorsement by them.
 
+<p align="center"><a href="#top"><b>&uarr; Back to top</b></a></p>
+
+<a name="license"></a>
 ## License
 
-GPLv3. See [LICENSE](LICENSE) and [NOTICE](NOTICE).
+![](images/divider-purple.svg)
+
+This project is licensed under the GNU General Public License v3.0. See [LICENSE](LICENSE) and [NOTICE](NOTICE) for the full license text and copyright notices.
+
+<p align="center"><a href="#top"><b>&uarr; Back to top</b></a></p>
