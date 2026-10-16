@@ -27,7 +27,6 @@ Technical documentation and patch catalog for Microsoft PowerPoint on Android.
 | **Bypass Code Transparency** | `bytecodePatch` | `true` (Enabled) | None | Bypasses the code transparency checks. |
 | **Disable Login Requirement** | `bytecodePatch` | `true` (Enabled) | None | Removes login requirement and FTUX paywall screens. |
 | **PowerPoint Companion Native Slimmer** | `rawResourcePatch` | `false` (Opt-in) | None | Strips optional companion native binaries (React Native and Hermes JavaScript runtime stack) via in-situ zeroing. |
-| **PowerPoint Locale Slimmer** | `resourcePatch` | `false` (Opt-in) | None | Strips unselected localized resource directories (res/values-<locale>/) from PowerPoint base APK. English (en, en-us) is always retained. |
 | **Remove Shared User ID** | `resourcePatch` | `true` (Enabled) | None | Removes the sharedUserId attribute from the manifest to prevent installation conflicts. |
 | **Unlock 365 Family** | `bytecodePatch` | `true` (Enabled) | None | Unlocks Microsoft 365 Family subscription features locally. |
 
@@ -65,11 +64,7 @@ Technical documentation and patch catalog for Microsoft PowerPoint on Android.
 
 ### C. Resource & Binary Trimming Axes
 
-1. **PowerPoint Locale Slimmer (`resourcePatch`)**:
-   - **Objective**: Reduce package size by discarding unselected languages.
-   - **How**: Removes unselected locale directories while retaining English and base fallback strings.
-
-2. **PowerPoint Companion Native Slimmer (`rawResourcePatch`)**:
+1. **PowerPoint Companion Native Slimmer (`rawResourcePatch`)**:
    - **Objective**: Reduce application disk footprint by discarding companion native libraries.
    - **How**: Empties React Native and Hermes runtime libraries in-situ across target architectures.
 
@@ -79,8 +74,12 @@ Technical documentation and patch catalog for Microsoft PowerPoint on Android.
 
 1. **PowerPoint Companion Native Slimmer**:
    Stripped libraries are load-bearing for React Native initialization. Enabling this will crash the app with `UnsatisfiedLinkError` when Copilot or other React Native surfaces start.
-2. **PowerPoint Locale Slimmer**:
-   Application strings for stripped locales will fall back to English.
+
+---
+
+## 6. Canonical Universal Patches
+
+The generic maintenance patches removed from this guide (screen densities, languages) are covered by the universal patches in the canonical collection [kveld-morphe-patches](https://github.com/kveld9/kveld-morphe-patches): `Remove Unused Screen Sizes` and `Remove Extra Languages`. For further generic maintenance (packaging leftovers, background sync, native trackers, telemetry) that collection also provides `Clean App Packaging`, `Stop Background Sync`, `Remove Tracking Libraries` and `Block Trackers`. Add that source in Morphe Manager alongside this one to use them; universal patches apply to any APK, including PowerPoint.
 
 ---
 
