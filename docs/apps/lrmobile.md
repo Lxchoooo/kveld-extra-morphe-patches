@@ -10,11 +10,11 @@ Technical documentation and patch catalog for Adobe Lightroom on Android.
 | :--- | :--- |
 | **Target App** | Lightroom |
 | **Package Name** | `com.adobe.lrmobile` |
-| **Target Version** | `11.6.11` |
-| **Target Package Format** | XAPK split bundle (base + config splits) |
+| **Target Version** | `11.6.01` |
+| **Target Package Format** | standalone APK |
 | **Primary Architecture** | `arm64-v8a` |
-| **Authoritative Source** | Uptodown (PairIP-wrapped variant) |
-| **Download Target** | [Lightroom 11.6.11 (arm64-v8a, nodpi, XAPK split bundle)](https://adobe-lightroom-mobile.uptodown.com/android) |
+| **Authoritative Source** | Uptodown (PairIP-free) |
+| **Download Target** | [Lightroom 11.6.01 (arm64-v8a, nodpi, standalone APK)](https://adobe-lightroom-mobile.uptodown.com/android) |
 
 ---
 
@@ -41,7 +41,7 @@ Technical documentation and patch catalog for Adobe Lightroom on Android.
 
 2. **Block Telemetry & Trackers**:
    - **Objective**: Prevent runtime event logging and analytics dispatching.
-   - **How**: Gates class presence via `classDefByOrNull` and hooks Google AppMeasurement, Firebase Crashlytics, Branch attribution (`InitSessionBuilder`, `ServerRequestQueue`), and Adobe Creative SDK analytics (`AdobeInternalAnalytics`, `CSDKAnalyticsQueue`) dispatch methods to return immediately. Redirects Adobe Experience Platform Edge collection hostnames (`edge.adobedc.net`, `edge-int.adobedc.net`) in `EdgeEndpoint` and Adobe Dynamic Tag Management configuration fetch URLs (`assets.adobedtm.com`) in `mv.i` to `0.0.0.0`. First-party Adobe analytics view helpers are transitively neutralized at the dispatcher perimeter; functional cloud/identity endpoints (`photos.adobe.io`, `api.lightroom.adobe.com`, `ims-na1.adobelogin.com`, `device.griffon.adobe.com`, `mh.adobe.io`, `adobeid-na1.services.adobe.com`, `cc-api-cp.adobe.io`, `cc-api-behance.adobe.io`) and native libraries are preserved for application boot and sync stability.
+   - **How**: Gates class presence via `classDefByOrNull` and hooks Google AppMeasurement, Firebase Crashlytics, Branch attribution (`InitSessionBuilder`, `ServerRequestQueue`), and Adobe Creative SDK analytics (`AdobeInternalAnalytics`, `CSDKAnalyticsQueue`) dispatch methods to return immediately. Redirects Adobe Experience Platform Edge collection hostnames (`edge.adobedc.net`, `edge-int.adobedc.net`) in `EdgeEndpoint` and Adobe Dynamic Tag Management configuration fetch URLs (`assets.adobedtm.com`) in `lv.i` to `0.0.0.0`. First-party Adobe analytics view helpers are transitively neutralized at the dispatcher perimeter; functional cloud/identity endpoints (`photos.adobe.io`, `api.lightroom.adobe.com`, `ims-na1.adobelogin.com`, `device.griffon.adobe.com`, `mh.adobe.io`, `adobeid-na1.services.adobe.com`, `cc-api-cp.adobe.io`, `cc-api-behance.adobe.io`) and native libraries are preserved for application boot and sync stability.
 
 3. **Sideload Install Support**:
    - **Objective**: Allow sideloaded packages to launch without redirection or license failures.

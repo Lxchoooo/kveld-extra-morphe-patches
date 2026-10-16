@@ -170,7 +170,7 @@ val lightroomBlockTelemetryPatch = bytecodePatch(
             hookVoidMethod(
                 definingClass = crashlyticsClass,
                 name = "recordException",
-                parameters = listOf("Ljava/lang/Throwable;", "Le70/g;"),
+                parameters = listOf("Ljava/lang/Throwable;", "Lc70/g;"),
                 hookedMethods = hookedMethods,
                 label = "FirebaseCrashlytics.recordException(Throwable, CustomKeysAndValues)",
             )
@@ -240,7 +240,7 @@ val lightroomBlockTelemetryPatch = bytecodePatch(
             hookVoidMethod(
                 definingClass = crashlyticsClass,
                 name = "setCustomKeys",
-                parameters = listOf("Le70/g;"),
+                parameters = listOf("Lc70/g;"),
                 hookedMethods = hookedMethods,
                 label = "FirebaseCrashlytics.setCustomKeys",
             )
@@ -338,7 +338,7 @@ val lightroomBlockTelemetryPatch = bytecodePatch(
         }
 
         // Adobe Dynamic Tag Management (assets.adobedtm.com)
-        val dtmConfigStateClass = "Lmv/i;"
+        val dtmConfigStateClass = "Llv/i;"
         if (classDefByOrNull(dtmConfigStateClass) != null) {
             rewriteStringLiteralInClass(
                 definingClass = dtmConfigStateClass,
@@ -348,7 +348,7 @@ val lightroomBlockTelemetryPatch = bytecodePatch(
                 label = "DTM.assetsUrl",
             )
         } else {
-            println("[Block Telemetry & Trackers] Skipped: ConfigurationStateManager (mv.i) absent (DTM fetch stripped from input).")
+            println("[Block Telemetry & Trackers] Skipped: ConfigurationStateManager (lv.i) absent (DTM fetch stripped from input).")
         }
 
         println("[Block Telemetry & Trackers] Neutralized ${hookedMethods.size} telemetry dispatch methods and endpoints: ${hookedMethods.joinToString(", ")}.")
