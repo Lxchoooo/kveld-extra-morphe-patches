@@ -22,8 +22,8 @@ Technical documentation and patch catalog for CapCut on Android.
 
 | Patch Name | Typology | Default State | Dependencies | Description |
 | :--- | :--- | :--- | :--- | :--- |
-| **Block Telemetry & Trackers** | `bytecodePatch` | `true` (Enabled) | `CapCut Telemetry Manifest Purge` | Neutralizes Google AppMeasurement event dispatchers and strips advertising identifiers. |
-| **CapCut Telemetry Manifest Purge** | `resourcePatch` | `false` (Opt-in) | None | Strips 6 advertising/tracking permissions, disables measurement/analytics/ad components, prunes analytics discovery registrars (MLKit/messaging/crashlytics preserved), injects 8 opt-out metadata flags. |
+| **Block Telemetry & Trackers** | `bytecodePatch` | `true` (Enabled) | `CapCut Telemetry Manifest Purge` | Neutralizes Google AppMeasurement, AppsFlyer, and ByteDance AppLog event dispatchers. |
+| **CapCut Telemetry Manifest Purge** | `resourcePatch` | `false` (Opt-in) | None | Strips 6 advertising/tracking permissions, disables measurement/analytics/attribution components (AppMeasurement, AppLovin, Vungle, BDInstall, ByteDance AppLog Collector, LogService, Pangle), prunes analytics discovery registrars (MLKit/messaging/crashlytics preserved), injects 8 opt-out metadata flags. |
 | **Locale Slimmer** | `resourcePatch` | `false` (Opt-in) | None | Strips unselected res/values-* tables and assets/locales/*.json bundles via locales option (default en). Base fallback and English always preserved. |
 | **Screen Density Slimmer** | `resourcePatch` | `false` (Opt-in) | None | Strips unselected drawable/mipmap density assets and purges watch/television/car/vrheadset UI modes via density option (default xxhdpi). Launcher icons, nodpi/anydpi and single-density orphans preserved. |
 | **Bypass Effects Region Restriction** | `bytecodePatch` | `true` (Enabled) | None | Spoofs device_platform to "windows" and resets deviceId in EffectConfiguration to bypass ByteDance Shark WAF effect loading blocks. |
@@ -40,14 +40,14 @@ Technical documentation and patch catalog for CapCut on Android.
 ### A. Manifest Purge Layer (`resourcePatch`)
 
 1. **CapCut Telemetry Manifest Purge**:
-   - **Objective**: Prevent tracker initialization and background telemetry collection.
-   - **How**: Strips advertising and attribution permissions from the manifest, disables tracking and dynamic ad components, prunes discovery registrars, and injects opt-out flags.
+   - **Objective**: Prevent tracker initialization, install attribution, and background telemetry collection.
+   - **How**: Strips advertising and attribution permissions from the manifest, disables tracking, install attribution, and dynamic ad components (including VungleProvider, BDInstallProvider, AppLog Collector, LogService, and Pangle BinderPoolService), prunes discovery registrars, and injects opt-out flags.
 
 ### B. Bytecode Dispatcher Neutralization Layer (`bytecodePatch`)
 
 1. **Block Telemetry & Trackers**:
-   - **Objective**: Stop runtime telemetry event dispatching.
-   - **How**: Intercepts event logging entrypoints and injects immediate void returns.
+   - **Objective**: Stop runtime telemetry event dispatching across first-party and third-party tracking pipelines.
+   - **How**: Intercepts event logging entrypoints (Google AppMeasurement, CapCut AppsFlyerAnalytics and AppsFlyer delegate entrypoints, ByteDance AppLogInstance event dispatchers) and injects immediate void returns.
 
 2. **Bypass Effects Region Restriction**:
    - **Objective**: Restore loading of effects, transitions, and templates blocked by region firewalls.

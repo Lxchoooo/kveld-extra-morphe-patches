@@ -2,6 +2,7 @@ package app.morphe.patches.capcut
 
 import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
+import app.morphe.patcher.patch.BytecodePatchContext
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.patch.resourcePatch
 import app.morphe.patches.shared.Constants
@@ -10,10 +11,13 @@ import app.morphe.patches.shared.disableComponentsByName
 import app.morphe.patches.shared.removeComponentDiscoveryRegistrarsWhere
 import app.morphe.patches.shared.setApplicationMetaData
 import app.morphe.patches.shared.stripPermissionsWhere
+import com.android.tools.smali.dexlib2.iface.Method
+import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
+import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 
 private val capcutTelemetryResourcePatch = resourcePatch(
     name = "CapCut Telemetry Manifest Purge",
-    description = "Strips tracking/advertising permissions, disables analytics services and receivers, and injects opt-out metadata in AndroidManifest.xml.",
+    description = "Strips tracking/advertising permissions, disables measurement, attribution, and analytics components (Vungle, BDInstall, AppLog, LogService), and injects opt-out metadata in AndroidManifest.xml.",
     default = false,
 ) {
     compatibleWith(Constants.COMPATIBILITY_CAPCUT)
@@ -21,7 +25,7 @@ private val capcutTelemetryResourcePatch = resourcePatch(
     execute {
         val manifestFile = get("AndroidManifest.xml")
         if (!manifestFile.exists()) {
-            println("[CapCut Telemetry] Skipped: AndroidManifest.xml not found.")
+            println("[Block Telemetry & Trackers] Skipped: AndroidManifest.xml not found.")
             return@execute
         }
 
@@ -39,6 +43,8 @@ private val capcutTelemetryResourcePatch = resourcePatch(
             "com.applovin.sdk.AppLovinInitProvider",
             "com.google.android.gms.ads.MobileAdsInitProvider",
             "com.facebook.internal.FacebookInitProvider",
+            "com.vungle.ads.VungleProvider",
+            "com.bytedance.bdinstall.BDInstallProvider",
 
             // Services
             "com.google.android.gms.measurement.AppMeasurementService",
@@ -46,11 +52,17 @@ private val capcutTelemetryResourcePatch = resourcePatch(
             "com.google.android.datatransport.runtime.scheduling.jobscheduling.JobInfoSchedulerService",
             "com.google.android.datatransport.runtime.backends.TransportBackendDiscovery",
             "com.applovin.impl.adview.activity.FullscreenAdService",
+            "com.ss.android.message.log.LogService",
+            "com.bytedance.sdk.openadsdk.multipro.aidl.BinderPoolService",
 
             // Receivers
             "com.google.android.gms.measurement.AppMeasurementReceiver",
             "com.google.android.datatransport.runtime.scheduling.jobscheduling.AlarmManagerSchedulerBroadcastReceiver",
             "com.appsflyer.SingleInstallBroadcastReceiver",
+            "com.bytedance.applog.collector.Collector",
+
+            // Activities
+            "com.ss.android.deviceregister.AActivity",
         )
 
         val optOutMetadata = listOf(
@@ -103,7 +115,7 @@ private val capcutTelemetryResourcePatch = resourcePatch(
                         "perf",
                         "remoteconfig",
                         "sessions",
-                        "abt"
+                        "abt",
                     ).any { name.contains(it, ignoreCase = true) }
                     val isExcluded = name.contains("mlkit", ignoreCase = true) ||
                         name.contains("messaging", ignoreCase = true) ||
@@ -119,14 +131,214 @@ private val capcutTelemetryResourcePatch = resourcePatch(
             }
         }
 
-        println("[CapCut Telemetry] Stripped $removedPermissions permissions, disabled $disabledComponents tracking components, removed $removedRegistrars discovery registrars, and injected $injectedMetadata opt-out flags in AndroidManifest.xml.")
+        println("[Block Telemetry & Trackers] Stripped $removedPermissions permissions, disabled $disabledComponents tracking components, removed $removedRegistrars discovery registrars, and injected $injectedMetadata opt-out flags in AndroidManifest.xml.")
+    }
+}
+
+private fun isSafeVoidDispatcher(method: Method): Boolean {
+    if (method.implementation == null) {
+        return false
+    }
+    if (method.name == "<init>" || method.name == "<clinit>") {
+        return false
+    }
+    if (method.returnType != "V") {
+        return false
+    }
+    val callbackParams = method.parameterTypes.map { it.toString() }.filter { param ->
+        param.contains("Callback", ignoreCase = true) ||
+            param.contains("Listener", ignoreCase = true) ||
+            param.contains("Continuation", ignoreCase = true) ||
+            param.contains("Observer", ignoreCase = true) ||
+            param.contains("Handler", ignoreCase = true)
+    }
+    if (callbackParams.isNotEmpty()) {
+        return false
+    }
+    val lifecycleNames = setOf(
+        "onCreate", "onStart", "onResume", "onPause", "onStop", "onDestroy",
+        "onReceive", "onBind", "onStartCommand", "attachBaseContext",
+    )
+    if (method.name in lifecycleNames) {
+        return false
+    }
+    val returnType = method.returnType
+    if (returnType.contains("Task") ||
+        returnType.contains("Future") ||
+        returnType.contains("Completable") ||
+        returnType.contains("Observable") ||
+        returnType.contains("Deferred")
+    ) {
+        return false
+    }
+    return true
+}
+
+private fun isSafeBooleanDispatcher(method: Method): Boolean {
+    if (method.implementation == null) {
+        return false
+    }
+    if (method.name == "<init>" || method.name == "<clinit>") {
+        return false
+    }
+    if (method.returnType != "Z") {
+        return false
+    }
+    val callbackParams = method.parameterTypes.map { it.toString() }.filter { param ->
+        param.contains("Callback", ignoreCase = true) ||
+            param.contains("Listener", ignoreCase = true) ||
+            param.contains("Continuation", ignoreCase = true) ||
+            param.contains("Observer", ignoreCase = true) ||
+            param.contains("Handler", ignoreCase = true)
+    }
+    if (callbackParams.isNotEmpty()) {
+        return false
+    }
+    return true
+}
+
+private val appsFlyerDataflowFingerprint = Fingerprint(
+    strings = listOf("DataflowID"),
+)
+
+private val appLogEventFingerprint = Fingerprint(
+    strings = listOf("event_v3"),
+)
+
+private fun BytecodePatchContext.hookAppsFlyerDelegate(
+    ref: MethodReference,
+    hookedMethods: MutableList<String>,
+    hookedSignatures: MutableSet<String>,
+) {
+    val delegateClassType = ref.definingClass
+    val delegateClass = classDefByOrNull(delegateClassType) ?: return
+    val mutableDelegate = mutableClassDefBy(delegateClass)
+    val delegateMethod = mutableDelegate.methods.firstOrNull {
+        it.name == ref.name && it.parameterTypes == ref.parameterTypes
+    } ?: return
+
+    val delegateSig = "$delegateClassType->${delegateMethod.name}"
+    if (delegateSig in hookedSignatures) return
+
+    if (isSafeVoidDispatcher(delegateMethod)) {
+        delegateMethod.addInstructions(0, "return-void")
+        hookedSignatures.add(delegateSig)
+        hookedMethods.add("AppsFlyerDelegate.${delegateMethod.name}")
+    } else if (isSafeBooleanDispatcher(delegateMethod)) {
+        delegateMethod.addInstructions(
+            0,
+            """
+                const/4 v0, 0x0
+                return v0
+            """.trimIndent(),
+        )
+        hookedSignatures.add(delegateSig)
+        hookedMethods.add("AppsFlyerDelegate.${delegateMethod.name}")
+    }
+}
+
+private fun BytecodePatchContext.hookAppsFlyer(
+    hookedMethods: MutableList<String>,
+    hookedSignatures: MutableSet<String>,
+) {
+    val analyticsClassType = "Lcom/vega/launcher/report/AppsFlyerAnalytics;"
+    val analyticsClass = classDefByOrNull(analyticsClassType)
+    if (analyticsClass != null) {
+        val mutableAnalytics = mutableClassDefBy(analyticsClass)
+        for (method in mutableAnalytics.methods) {
+            val sig = "$analyticsClassType->${method.name}"
+            if (sig !in hookedSignatures && isSafeVoidDispatcher(method)) {
+                method.addInstructions(0, "return-void")
+                hookedSignatures.add(sig)
+                hookedMethods.add("AppsFlyerAnalytics.${method.name}")
+            }
+
+            method.implementation?.instructions?.forEach { ins ->
+                val ref = (ins as? ReferenceInstruction)?.reference as? MethodReference ?: return@forEach
+                val targetClass = ref.definingClass
+                if (targetClass != analyticsClassType &&
+                    (targetClass.startsWith("Lcom/appsflyer/") ||
+                        targetClass.startsWith("Lcom/vega/") ||
+                        targetClass.contains("AppsFlyer", ignoreCase = true))
+                ) {
+                    hookAppsFlyerDelegate(ref, hookedMethods, hookedSignatures)
+                }
+            }
+        }
+    }
+
+    val dataflowMatches = appsFlyerDataflowFingerprint.matchAllOrNull() ?: emptyList()
+    for (match in dataflowMatches) {
+        val method = match.method
+        val defClass = method.definingClass
+        if (defClass.startsWith("Lcom/appsflyer/") ||
+            defClass.startsWith("Lcom/vega/launcher/report/") ||
+            defClass.contains("AppsFlyer", ignoreCase = true)
+        ) {
+            val sig = "$defClass->${method.name}"
+            if (sig !in hookedSignatures) {
+                if (isSafeVoidDispatcher(method)) {
+                    method.addInstructions(0, "return-void")
+                    hookedSignatures.add(sig)
+                    hookedMethods.add("AppsFlyerDataflow.${method.name}")
+                } else if (isSafeBooleanDispatcher(method)) {
+                    method.addInstructions(
+                        0,
+                        """
+                            const/4 v0, 0x0
+                            return v0
+                        """.trimIndent(),
+                    )
+                    hookedSignatures.add(sig)
+                    hookedMethods.add("AppsFlyerDataflow.${method.name}")
+                }
+            }
+        }
+    }
+}
+
+private fun BytecodePatchContext.hookAppLog(
+    hookedMethods: MutableList<String>,
+    hookedSignatures: MutableSet<String>,
+) {
+    val appLogInstanceType = "Lcom/bytedance/applog/AppLogInstance;"
+    val appLogInstanceClass = classDefByOrNull(appLogInstanceType)
+    if (appLogInstanceClass != null) {
+        val mutableAppLog = mutableClassDefBy(appLogInstanceClass)
+        for (method in mutableAppLog.methods) {
+            val sig = "$appLogInstanceType->${method.name}"
+            if (sig !in hookedSignatures &&
+                (method.name.startsWith("onEvent") || method.name.contains("event", ignoreCase = true)) &&
+                isSafeVoidDispatcher(method)
+            ) {
+                method.addInstructions(0, "return-void")
+                hookedSignatures.add(sig)
+                hookedMethods.add("AppLogInstance.${method.name}")
+            }
+        }
+    }
+
+    val eventMatches = appLogEventFingerprint.matchAllOrNull() ?: emptyList()
+    for (match in eventMatches) {
+        val method = match.method
+        val defClass = method.definingClass
+        if (defClass.startsWith("Lcom/bytedance/applog/") ||
+            defClass.startsWith("Lcom/ss/android/common/applog/")
+        ) {
+            val sig = "$defClass->${method.name}"
+            if (sig !in hookedSignatures && isSafeVoidDispatcher(method)) {
+                method.addInstructions(0, "return-void")
+                hookedSignatures.add(sig)
+                hookedMethods.add("AppLog.${method.name}")
+            }
+        }
     }
 }
 
 @Suppress("unused")
 val capcutBlockTelemetryPatch = bytecodePatch(
     name = "Block Telemetry & Trackers",
-    description = "Neutralizes Google AppMeasurement event dispatchers.",
+    description = "Neutralizes Google AppMeasurement, AppsFlyer, and ByteDance AppLog event dispatchers.",
     default = true,
 ) {
     compatibleWith(Constants.COMPATIBILITY_CAPCUT)
@@ -134,6 +346,7 @@ val capcutBlockTelemetryPatch = bytecodePatch(
 
     execute {
         val hookedMethods = mutableListOf<String>()
+        val hookedSignatures = mutableSetOf<String>()
 
         Fingerprint(
             definingClass = "Lcom/google/android/gms/measurement/AppMeasurement;",
@@ -143,7 +356,11 @@ val capcutBlockTelemetryPatch = bytecodePatch(
         ).method.apply {
             addInstructions(0, "return-void")
             hookedMethods.add("AppMeasurement.logEventInternal")
+            hookedSignatures.add("Lcom/google/android/gms/measurement/AppMeasurement;->logEventInternal")
         }
+
+        hookAppsFlyer(hookedMethods, hookedSignatures)
+        hookAppLog(hookedMethods, hookedSignatures)
 
         println("[Block Telemetry & Trackers] Neutralized ${hookedMethods.size} telemetry dispatch methods: ${hookedMethods.joinToString(", ")}.")
     }
