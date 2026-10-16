@@ -73,37 +73,49 @@ private object SubscribeCloudImplIsVipFingerprint : Fingerprint(
 private object BusinessManagerBFingerprint : Fingerprint(
     definingClass = "Lcom/lemon/lv/clipmonetize/wrapper/BusinessManager;",
     name = "B",
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
     returnType = "Z",
+    parameters = listOf(),
 )
 
 private object BusinessManagerYFingerprint : Fingerprint(
     definingClass = "Lcom/lemon/lv/clipmonetize/wrapper/BusinessManager;",
     name = "y",
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
     returnType = "Z",
+    parameters = listOf(),
 )
 
 private object BusinessManagerXFingerprint : Fingerprint(
     definingClass = "Lcom/lemon/lv/clipmonetize/wrapper/BusinessManager;",
     name = "x",
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
     returnType = "Z",
+    parameters = listOf("Z"),
 )
 
 private object BusinessManagerVFingerprint : Fingerprint(
     definingClass = "Lcom/lemon/lv/clipmonetize/wrapper/BusinessManager;",
     name = "v",
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
     returnType = "Z",
+    parameters = listOf("Lcom/lemon/lv/clipmonetize/wrapper/BenefitResource;"),
 )
 
 private object BusinessManagerAFingerprint : Fingerprint(
     definingClass = "Lcom/lemon/lv/clipmonetize/wrapper/BusinessManager;",
     name = "A",
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
     returnType = "Z",
+    parameters = listOf("Lcom/lemon/lv/clipmonetize/wrapper/BenefitResource;"),
 )
 
 private object BusinessManagerTFingerprint : Fingerprint(
     definingClass = "Lcom/lemon/lv/clipmonetize/wrapper/BusinessManager;",
     name = "T",
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
     returnType = "Z",
+    parameters = listOf("Lcom/lemon/lv/clipmonetize/wrapper/BenefitResource;", "Z"),
 )
 
 @Suppress("unused")

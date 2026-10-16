@@ -9,30 +9,35 @@ private object TemplateExportUltraHdUtilsCFingerprint : Fingerprint(
     definingClass = "Lcom/vega/edit/base/utils/TemplateExportUltraHdUtils;",
     name = "c",
     returnType = "Z",
+    parameters = listOf(),
 )
 
 private object TemplateExportUltraHdUtilsDFingerprint : Fingerprint(
     definingClass = "Lcom/vega/edit/base/utils/TemplateExportUltraHdUtils;",
     name = "d",
     returnType = "Z",
+    parameters = listOf(),
 )
 
 private object TemplateExportUltraHdUtilsEFingerprint : Fingerprint(
     definingClass = "Lcom/vega/edit/base/utils/TemplateExportUltraHdUtils;",
     name = "e",
     returnType = "Z",
+    parameters = listOf(),
 )
 
 private object TemplateExportUltraHdUtilsJFingerprint : Fingerprint(
     definingClass = "Lcom/vega/edit/base/utils/TemplateExportUltraHdUtils;",
     name = "j",
     returnType = "Z",
+    parameters = listOf(),
 )
 
 private object TemplateExportUltraHdUtilsQFingerprint : Fingerprint(
     definingClass = "Lcom/vega/edit/base/utils/TemplateExportUltraHdUtils;",
     name = "q",
     returnType = "Z",
+    parameters = listOf(),
 )
 
 @Suppress("unused")

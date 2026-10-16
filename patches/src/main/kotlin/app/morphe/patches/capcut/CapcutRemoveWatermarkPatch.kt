@@ -11,6 +11,7 @@ private object WatermarkBusinessFunctionA4Fingerprint : Fingerprint(
     name = "A4",
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
     returnType = "Z",
+    parameters = listOf("Lcom/vega/subscriptionapi/biz/function/WatermarkSceneParams;"),
 )
 
 private object WatermarkBusinessFunctionQ0Fingerprint : Fingerprint(
@@ -18,6 +19,7 @@ private object WatermarkBusinessFunctionQ0Fingerprint : Fingerprint(
     name = "Q0",
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
     returnType = "Z",
+    parameters = listOf("Lcom/vega/subscriptionapi/biz/function/WatermarkSceneParams;"),
 )
 
 private object WatermarkBusinessFunctionB4Fingerprint : Fingerprint(
@@ -25,6 +27,7 @@ private object WatermarkBusinessFunctionB4Fingerprint : Fingerprint(
     name = "B4",
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
     returnType = "Z",
+    parameters = listOf("Lcom/lemon/lv/clipmonetize/wrapper/BenefitResource;"),
 )
 
 private object WatermarkBusinessFunctionE4Fingerprint : Fingerprint(
@@ -32,6 +35,7 @@ private object WatermarkBusinessFunctionE4Fingerprint : Fingerprint(
     name = "E4",
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
     returnType = "Z",
+    parameters = listOf("Lcom/vega/subscriptionapi/biz/function/WatermarkBusinessParam;", "Lcom/lemon/lv/clipmonetize/wrapper/BenefitResource;"),
 )
 
 private object WatermarkBusinessFunctionU4Fingerprint : Fingerprint(
@@ -39,6 +43,7 @@ private object WatermarkBusinessFunctionU4Fingerprint : Fingerprint(
     name = "u4",
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
     returnType = "Z",
+    parameters = listOf("Lcom/lemon/lv/clipmonetize/wrapper/BenefitResource;"),
 )
 
 private object WatermarkBusinessFunctionY2Fingerprint : Fingerprint(
@@ -46,6 +51,7 @@ private object WatermarkBusinessFunctionY2Fingerprint : Fingerprint(
     name = "y2",
     accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.FINAL),
     returnType = "Z",
+    parameters = listOf(),
 )
 
 @Suppress("unused")

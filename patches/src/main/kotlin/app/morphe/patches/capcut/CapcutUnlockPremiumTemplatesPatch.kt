@@ -9,30 +9,35 @@ private object CutSamePurchaseViewModelU6Fingerprint : Fingerprint(
     definingClass = "Lcom/vega/libcutsame/viewmodel/CutSamePurchaseViewModel;",
     name = "u6",
     returnType = "Z",
+    parameters = listOf(),
 )
 
 private object CutSamePurchaseViewModelX6Fingerprint : Fingerprint(
     definingClass = "Lcom/vega/libcutsame/viewmodel/CutSamePurchaseViewModel;",
     name = "x6",
     returnType = "Z",
+    parameters = listOf(),
 )
 
 private object CutSamePurchaseViewModelW6Fingerprint : Fingerprint(
     definingClass = "Lcom/vega/libcutsame/viewmodel/CutSamePurchaseViewModel;",
     name = "w6",
     returnType = "Z",
+    parameters = listOf(),
 )
 
 private object CutSamePurchaseViewModelZ6Fingerprint : Fingerprint(
     definingClass = "Lcom/vega/libcutsame/viewmodel/CutSamePurchaseViewModel;",
     name = "z6",
     returnType = "Z",
+    parameters = listOf(),
 )
 
 private object CutSamePurchaseViewModelA6Fingerprint : Fingerprint(
     definingClass = "Lcom/vega/libcutsame/viewmodel/CutSamePurchaseViewModel;",
     name = "A6",
     returnType = "Z",
+    parameters = listOf(),
 )
 
 @Suppress("unused")
