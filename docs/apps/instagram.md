@@ -26,7 +26,6 @@ Technical documentation and patch catalog for Instagram on Android.
 | **Instagram Telemetry Manifest Purge** | `resourcePatch` | `false` (Opt-in) | None | Strips tracking and advertising permissions, disables analytics services, content providers, and receivers in AndroidManifest.xml. |
 | **Block Crash & Diagnostics** | `bytecodePatch` | `false` (Opt-in) | `Instagram Crash & Diagnostics Manifest Purge` | Neutralizes crash-dump uploaders, Lacrima detector broadcasts, debug diagnostics, carrier preload trackers, and lead-ads entrypoints. |
 | **Instagram Crash & Diagnostics Manifest Purge** | `resourcePatch` | `false` (Opt-in) | None | Disables crash-dump upload services, Lacrima broadcast receivers, debug diagnostics, carrier preload trackers, and lead-ads activities in AndroidManifest.xml. |
-| **MLKit Vision Slimmer** | `resourcePatch` | `false` (Opt-in) | None | Disables MLKit component discovery and removes discovery registrars in AndroidManifest.xml. |
 | **AR Effects Slimmer** | `rawResourcePatch` | `false` (Opt-in) | None | Strips ARCore native binaries (libarcore_sdk_c.so, libarcore_sdk_jni.so) and AR effect/face tracking asset models. |
 
 ---
@@ -42,10 +41,6 @@ Technical documentation and patch catalog for Instagram on Android.
 2. **Instagram Crash & Diagnostics Manifest Purge**:
    - **Objective**: Disable diagnostic reporters and background crash loggers.
    - **How**: Disables crash upload services, detector broadcast receivers, and carrier preload tracking services.
-
-3. **MLKit Vision Slimmer**:
-   - **Objective**: Reduce binary overhead from machine learning vision components.
-   - **How**: Disables the component discovery service and removes vision component registrars from the manifest.
 
 ### B. Bytecode Dispatcher Neutralization Layer (`bytecodePatch`)
 
@@ -67,9 +62,7 @@ Technical documentation and patch catalog for Instagram on Android.
 
 ## 4. Behavioral Hazards Warning
 
-1. **MLKit Vision Slimmer**:
-   Disabling MLKit component discovery breaks in-app QR and barcode scanning features.
-2. **AR Effects Slimmer**:
+1. **AR Effects Slimmer**:
    Stripping ARCore binaries and facial geometry models disables camera AR filters, 3D face effects, and body/face tracking.
 
 ---
@@ -77,3 +70,9 @@ Technical documentation and patch catalog for Instagram on Android.
 ## 5. Known Limitations
 
 None evidenced by patch sources.
+
+---
+
+## 6. Canonical Universal Patches
+
+The MLKit slimming removed from this guide is covered by the `Block Trackers` universal patch in the canonical collection [kveld-morphe-patches](https://github.com/kveld9/kveld-morphe-patches): enable its `disableMlKit` option to disable `MlKitInitProvider`, the component discovery service and the vision registrars (same warning applies: in-app QR and barcode scanning breaks). That collection also provides further generic maintenance (`Remove Unused Screen Sizes`, `Remove Extra Languages`, `Clean App Packaging`, `Stop Background Sync`, `Remove Tracking Libraries`). Add that source in Morphe Manager alongside this one to use them; universal patches apply to any APK, including Instagram.
