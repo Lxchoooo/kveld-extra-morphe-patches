@@ -28,7 +28,6 @@ Note: `versionCode 1809` corresponds to the actual build versionCode assigned on
 | **Moovit Telemetry Manifest Purge** | `resourcePatch` | `false` (Opt-in) | None | Strips advertising and tracking permissions, disables analytics services, providers, and receivers, and injects opt-out metadata in AndroidManifest.xml. |
 | **Fix Google Maps** | `bytecodePatch` | `true` (Enabled) | `Moovit Custom Maps API Key` | Restores Google Maps rendering by spoofing the original package signature to Google Play Services. |
 | **Moovit Custom Maps API Key** | `resourcePatch` | `false` (Opt-in) | None | Replaces the Google Maps API key in AndroidManifest.xml and web-service strings when a custom key is provided. |
-| **Locale Slimmer** | `resourcePatch` | `false` (Opt-in) | None | Strips unselected language string tables and resources from base APK. Base fallback and English are always preserved. |
 | **Remove Ads** | `bytecodePatch` | `true` (Enabled) | None | Hides banner and inline ads and neutralizes ad unit ID lookups. |
 | **Suppress Paywalls** | `bytecodePatch` | `true` (Enabled) | None | Suppresses subscription paywalls, onboarding upgrade dialogs, and promotional cards. |
 | **Unlock Moovit+** | `bytecodePatch` | `true` (Enabled) | None | Unlocks Moovit+ premium subscription features locally, including Safe Ride and address search in favorites. |
@@ -69,21 +68,20 @@ Note: `versionCode 1809` corresponds to the actual build versionCode assigned on
    - **Objective**: Enable Moovit+ premium features locally.
    - **How**: Forces subscription status checks to return true and activates Safe Ride and favorite address search flags.
 
-### C. Resource Trimming Axes (`resourcePatch`)
-
-1. **Locale Slimmer**:
-   - **Objective**: Reduce package size by discarding unused language resources.
-   - **How**: Strips unselected locale value tables from the base APK while retaining English and base fallback strings.
-
 ---
 
 ## 4. Behavioral Hazards Warning
 
-1. **Locale Slimmer**:
-   Stripped application languages fall back to base or English translations.
+None related to resource trimming.
 
 ---
 
 ## 5. Known Limitations
 
 None evidenced by patch sources.
+
+---
+
+## 6. Canonical Universal Patches
+
+The generic maintenance patches removed from this guide (screen densities, languages) are covered by the universal patches in the canonical collection [kveld-morphe-patches](https://github.com/kveld9/kveld-morphe-patches): `Remove Unused Screen Sizes` and `Remove Extra Languages`. For further generic maintenance (packaging leftovers, background sync, native trackers, telemetry) that collection also provides `Clean App Packaging`, `Stop Background Sync`, `Remove Tracking Libraries` and `Block Trackers`. Add that source in Morphe Manager alongside this one to use them; universal patches apply to any APK, including Moovit.
