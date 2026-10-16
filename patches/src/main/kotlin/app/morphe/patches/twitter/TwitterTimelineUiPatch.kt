@@ -505,6 +505,7 @@ val twitterTimelineUiPatch = bytecodePatch(
 
         // 5. hideDiscoverMore
         if (hideDiscoverMore ?: true) {
+            // Discover more module entryId has the form "tweetdetailrelatedtweets-<postId>"
             val discoverItemTestSmali = """
                 :tluid_cond_check_item
                 invoke-interface {v0}, Lcom/x/models/timelines/items/p0;->c()Ljava/lang/String;
@@ -512,12 +513,7 @@ val twitterTimelineUiPatch = bytecodePatch(
                 if-eqz v1, :tluid_cond_continue
 
                 :tluid_cond_check_entry_id
-                const-string v2, "discover"
-                invoke-virtual {v1, v2}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
-                move-result v2
-                if-nez v2, :tluid_cond_suppress_discover
-
-                const-string v2, "Discover"
+                const-string v2, "relatedtweets"
                 invoke-virtual {v1, v2}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
                 move-result v2
                 if-nez v2, :tluid_cond_suppress_discover
