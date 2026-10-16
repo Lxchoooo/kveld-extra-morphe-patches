@@ -28,6 +28,7 @@ Technical documentation and patch catalog for X (Twitter) on Android.
 | **Control Video Auto Scroll** | `bytecodePatch` | `false` (Opt-in) | None | Prevents automatic scrolling to the next video in immersive media view. |
 | **Custom Deep Links** | `resourcePatch` | `false` (Opt-in) | None | Registers intent filters to open supported domains in the app. |
 | **Custom Fonts** | `bytecodePatch` | `false` (Opt-in) | None | Applies custom typography to post and profile text. |
+| **Disable Auto Refresh** | `bytecodePatch` | `false` (Opt-in) | None | Stops the home timeline from automatically jumping to new posts. |
 | **DM Debloat** | `bytecodePatch` | `false` (Opt-in) | None | Hides call buttons and composer actions in direct message conversations. |
 | **Drawer Items** | `bytecodePatch` | `false` (Opt-in) | None | Hides navigation drawer items including Grok, Premium, and secondary shortcuts. |
 | **MLKit Vision Slimmer** | `resourcePatch` | `false` (Opt-in) | None | Disables MLKit components and discovery registrars to reduce binary footprint. |
@@ -78,51 +79,55 @@ Technical documentation and patch catalog for X (Twitter) on Android.
    - **Objective**: Apply user-selected typography to application text.
    - **How**: Replaces font asset paths with configured font file paths.
 
-5. **DM Debloat**:
+5. **Disable Auto Refresh**:
+   - **Objective**: Prevent the home timeline from automatically jumping to new posts.
+   - **How**: Bypasses the timeline scroll-to-top navigation call on update and keeps the reading position on startup.
+
+6. **DM Debloat**:
    - **Objective**: Simplify direct message conversation headers.
    - **How**: Toggles conversation action flags to hide call buttons and composer actions.
 
-6. **Drawer Items**:
+7. **Drawer Items**:
    - **Objective**: Declutter the side navigation drawer and sidebar surfaces.
    - **How**: Hides configured navigation entries including Grok assistant, Premium, and secondary shortcuts.
 
-7. **Navigation UI**:
+8. **Navigation UI**:
    - **Objective**: Customize navigation bars, floating buttons, and tabs.
    - **How**: Adjusts layout flags to hide unread badges, floating action buttons, and secondary tabs (drawer and sidebar toggles are centralized under Drawer Items).
 
-8. **No Shortened URL**:
+9. **No Shortened URL**:
    - **Objective**: Bypass t.co link redirection and click tracking.
    - **How**: Replaces shortened link destinations with their full original target URLs.
 
-9. **Pause Search Suggestions**:
-   - **Objective**: Stop storing recent search entries without breaking active search.
-   - **How**: Suppresses local caching of search queries.
+10. **Pause Search Suggestions**:
+    - **Objective**: Stop storing recent search entries without breaking active search.
+    - **How**: Suppresses local caching of search queries.
 
-10. **Post & Profile UI**:
+11. **Post & Profile UI**:
     - **Objective**: Remove unwanted action buttons from posts and profiles.
     - **How**: Hides Grok post actions and profile buttons, and toggles profile header tabs.
 
-11. **Remove Ads**:
+12. **Remove Ads**:
     - **Objective**: Remove promoted posts and sponsored content.
     - **How**: Filters out promoted tweets and advertising objects in timeline adapters.
 
-12. **Remove Premium Upsell**:
+13. **Remove Premium Upsell**:
     - **Objective**: Eliminate subscription prompts and badges.
     - **How**: Hides verification upsell pills and premium upgrade banners (drawer Premium entry is owned by Drawer Items).
 
-13. **Round Off Numbers**:
+14. **Round Off Numbers**:
     - **Objective**: Show exact metric counts on posts and profiles.
     - **How**: Disables number abbreviation formatting routines.
 
-14. **Share Links**:
+15. **Share Links**:
     - **Objective**: Clean and customize links when sharing posts (outbound).
     - **How**: Replaces shared link domains with configured custom domains (inbound link opening is handled by Custom Deep Links).
 
-15. **Show Sensitive Media**:
+16. **Show Sensitive Media**:
     - **Objective**: View sensitive media without manual tap-to-reveal prompts.
     - **How**: Sets sensitive media warning flags to display media directly.
 
-16. **Timeline UI**:
+17. **Timeline UI**:
     - **Objective**: Clean up home timeline feeds.
     - **How**: Removes banner alerts, recommendation carousels, and video entrypoints.
 
