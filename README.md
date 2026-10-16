@@ -10,7 +10,7 @@
 <h1 align="center">kveld9 Extra Patches</h1>
 
 <p align="center">
-  Standalone, app-specific patches for Instagram, X, Moovit, PowerPoint, Lightroom, CapCut, Copilot, Hevy, NokoPrint, and Xiaomi Earbuds for use with the <b><a href="https://morphe.software">Morphe</a></b> patcher framework.<br>
+  Standalone, app-specific patches for companion targets for use with the <b><a href="https://morphe.software">Morphe</a></b> patcher framework.<br>
   Companion to the main collection: <a href="https://github.com/kveld9/kveld-morphe-patches">kveld-morphe-patches</a>.
 </p>
 
