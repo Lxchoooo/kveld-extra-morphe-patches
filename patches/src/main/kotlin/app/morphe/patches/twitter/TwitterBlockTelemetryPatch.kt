@@ -354,10 +354,7 @@ private val brazeTargetUrls = setOf(
 )
 
 private val brazeBaseUrlFingerprint = Fingerprint(
-    strings = listOf(
-        "https://sdk.iad-01.braze.com/api/v3/",
-        "https://sondheim.braze.com/api/v3/",
-    ),
+    strings = brazeTargetUrls.toList(),
 )
 
 private val sentryTargetUrls = setOf(
@@ -365,32 +362,40 @@ private val sentryTargetUrls = setOf(
 )
 
 private val sentryEndpointFingerprint = Fingerprint(
-    strings = listOf(
-        "https://o438986.ingest.sentry.io/api/5405103/store/?sentry_key=524610463d1141a58e7f57053dc7ef87",
-    ),
+    strings = sentryTargetUrls.toList(),
 )
+
+private const val GOOGLE_ADS_URL = "https://googleads.g.doubleclick.net"
+private const val PUB_ADS_URL = "https://pubads.g.doubleclick.net"
+private const val STATIC_DOUBLECLICK_URL = "https://static.doubleclick.net"
+private const val CRASHLYTICS_SETTINGS_URL = "https://firebase-settings.crashlytics.com/spi/v2/platforms/android/gmp/"
+private const val APP_MEASUREMENT_A_URL = "https://app-measurement.com/a"
+private const val APP_MEASUREMENT_SD_URL = "https://app-measurement.com/s/d"
 
 private val googleAdsTargetUrls = setOf(
-    "https://googleads.g.doubleclick.net",
-    "https://pubads.g.doubleclick.net",
-    "https://static.doubleclick.net",
-    "https://firebase-settings.crashlytics.com/spi/v2/platforms/android/gmp/",
-    "https://app-measurement.com/a",
-    "https://app-measurement.com/s/d",
+    GOOGLE_ADS_URL,
+    PUB_ADS_URL,
+    STATIC_DOUBLECLICK_URL,
+    CRASHLYTICS_SETTINGS_URL,
+    APP_MEASUREMENT_A_URL,
+    APP_MEASUREMENT_SD_URL,
 )
 
-private val googleAdsEndpointFingerprint = Fingerprint(strings = listOf("https://googleads.g.doubleclick.net"))
-private val pubAdsEndpointFingerprint = Fingerprint(strings = listOf("https://pubads.g.doubleclick.net"))
-private val crashlyticsSettingsFingerprint = Fingerprint(strings = listOf("https://firebase-settings.crashlytics.com/spi/v2/platforms/android/gmp/"))
-private val appMeasurementEndpointFingerprint = Fingerprint(strings = listOf("https://app-measurement.com/a"))
+private val googleAdsEndpointFingerprint = Fingerprint(strings = listOf(GOOGLE_ADS_URL))
+private val pubAdsEndpointFingerprint = Fingerprint(strings = listOf(PUB_ADS_URL))
+private val crashlyticsSettingsFingerprint = Fingerprint(strings = listOf(CRASHLYTICS_SETTINGS_URL))
+private val appMeasurementEndpointFingerprint = Fingerprint(strings = listOf(APP_MEASUREMENT_A_URL))
+
+private const val PLAID_ANALYTICS_URL = "https://analytics.plaid.com/sentry/api/"
+private const val SCRIBEUP_URL = "https://api.scribeup.io"
 
 private val paymentsTargetUrls = setOf(
-    "https://analytics.plaid.com/sentry/api/",
-    "https://api.scribeup.io",
+    PLAID_ANALYTICS_URL,
+    SCRIBEUP_URL,
 )
 
-private val plaidAnalyticsFingerprint = Fingerprint(strings = listOf("https://analytics.plaid.com/sentry/api/"))
-private val scribeupEndpointFingerprint = Fingerprint(strings = listOf("https://api.scribeup.io"))
+private val plaidAnalyticsFingerprint = Fingerprint(strings = listOf(PLAID_ANALYTICS_URL))
+private val scribeupEndpointFingerprint = Fingerprint(strings = listOf(SCRIBEUP_URL))
 
 @Suppress("unused")
 val twitterBlockTelemetryPatch = bytecodePatch(
