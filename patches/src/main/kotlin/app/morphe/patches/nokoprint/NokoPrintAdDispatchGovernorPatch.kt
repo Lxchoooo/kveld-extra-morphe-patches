@@ -45,6 +45,8 @@ private val nokoPrintAdManifestResourcePatch = resourcePatch(
             "com.moloco.sdk.",
             "com.pubmatic.sdk.",
             "com.tappx.sdk.",
+            "com.google.android.gms.ads.",
+            "io.bidmachine.",
         )
 
         val providersToDisable = setOf(
@@ -59,6 +61,9 @@ private val nokoPrintAdManifestResourcePatch = resourcePatch(
             "com.vungle.ads.VungleProvider",
             "com.mbridge.msdk.config.component.status.MBComponentLifecycleProvider",
             "com.ironsource.lifecycle.LevelPlayActivityLifecycleProvider",
+            "com.google.android.gms.ads.MobileAdsInitProvider",
+            "io.bidmachine.BidMachineInitProvider",
+            "com.tappx.sdk.android.TappxInitializationManager",
         )
 
         val tagCounts = mutableMapOf("activity" to 0, "service" to 0, "receiver" to 0)
