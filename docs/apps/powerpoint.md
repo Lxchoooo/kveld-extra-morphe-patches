@@ -14,7 +14,7 @@ Technical documentation and patch catalog for Microsoft PowerPoint on Android.
 | **Target Package Format** | APKM |
 | **Primary Architecture** | `arm64-v8a` |
 | **Authoritative Source** | APKMirror |
-| **Download Target** | [PowerPoint 16.0.20527.20034 (arm64-v8a, 120-480dpi, versionCode 2005437911 / BUNDLE 5 S, Oct 8)](https://www.apkmirror.com/apk/microsoft-corporation/microsoft-powerpoint/microsoft-powerpoint-16-0-20527-20034-release/microsoft-powerpoint-16-0-20527-20034-arm64-v8a-120-480dpi-android-apk-download/) |
+| **Download Target** | [PowerPoint 16.0.20527.20034 (arm64-v8a, 120-480dpi, versionCode 2005437911 / BUNDLE 5 S, Oct 8)](https://www.apkmirror.com/apk/microsoft-corporation/powerpoint/microsoft-powerpoint-16-0-20527-20034-release/microsoft-powerpoint-16-0-20527-20034-android-apk-download/) |
 
 ---
 
