@@ -32,7 +32,6 @@ Technical documentation and patch catalog for X (Twitter) on Android.
 | **Disable Auto Refresh** | `bytecodePatch` | `false` (Opt-in) | None | Stops the home timeline from automatically jumping to new posts. |
 | **DM Debloat** | `bytecodePatch` | `false` (Opt-in) | None | Hides call buttons and composer actions in direct message conversations. |
 | **Drawer Items** | `bytecodePatch` | `false` (Opt-in) | None | Hides navigation drawer items including Grok, Premium, and secondary shortcuts. |
-| **MLKit Vision Slimmer** | `resourcePatch` | `false` (Opt-in) | None | Disables MLKit components and discovery registrars to reduce binary footprint. |
 | **Navigation UI** | `bytecodePatch` | `false` (Opt-in) | None | Customizes navigation bar, unread badges, search tabs, and floating action button. |
 | **No Shortened URL** | `bytecodePatch` | `false` (Opt-in) | None | Expands t.co shortened links to their direct destination. |
 | **Pause Search Suggestions** | `bytecodePatch` | `false` (Opt-in) | None | Stops saving recent search history locally without breaking search. |
@@ -58,10 +57,6 @@ Technical documentation and patch catalog for X (Twitter) on Android.
 2. **Custom Deep Links**:
    - **Objective**: Open custom domain links (inbound routing) directly in the application.
    - **How**: Injects intent filters with specified domains (vxtwitter, fixvx, fxtwitter, fixupx, twittpr, xcancel) into MainActivity in the manifest.
-
-3. **MLKit Vision Slimmer**:
-   - **Objective**: Reduce binary overhead from machine learning vision components.
-   - **How**: Disables component discovery and removes discovery registrars from the manifest.
 
 ### B. Bytecode Modification Layer (`bytecodePatch`)
 
@@ -145,9 +140,7 @@ Technical documentation and patch catalog for X (Twitter) on Android.
 
 ## 4. Behavioral Hazards Warning
 
-1. **MLKit Vision Slimmer**:
-   Disabling MLKit component discovery breaks in-app QR and barcode scanning.
-2. **DM Debloat**:
+1. **DM Debloat**:
    Neutralizing the calling flag disables direct message outgoing call entrypoints.
 3. **Block Telemetry & Trackers (`blockPaymentsTelemetry`)**:
    Enabling the opt-in `blockPaymentsTelemetry` option redirects Plaid, ScribeUp, and anti-fraud telemetry endpoints to `http://0.0.0.0`, which disables X Payments and banking verification features.
@@ -157,3 +150,9 @@ Technical documentation and patch catalog for X (Twitter) on Android.
 ## 5. Known Limitations
 
 None evidenced by patch sources.
+
+---
+
+## 6. Canonical Universal Patches
+
+The MLKit slimming removed from this guide is covered by the `Block Trackers` universal patch in the canonical collection [kveld-morphe-patches](https://github.com/kveld9/kveld-morphe-patches): enable its `disableMlKit` option to disable `MlKitInitProvider`, the component discovery service and the vision registrars (same warning applies: in-app QR and barcode scanning breaks). That collection also provides further generic maintenance (`Remove Unused Screen Sizes`, `Remove Extra Languages`, `Clean App Packaging`, `Stop Background Sync`, `Remove Tracking Libraries`). Add that source in Morphe Manager alongside this one to use them; universal patches apply to any APK, including X.

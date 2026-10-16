@@ -31,6 +31,7 @@
 - [Quick Start](#quick-start)
 - [Key Advantages](#key-advantages)
 - [Supported Targets & Downloads](#supported-targets--downloads)
+- [Universal Patches (Companion Source)](#universal-patches-companion-source)
 - [Patch Catalog](#patch-catalog)
 - [Documentation & Guides](#documentation--guides)
 - [Contributing & Feature Requests](#contributing--feature-requests)
@@ -81,6 +82,26 @@
 | Lightroom | `com.adobe.lrmobile` | 11.6.01 | APK (`arm64-v8a`, PairIP-free variant) | [Uptodown](https://adobe-lightroom-mobile.uptodown.com/android) | Lightroom Guide |
 | CapCut | `com.lemon.lvoverseas` | 19.8.0 | APK (`arm64-v8a`, `armeabi-v7a`, `nodpi`) | [APKMirror](https://www.apkmirror.com/apk/bytedance-pte-ltd/capcut/capcut-video-editor-19-8-0-release) | CapCut Guide |
 | Copilot | `com.microsoft.office.officehubrow` | 16.0.20527.20022 | APKM bundle (`arm64-v8a`) | [APKMirror](https://www.apkmirror.com/apk/microsoft-corporation/microsoft-copilot/microsoft-copilot-16-0-20527-20022-release/) | Copilot Guide |
+
+<p align="center"><a href="#top"><b>&uarr; Back to top</b></a></p>
+
+<a name="universal-patches-companion-source"></a>
+## Universal Patches (Companion Source)
+
+![](images/divider-purple.svg)
+
+This source ships app-specific patches only. Generic maintenance already covered elsewhere lives in the canonical collection [kveld-morphe-patches](https://github.com/kveld9/kveld-morphe-patches) as universal patches that apply to any APK, including every target in this repo:
+
+| Universal Patch | Covers |
+| :--- | :--- |
+| `Remove Unused Screen Sizes` | Screen density slimming (replaces the removed per-app Density Slimmers) |
+| `Remove Extra Languages` | Language slimming for `res/*` tables (replaces the removed per-app Locale Slimmers; CapCut keeps a dedicated `Locale Assets Slimmer` for its `assets/locales/*.json` bundles) |
+| `Clean App Packaging` | Build leftovers and duplicate files (replaces the removed per-app Junk Cleaners) |
+| `Stop Background Sync` | Background schedulers and boot wakeups (replaces the removed Lightroom Background Sync) |
+| `Block Trackers` (enable its `disableMlKit` option) | Generic telemetry plus MLKit (replaces the removed per-app MLKit Vision Slimmers) |
+| `Remove Tracking Libraries` | Tracking and crash-reporting native libraries |
+
+Add `kveld9/kveld-morphe-patches` as a second source in Morphe Manager (or via [one-click](https://morphe.software/add-source?github=kveld9/kveld-morphe-patches)) to use them alongside this collection.
 
 <p align="center"><a href="#top"><b>&uarr; Back to top</b></a></p>
 
