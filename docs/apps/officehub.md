@@ -14,7 +14,7 @@ Technical documentation and patch catalog for Microsoft Copilot (OfficeHub) on A
 | **Target Package Format** | APKM |
 | **Primary Architecture** | `arm64-v8a` |
 | **Authoritative Source** | APKMirror |
-| **Download Target** | [Copilot 16.0.20527.20022 (arm64-v8a, 120-480dpi, versionCode 45451803 / BUNDLE 32 S, Oct 9)](https://www.apkmirror.com/apk/microsoft-corporation/microsoft-copilot/microsoft-copilot-16-0-20527-20022-release/microsoft-copilot-16-0-20527-20022-arm64-v8a-120-480dpi-android-apk-download/) |
+| **Download Target** | [Copilot 16.0.20527.20022 (arm64-v8a, 120-480dpi, versionCode 45451803 / BUNDLE 32 S, Oct 9)](https://www.apkmirror.com/apk/microsoft-corporation/office-mobile-2/microsoft-copilot-16-0-20527-20022-release/microsoft-copilot-16-0-20527-20022-3-2-android-apk-download/) |
 
 ---
 
