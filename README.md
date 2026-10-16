@@ -91,7 +91,7 @@
 | **Round Off Numbers** | Displays full metric counts without abbreviation on posts and profiles. | • Show Full Numbers |
 | **Share Links** | Customizes domain and format for shared post links (for opening custom links in app, see Custom Deep Links). | • Custom Sharing Domain<br>• Sharing Domain<br>• Legacy Share Links |
 | **Show Sensitive Media** | Displays sensitive media directly without requiring tap to reveal. |  |
-| **Timeline UI** | Customizes timeline surfaces including banners, recommendation carousels, and action buttons. | • Hide Banner<br>• Hide Promote Button<br>• Hide Nudge Button<br>• Hide Recommendation Items<br>• Hide Discover More<br>• Hide Recommended Users<br>• Hide Live Threads<br>• Hide Community Notes<br>• Hide Post Metrics<br>• Hide View Count<br>• Hide Inline Action Bar<br>• Timeline Add Tab<br>• Hide Timeline Top Bar<br>• Hide Live Banner |
+| **Timeline UI** | Customizes timeline surfaces including banners, recommendation carousels, and action buttons. | • Hide Banner<br>• Hide Promote Button<br>• Hide Nudge Button<br>• Hide Recommendation Items<br>• Hide Discover More<br>• Hide Recommended Users<br>• Hide Live Threads<br>• Hide Community Notes<br>• Hide Post Metrics<br>• Hide View Count<br>• Hide Inline Action Bar<br>• Hide Timeline Add Tab<br>• Hide Timeline Top Bar<br>• Hide Live Banner |
 
 </details>
 
@@ -129,7 +129,7 @@
 
 | Patch | Description | Options |
 |----------|----------------|-----------|
-| **Block Telemetry & Trackers** | Neutralizes Google AppMeasurement and Firebase Crashlytics dispatchers, strips advertising permissions, and injects analytics opt-out flags. |  |
+| **Block Telemetry & Trackers** | Neutralizes Google AppMeasurement, Firebase Crashlytics, Branch attribution, and Adobe Creative SDK analytics dispatchers, redirects Adobe Edge and DTM endpoints to 0.0.0.0, strips advertising permissions, and injects analytics opt-out flags. |  |
 | **Lightroom Background Sync** | Disables WorkManager background sync services, scheduled jobs, and boot receiver. The WorkManager startup initializer is intentionally preserved because removing it prevents application boot. WARNING: Disabling WorkManager can affect background photo uploads, syncing, and exports. |  |
 | **Lightroom Junk Cleaner** | Purges non-functional build metadata, compiler properties, and duplicate license files from the APK root and META-INF. |  |
 | **Sideload Install Support** | Ensures compatibility for sideloaded lab installs by allowing local installer source checks to report success and completing Play Integrity token requests. Required for sideloaded lab installs: without it the app routes to the Play Store. |  |
