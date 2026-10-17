@@ -15,6 +15,8 @@ import app.morphe.patches.shared.clearTryBlocks
 import app.morphe.patches.shared.disableComponentsByName
 import app.morphe.patches.shared.ensureRegisterCount
 import app.morphe.patches.shared.removeComponentDiscoveryRegistrarsWhere
+import app.morphe.patches.shared.replaceWithReturnBoolean
+import app.morphe.patches.shared.replaceWithReturnVoid
 import app.morphe.patches.shared.setApplicationMetaData
 import app.morphe.patches.shared.stripPermissionsWhere
 import com.android.tools.smali.dexlib2.Opcode
@@ -26,6 +28,7 @@ import org.w3c.dom.Element
 private val blockedPermissions = setOf(
     "com.google.android.gms.permission.AD_ID",
     "com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE",
+    "com.singular.preinstall.READ_PERMISSION_SINGULAR",
 )
 
 private val blockedComponents = setOf(
@@ -221,6 +224,37 @@ private fun hookAdMeasurementPlatformData(hookedMethods: MutableList<String>) {
     hookedMethods.add("AdMeasurementPlatformData.getAppSetId")
 }
 
+context(_: BytecodePatchContext)
+private fun hookSingularSDK(hookedMethods: MutableList<String>) {
+    with(contextOf<BytecodePatchContext>()) {
+        val singularClass = classDefByOrNull("Lcom/singular/sdk/Singular;") ?: run {
+            println("[Copilot Telemetry] Skipped: Singular SDK class absent.")
+            return
+        }
+        val mutableClass = mutableClassDefBy(singularClass)
+        var count = 0
+        for (method in mutableClass.methods) {
+            when (method.name) {
+                "init", "event", "eventJSON", "revenue", "customRevenue" -> {
+                    if (method.returnType == "Z") {
+                        method.replaceWithReturnBoolean(false)
+                        count++
+                    }
+                }
+                "setCustomUserId", "setDeviceCustomUserId", "setFCMDeviceToken", "setGCMDeviceToken", "setIMEI" -> {
+                    if (method.returnType == "V") {
+                        method.replaceWithReturnVoid()
+                        count++
+                    }
+                }
+            }
+        }
+        if (count > 0) {
+            hookedMethods.add("Singular SDK ($count dispatchers neutralized)")
+        }
+    }
+}
+
 // -- Hosts Rewrite Layer (Second-Layer Defense) ------------------------------
 
 private const val SINK_HOST = "0.0.0.0"
@@ -234,6 +268,9 @@ private val DEFAULT_BLOCKED_HOSTS = setOf(
     "web.vortex.data.microsoft.com",
     "telemetry.microsoft.com",
     "watson.telemetry.microsoft.com",
+    "events.data.microsoft.com",
+    "appcenter.ms",
+    "sng.link",
     "onecollector.cloudapp.net",
 
     // Google / Firebase telemetry endpoints
@@ -257,7 +294,11 @@ private val TELEMETRY_PACKAGE_PREFIXES = listOf(
     "Lcom/microsoft/office/adsmobile_admeasurementpartner/",
     "Lcom/microsoft/office/asyncdatapointreporting/",
     "Lcom/microsoft/office/hockeyapp/",
+    "Lcom/microsoft/appcenter/",
+    "Lcom/microsoft/office/watson/",
+    "Lcom/microsoft/office/dropoutscollector/",
     "Lcom/microsoft/android/crosssell/",
+    "Lcom/singular/sdk/",
     "Lcom/google/android/datatransport/",
     "Lcom/google/android/gms/measurement/",
     "Lcom/google/firebase/analytics/",
@@ -383,7 +424,7 @@ private fun BytecodePatchContext.blockHostsInDex(
 @Suppress("unused")
 val officeHubBlockTelemetryPatch = bytecodePatch(
     name = "Block Telemetry & Trackers",
-    description = "Neutralizes Microsoft OneDS/Aria lifecycle, aggregated-metric and failure-logging dispatch methods, nullifies ad measurement platform identifiers (AIFA, AppSetId), rewrites default telemetry endpoints inside telemetry packages and custom blocked hosts unscoped to 0.0.0.0, disables cross-sell, Floodgate, HockeyApp and DataTransport components, and strips advertising permissions.",
+    description = "Neutralizes Microsoft OneDS/Aria lifecycle, aggregated-metric and failure-logging dispatch methods, stubs Singular attribution SDK initializers and dispatchers, nullifies ad measurement platform identifiers (AIFA, AppSetId), rewrites default telemetry endpoints inside telemetry packages and custom blocked hosts unscoped to 0.0.0.0, disables cross-sell, Floodgate, HockeyApp and DataTransport components, and strips advertising and preinstall attribution permissions.",
     default = true,
 ) {
     compatibleWith(Constants.COMPATIBILITY_OFFICEHUB)
@@ -402,6 +443,7 @@ val officeHubBlockTelemetryPatch = bytecodePatch(
         hookLifecycleCallbacks(hookedMethods)
         hookTelemetryDispatchers(hookedMethods)
         hookAdMeasurementPlatformData(hookedMethods)
+        hookSingularSDK(hookedMethods)
 
         val userHosts = mutableListOf<String>()
         val skippedUserHosts = mutableListOf<Pair<String, String>>()
