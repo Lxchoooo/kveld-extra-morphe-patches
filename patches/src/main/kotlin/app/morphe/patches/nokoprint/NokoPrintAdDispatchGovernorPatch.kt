@@ -8,6 +8,7 @@ import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.patch.resourcePatch
 import app.morphe.patches.shared.Constants
 import app.morphe.patches.shared.clearTryBlocks
+import app.morphe.patches.shared.ensureRegisterCount
 import org.w3c.dom.Element
 
 private val nokoPrintAdManifestResourcePatch = resourcePatch(
@@ -179,6 +180,7 @@ val nokoPrintAdDispatchGovernorPatch = bytecodePatch(
             returnType = "V",
         ).method.apply {
             clearTryBlocks()
+            ensureRegisterCount(4)
             val count = implementation?.instructions?.count() ?: 0
             if (count > 0) {
                 removeInstructions(0, count)
