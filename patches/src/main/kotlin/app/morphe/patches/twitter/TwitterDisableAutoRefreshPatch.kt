@@ -44,13 +44,6 @@ private val autoRefreshWorkerFingerprint = Fingerprint(
     parameters = listOf("Ljava/lang/Object;"),
 )
 
-private val autoRefreshPageCallbackFingerprint = Fingerprint(
-    definingClass = "Lcom/arkivanov/decompose/extensions/compose/pages/c;",
-    name = "invokeSuspend",
-    returnType = "Ljava/lang/Object;",
-    parameters = listOf("Ljava/lang/Object;"),
-)
-
 private val automaticFetchTypes = setOf("AUTO_REFRESH", "VIEWPORT_AWARE_AUTO_REFRESH")
 
 private fun isAutomaticFetchSget(ins: ReferenceInstruction): Boolean {
@@ -103,7 +96,6 @@ val twitterDisableAutoRefreshPatch = bytecodePatch(
 
         patched += nopAutomaticFetches(autoRefreshDispatcherFingerprint.method, 1)
         patched += nopAutomaticFetches(autoRefreshWorkerFingerprint.method, 2)
-        patched += nopAutomaticFetches(autoRefreshPageCallbackFingerprint.method, 2)
 
         println("[Disable Auto Refresh] Applied $patched hooks -> timeline auto refresh disabled.")
     }
