@@ -35,12 +35,12 @@ private val badgesFingerprint = Fingerprint(
 )
 
 private val fabVisibilityFingerprint = Fingerprint(
-    definingClass = "Lcom/x/ui/common/i3;",
+    definingClass = "Lcom/x/ui/common/q3;",
     name = "d",
     returnType = "V",
     parameters = listOf(
         "Landroidx/compose/ui/Modifier;",
-        "Landroidx/compose/runtime/internal/e;",
+        "Landroidx/compose/runtime/internal/g;",
         "Landroidx/compose/runtime/Composer;",
         "I",
     ),
@@ -57,7 +57,7 @@ private val bottomNavFingerprint = Fingerprint(
 )
 
 private val grokTabFingerprint = Fingerprint(
-    definingClass = "Lcom/x/main/landing/f0;",
+    definingClass = "Lcom/x/main/landing/h0;",
     strings = listOf("android_webview_grok_tab_enabled"),
 )
 

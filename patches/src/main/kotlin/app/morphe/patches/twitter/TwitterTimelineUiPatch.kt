@@ -57,7 +57,7 @@ private val focalPostStateFingerprint = Fingerprint(
 )
 
 private val focalPostHeaderFingerprint = Fingerprint(
-    definingClass = "Lcom/x/urt/items/post/a2;",
+    definingClass = "Lcom/x/urt/items/post/h2;",
     name = "a",
     returnType = "V",
 )
@@ -73,12 +73,12 @@ private val urtItemPresenterFingerprint = Fingerprint(
 )
 
 private val postDetailPresenterFingerprint = Fingerprint(
-    definingClass = "Lcom/x/postdetail/m;",
+    definingClass = "Lcom/x/postdetail/n;",
     name = "v",
     returnType = "Lcom/x/presenter/a;",
     parameters = listOf(
         "I",
-        "Lcom/x/models/timelines/items/p0;",
+        "Lcom/x/models/timelines/items/o0;",
     ),
 )
 
@@ -423,7 +423,7 @@ val twitterTimelineUiPatch = bytecodePatch(
 
             // Null follow button state at composable entry instead of in state constructor (which crashed).
             val headerMethod = focalPostHeaderFingerprint.method
-            val followParamIndex = headerMethod.parameterTypes.indexOfFirst { it.toString() == "Lcom/x/models/p2;" }
+            val followParamIndex = headerMethod.parameterTypes.indexOfFirst { it.toString() == "Lcom/x/models/q2;" }
             if (followParamIndex < 0) {
                 error("[Timeline UI] Follow button state parameter not found in focal post header.")
             }
@@ -459,16 +459,16 @@ val twitterTimelineUiPatch = bytecodePatch(
 
                     invoke-interface {v0}, Ljava/util/Iterator;->next()Ljava/lang/Object;
                     move-result-object v2
-                    check-cast v2, Lcom/x/models/timelines/items/p0;
+                    check-cast v2, Lcom/x/models/timelines/items/o0;
 
-                    instance-of v3, v2, Lcom/x/models/timelines/items/b1;
+                    instance-of v3, v2, Lcom/x/models/timelines/items/a1;
                     if-eqz v3, :tlflt_cond_add_item
 
                     move-object v3, v2
-                    check-cast v3, Lcom/x/models/timelines/items/b1;
+                    check-cast v3, Lcom/x/models/timelines/items/a1;
 
                     # Check 1: entryId contains who-to-follow, who_to_follow, or user_recommendations
-                    iget-object v4, v3, Lcom/x/models/timelines/items/b1;->f:Ljava/lang/String;
+                    iget-object v4, v3, Lcom/x/models/timelines/items/a1;->f:Ljava/lang/String;
                     if-eqz v4, :tlflt_cond_check_inner
 
                     const-string v5, "who-to-follow"
@@ -488,7 +488,7 @@ val twitterTimelineUiPatch = bytecodePatch(
 
                     :tlflt_cond_check_inner
                     # Check 3: innerContent contains d2 (UrtTimelineUser)
-                    iget-object v4, v3, Lcom/x/models/timelines/items/b1;->a:Ljava/util/List;
+                    iget-object v4, v3, Lcom/x/models/timelines/items/a1;->a:Ljava/util/List;
                     if-eqz v4, :tlflt_cond_add_item
 
                     invoke-interface {v4}, Ljava/util/List;->isEmpty()Z
@@ -500,12 +500,12 @@ val twitterTimelineUiPatch = bytecodePatch(
                     move-result-object v4
 
                     # Defect 2 guard: verify instance-of e1 before casting
-                    instance-of v5, v4, Lcom/x/models/timelines/items/e1;
+                    instance-of v5, v4, Lcom/x/models/timelines/items/d1;
                     if-eqz v5, :tlflt_cond_add_item
 
-                    check-cast v4, Lcom/x/models/timelines/items/e1;
-                    iget-object v4, v4, Lcom/x/models/timelines/items/e1;->a:Lcom/x/models/timelines/items/p0;
-                    instance-of v5, v4, Lcom/x/models/timelines/items/d2;
+                    check-cast v4, Lcom/x/models/timelines/items/d1;
+                    iget-object v4, v4, Lcom/x/models/timelines/items/d1;->a:Lcom/x/models/timelines/items/o0;
+                    instance-of v5, v4, Lcom/x/models/timelines/items/b2;
                     if-nez v5, :tlflt_cond_drop_item
 
                     :tlflt_cond_add_item
@@ -532,7 +532,7 @@ val twitterTimelineUiPatch = bytecodePatch(
             // Discover more module entryId has the form "tweetdetailrelatedtweets-<postId>"
             val discoverItemTestSmali = """
                 :tluid_cond_check_item
-                invoke-interface {v0}, Lcom/x/models/timelines/items/p0;->c()Ljava/lang/String;
+                invoke-interface {v0}, Lcom/x/models/timelines/items/o0;->c()Ljava/lang/String;
                 move-result-object v1
                 if-eqz v1, :tluid_cond_continue
 
@@ -568,7 +568,7 @@ val twitterTimelineUiPatch = bytecodePatch(
                 $discoverItemTestSmali
 
                 :tluid_cond_continue
-                invoke-virtual {p0, p1, p2}, Lcom/x/postdetail/m;->morphePostDetailPresenterTimelineUi(ILcom/x/models/timelines/items/p0;)Lcom/x/presenter/a;
+                invoke-virtual {p0, p1, p2}, Lcom/x/postdetail/n;->morphePostDetailPresenterTimelineUi(ILcom/x/models/timelines/items/o0;)Lcom/x/presenter/a;
                 move-result-object v0
                 return-object v0
             """.trimIndent()
@@ -590,16 +590,16 @@ val twitterTimelineUiPatch = bytecodePatch(
 
                 invoke-interface {v0}, Ljava/util/Iterator;->next()Ljava/lang/Object;
                 move-result-object v2
-                check-cast v2, Lcom/x/models/timelines/items/p0;
+                check-cast v2, Lcom/x/models/timelines/items/o0;
 
-                instance-of v3, v2, Lcom/x/models/timelines/items/b1;
+                instance-of v3, v2, Lcom/x/models/timelines/items/a1;
                 if-eqz v3, :tldsc_cond_add_item
 
                 move-object v3, v2
-                check-cast v3, Lcom/x/models/timelines/items/b1;
+                check-cast v3, Lcom/x/models/timelines/items/a1;
 
                 # Null-guard on b1->f before contains
-                iget-object v4, v3, Lcom/x/models/timelines/items/b1;->f:Ljava/lang/String;
+                iget-object v4, v3, Lcom/x/models/timelines/items/a1;->f:Ljava/lang/String;
                 if-eqz v4, :tldsc_cond_add_item
 
                 const-string v5, "relatedtweets"
@@ -901,7 +901,7 @@ val twitterTimelineUiPatch = bytecodePatch(
                 val targetReg = countedPillIns.registerA
                 method.replaceInstruction(
                     countedPillIndex,
-                    "sget-object v$targetReg, Lcom/x/inlineactionbar/k1;->Countless:Lcom/x/inlineactionbar/k1;",
+                    "sget-object v$targetReg, Lcom/x/inlineactionbar/k1;->b:Lcom/x/inlineactionbar/k1;",
                 )
                 patched++
             } else {
@@ -934,8 +934,8 @@ val twitterTimelineUiPatch = bytecodePatch(
                 method.addInstructionsWithLabels(
                     invokeIndex,
                     """
-                        iget-object v3, v$startReg, Lcom/x/models/l4;->a:Lcom/x/models/v5;
-                        sget-object v4, Lcom/x/models/v5;->ViewCount:Lcom/x/models/v5;
+                        iget-object v3, v$startReg, Lcom/x/models/l4;->a:Lcom/x/models/w5;
+                        sget-object v4, Lcom/x/models/w5;->ViewCount:Lcom/x/models/w5;
                         if-eq v3, v4, :skip_view_count
                         invoke-static/range {v$startReg .. v$endReg}, $methodDescriptor
                         :skip_view_count

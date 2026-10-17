@@ -32,12 +32,12 @@ private val urtItemPresenterFingerprint = Fingerprint(
 )
 
 private val postDetailPresenterFingerprint = Fingerprint(
-    definingClass = "Lcom/x/postdetail/m;",
+    definingClass = "Lcom/x/postdetail/n;",
     name = "v",
     returnType = "Lcom/x/presenter/a;",
     parameters = listOf(
         "I",
-        "Lcom/x/models/timelines/items/p0;",
+        "Lcom/x/models/timelines/items/o0;",
     ),
 )
 
@@ -64,69 +64,68 @@ val twitterRemoveAdsPatch = bytecodePatch(
 
         val adItemTestSmali = """
             :rmad_cond_check_item
-            instance-of v1, v0, Lcom/x/models/timelines/items/l1;
+            instance-of v1, v0, Lcom/x/models/timelines/items/j1;
             if-nez v1, :rmad_cond_check_post
             goto :rmad_cond_not_post
 
             :rmad_cond_check_post
             move-object v1, v0
-            check-cast v1, Lcom/x/models/timelines/items/l1;
-            invoke-virtual {v1}, Lcom/x/models/timelines/items/l1;->y()Lcom/x/models/df;
-            move-result-object v1
+            check-cast v1, Lcom/x/models/timelines/items/j1;
+            iget-object v1, v1, Lcom/x/models/timelines/items/j1;->e:Lcom/x/models/df;
             if-nez v1, :rmad_cond_suppress_ad
 
             :rmad_cond_not_post
-            instance-of v1, v0, Lcom/x/models/timelines/items/a2;
+            instance-of v1, v0, Lcom/x/models/timelines/items/y1;
             if-nez v1, :rmad_cond_check_trend
             goto :rmad_cond_not_trend
 
             :rmad_cond_check_trend
             move-object v1, v0
-            check-cast v1, Lcom/x/models/timelines/items/a2;
-            iget-object v1, v1, Lcom/x/models/timelines/items/a2;->a:Lcom/x/models/sf;
+            check-cast v1, Lcom/x/models/timelines/items/y1;
+            iget-object v1, v1, Lcom/x/models/timelines/items/y1;->a:Lcom/x/models/sf;
             if-eqz v1, :rmad_cond_not_trend
             invoke-virtual {v1}, Lcom/x/models/sf;->b()Lcom/x/models/df;
             move-result-object v1
             if-nez v1, :rmad_cond_suppress_ad
 
             :rmad_cond_not_trend
-            instance-of v1, v0, Lcom/x/models/timelines/items/r1;
+            instance-of v1, v0, Lcom/x/models/timelines/items/p1;
             if-nez v1, :rmad_cond_check_rtb
             goto :rmad_cond_not_rtb
 
             :rmad_cond_check_rtb
             move-object v1, v0
-            check-cast v1, Lcom/x/models/timelines/items/r1;
-            iget-object v1, v1, Lcom/x/models/timelines/items/r1;->j:Lcom/x/models/df;
+            check-cast v1, Lcom/x/models/timelines/items/p1;
+            iget-object v1, v1, Lcom/x/models/timelines/items/p1;->j:Lcom/x/models/df;
             if-nez v1, :rmad_cond_suppress_ad
 
             :rmad_cond_not_rtb
-            instance-of v1, v0, Lcom/x/models/timelines/items/d2;
+            instance-of v1, v0, Lcom/x/models/timelines/items/b2;
             if-nez v1, :rmad_cond_check_user
             goto :rmad_cond_not_user
 
             :rmad_cond_check_user
             move-object v1, v0
-            check-cast v1, Lcom/x/models/timelines/items/d2;
-            iget-object v1, v1, Lcom/x/models/timelines/items/d2;->h:Lcom/x/models/df;
+            check-cast v1, Lcom/x/models/timelines/items/b2;
+            iget-object v1, v1, Lcom/x/models/timelines/items/b2;->h:Lcom/x/models/df;
             if-nez v1, :rmad_cond_suppress_ad
 
             :rmad_cond_not_user
-            instance-of v1, v0, Lcom/x/models/timelines/items/n0;
+            instance-of v1, v0, Lcom/x/models/timelines/items/m0;
             if-nez v1, :rmad_cond_check_event
             goto :rmad_cond_not_event
 
             :rmad_cond_check_event
             move-object v1, v0
-            check-cast v1, Lcom/x/models/timelines/items/n0;
-            iget-object v1, v1, Lcom/x/models/timelines/items/n0;->a:Lcom/x/models/l2;
+            check-cast v1, Lcom/x/models/timelines/items/m0;
+            iget-object v1, v1, Lcom/x/models/timelines/items/m0;->a:Lcom/x/models/m2;
             if-eqz v1, :rmad_cond_not_event
-            invoke-virtual {v1}, Lcom/x/models/l2;->a()Lcom/x/models/df;
+            invoke-virtual {v1}, Lcom/x/models/m2;->a()Lcom/x/models/df;
             move-result-object v1
             if-nez v1, :rmad_cond_suppress_ad
 
             :rmad_cond_not_event
-            invoke-interface {v0}, Lcom/x/models/timelines/items/p0;->c()Ljava/lang/String;
+            invoke-interface {v0}, Lcom/x/models/timelines/items/o0;->c()Ljava/lang/String;
             move-result-object v1
             if-eqz v1, :rmad_cond_continue
 
@@ -166,7 +165,7 @@ val twitterRemoveAdsPatch = bytecodePatch(
             $adItemTestSmali
 
             :rmad_cond_continue
-            invoke-virtual {p0, p1, p2}, Lcom/x/postdetail/m;->morphePostDetailPresenterRemoveAds(ILcom/x/models/timelines/items/p0;)Lcom/x/presenter/a;
+            invoke-virtual {p0, p1, p2}, Lcom/x/postdetail/n;->morphePostDetailPresenterRemoveAds(ILcom/x/models/timelines/items/o0;)Lcom/x/presenter/a;
             move-result-object v0
             return-object v0
         """.trimIndent()

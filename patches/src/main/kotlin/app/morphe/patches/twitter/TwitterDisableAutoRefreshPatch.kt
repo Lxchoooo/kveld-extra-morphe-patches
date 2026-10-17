@@ -30,7 +30,7 @@ import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 
 private val autoRefreshDispatcherFingerprint = Fingerprint(
     returnType = "V",
-    parameters = listOf("Lcom/x/urt/u1;"),
+    parameters = listOf("Lcom/x/urt/v1;"),
     strings = listOf(
         "x_lite_infra_home_jtt_clear_cache_enabled",
         "home_timeline_navigation_clear_cache_after_manual_jtt_enabled",
@@ -38,7 +38,7 @@ private val autoRefreshDispatcherFingerprint = Fingerprint(
 )
 
 private val autoRefreshWorkerFingerprint = Fingerprint(
-    definingClass = "Lcom/x/android/main/helpers/e3;",
+    definingClass = "Lcom/x/android/main/helpers/f3;",
     name = "invokeSuspend",
     returnType = "Ljava/lang/Object;",
     parameters = listOf("Ljava/lang/Object;"),
@@ -53,7 +53,7 @@ private fun isAutomaticFetchSget(ins: ReferenceInstruction): Boolean {
 
 private fun isTimelineFetchInvoke(ins: ReferenceInstruction): Boolean {
     val methodRef = ins.reference as? MethodReference ?: return false
-    return methodRef.name == "k" && methodRef.definingClass == "Lcom/x/repositories/urt/r1;"
+    return (methodRef.name == "r" || methodRef.name == "k") && methodRef.definingClass == "Lcom/x/repositories/urt/r1;"
 }
 
 private fun findAutomaticFetchInvokes(method: MutableMethod): List<Int> {

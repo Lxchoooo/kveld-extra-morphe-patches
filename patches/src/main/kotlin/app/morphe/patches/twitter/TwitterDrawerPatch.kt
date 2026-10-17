@@ -174,12 +174,12 @@ val twitterDrawerPatch = bytecodePatch(
 
         val methodE = classDef.methods.firstOrNull { it.name == "e" && it.parameterTypes.size == 4 }
             ?: error("[Drawer Items] Discount pill method 'e' not found in '$classDescriptor'.")
-        val methodO = classDef.methods.firstOrNull { it.name == "o" && it.parameterTypes.size == 4 }
-            ?: error("[Drawer Items] Get Grok method 'o' not found in '$classDescriptor'.")
-        val methodP = classDef.methods.firstOrNull { it.name == "p" && it.parameterTypes.size == 8 }
-            ?: error("[Drawer Items] Standard item method 'p' not found in '$classDescriptor'.")
-        val methodQ = classDef.methods.firstOrNull { it.name == "q" && it.parameterTypes.size == 10 }
-            ?: error("[Drawer Items] Item method 'q' not found in '$classDescriptor'.")
+        val methodGrok = classDef.methods.firstOrNull { (it.name == "p" || it.name == "o") && it.parameterTypes.size == 4 && it.parameterTypes[0].toString().startsWith("Landroidx/compose/material3/") }
+            ?: error("[Drawer Items] Get Grok method not found in '$classDescriptor'.")
+        val methodHelpCenter = classDef.methods.firstOrNull { (it.name == "q" || it.name == "p") && it.parameterTypes.size == 8 && it.parameterTypes[1].toString() == "Lcom/x/icons/b;" }
+            ?: error("[Drawer Items] Standard item method not found in '$classDescriptor'.")
+        val methodItems = classDef.methods.firstOrNull { (it.name == "r" || it.name == "q") && it.parameterTypes.size == 10 && it.parameterTypes[1].toString() == "Lcom/x/icons/b;" }
+            ?: error("[Drawer Items] Item method not found in '$classDescriptor'.")
 
         var patched = 0
 
@@ -191,7 +191,7 @@ val twitterDrawerPatch = bytecodePatch(
 
         // 2. Hide Grok (drawer item and sidebar bot entry)
         if (hideGetGrok ?: true) {
-            methodO.addInstructions(0, "return-void")
+            methodGrok.addInstructions(0, "return-void")
             patched++
             if (neutralizeFlag(sideBarFingerprint, "android_grok_bot_sidebar_enabled", "Drawer Items")) {
                 patched++
@@ -215,7 +215,7 @@ val twitterDrawerPatch = bytecodePatch(
                 return-void
                 :cond_keep_p
             """.trimIndent()
-            methodP.addInstructions(0, smaliP)
+            methodHelpCenter.addInstructions(0, smaliP)
             patched++
         }
 
@@ -293,7 +293,7 @@ val twitterDrawerPatch = bytecodePatch(
                 ${qChecks.joinToString("\n")}
                 :cond_keep_q
             """.trimIndent()
-            methodQ.addInstructions(0, smaliQ)
+            methodItems.addInstructions(0, smaliQ)
             patched++
         }
 

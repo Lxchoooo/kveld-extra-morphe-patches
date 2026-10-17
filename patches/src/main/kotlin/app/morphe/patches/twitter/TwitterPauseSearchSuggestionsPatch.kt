@@ -45,8 +45,8 @@ val twitterPauseSearchSuggestionsPatch = bytecodePatch(
         val repoClass = mutableClassDefBy(repoClassDescriptor)
 
         val persistMethod = repoClass.methods.firstOrNull { method ->
-            method.parameterTypes.size == 3 &&
-                method.parameterTypes[0].toString() == repoClassDescriptor &&
+            ((method.parameterTypes.size == 3 && method.parameterTypes[0].toString() == repoClassDescriptor) ||
+             (method.parameterTypes.size == 2 && method.parameterTypes[0].toString().startsWith("Lcom/x/models/search/"))) &&
                 method.returnType == "Ljava/lang/Object;"
         } ?: error("[Pause Search Suggestions] Recent search persist method not found in '$repoClassDescriptor'.")
 

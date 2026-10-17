@@ -25,7 +25,7 @@ import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patches.shared.Constants
 
 private val dmCallButtonsFingerprint = Fingerprint(
-    definingClass = "Lcom/x/dm/chat/composables/u0;",
+    definingClass = "Lcom/x/dm/chat/composables/r0;",
     name = "d",
     returnType = "V",
     parameters = listOf(
