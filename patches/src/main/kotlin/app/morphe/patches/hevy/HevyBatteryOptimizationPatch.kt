@@ -5,6 +5,7 @@ import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.patch.resourcePatch
 import app.morphe.patches.shared.Constants
+import app.morphe.patches.shared.ensureRegisterCount
 import org.w3c.dom.Element
 
 private val hevyBatteryResourcePatch = resourcePatch(
@@ -36,11 +37,6 @@ private val hevyBatteryResourcePatch = resourcePatch(
             "androidx.work.impl.diagnostics.DiagnosticsReceiver",
 
             // 2. Firebase & DataTransport Background Wakeups
-            "com.hevy.notifications.HevyFirebaseMessagingReceiver",
-            "com.hevy.notifications.HevyFirebaseMessagingService",
-            "com.google.firebase.iid.FirebaseInstanceIdReceiver",
-            "com.google.firebase.messaging.FirebaseMessagingService",
-            "com.google.firebase.provider.FirebaseInitProvider",
             "com.google.firebase.components.ComponentDiscoveryService",
             "com.google.android.datatransport.runtime.backends.TransportBackendDiscovery",
             "com.google.android.datatransport.runtime.scheduling.jobscheduling.JobInfoSchedulerService",
@@ -168,6 +164,7 @@ val hevyBatteryOptimizationPatch = bytecodePatch(
             parameters = listOf("Landroid/content/Context;"),
             returnType = "Ljava/lang/Object;",
         ).method.apply {
+            ensureRegisterCount(2)
             addInstructions(0, "const/4 v0, 0\nreturn-object v0")
             println("[Stop Background Sync] Neutralized WorkManagerInitializer.create")
         }

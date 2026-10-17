@@ -214,7 +214,7 @@ val hevyBlockTelemetryPatch = bytecodePatch(
         )
         hookedMethods.add("AmplitudeReactNativeModule.getLegacyEvents")
 
-        // 7. React Native NetworkingModule telemetry sinkhole (redirects Amplitude, Branch and Sentry JS requests to 127.0.0.1:0)
+        // 7. React Native NetworkingModule telemetry sinkhole (redirects Amplitude, Branch and Sentry JS requests to 0.0.0.0)
         val networkingFp = Fingerprint(
             definingClass = "Lcom/facebook/react/modules/network/NetworkingModule;",
             name = "sendRequest",
@@ -248,7 +248,7 @@ val hevyBlockTelemetryPatch = bytecodePatch(
                 if-nez v0, :cond_sink
                 goto :cond_proceed
                 :cond_sink
-                const-string p2, "http://127.0.0.1:0"
+                const-string p2, "http://0.0.0.0"
                 :cond_proceed
             """.trimIndent(),
         )
