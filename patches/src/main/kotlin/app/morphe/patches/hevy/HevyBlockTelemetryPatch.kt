@@ -36,6 +36,15 @@ private val hevyTelemetryResourcePatch = resourcePatch(
         val blockedProviders = setOf(
             "io.sentry.android.core.SentryInitProvider",
             "io.sentry.android.core.SentryPerformanceProvider",
+            "com.adjust.sdk.SystemLifecycleContentProvider",
+            "com.facebook.internal.FacebookInitProvider",
+            "com.facebook.FacebookContentProvider",
+        )
+
+        val blockedReceivers = setOf(
+            "com.adjust.sdk.AdjustReferrerReceiver",
+            "com.facebook.CurrentAccessTokenExpirationBroadcastReceiver",
+            "com.facebook.AuthenticationTokenManager\$CurrentAuthenticationTokenChangedBroadcastReceiver",
         )
 
         var removedPermissions = 0
@@ -85,7 +94,7 @@ private val hevyTelemetryResourcePatch = resourcePatch(
             for (i in 0 until receivers.length) {
                 val receiver = receivers.item(i) as? Element ?: continue
                 val name = receiver.getAttribute("android:name")
-                if (name == "com.adjust.sdk.AdjustReferrerReceiver") {
+                if (name in blockedReceivers) {
                     receiver.setAttribute("android:enabled", "false")
                     disabledReceivers++
                 }
