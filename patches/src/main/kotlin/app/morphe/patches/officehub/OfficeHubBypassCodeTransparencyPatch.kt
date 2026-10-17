@@ -6,6 +6,7 @@ import app.morphe.patcher.extensions.InstructionExtensions.removeInstructions
 import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patches.shared.Constants.COMPATIBILITY_OFFICEHUB
 import app.morphe.patches.shared.clearTryBlocks
+import app.morphe.patches.shared.ensureRegisterCount
 
 private val codeTransparencyDialogFingerprint = Fingerprint(
     definingClass = "Lcom/microsoft/office/android/transparencyverification/c;",
@@ -32,6 +33,7 @@ val officeHubBypassCodeTransparencyPatch = bytecodePatch(
 
         codeTransparencyDialogFingerprint.method.apply {
             clearTryBlocks()
+            ensureRegisterCount(5)
             implementation?.let { removeInstructions(0, it.instructions.count()) }
             addInstructions(0, """
                 const/4 v0, 0x0
