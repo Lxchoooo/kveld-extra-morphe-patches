@@ -8,12 +8,12 @@ import app.morphe.patches.shared.Constants.COMPATIBILITY_OFFICEHUB
 import app.morphe.patches.shared.clearTryBlocks
 
 private val codeTransparencyDialogFingerprint = Fingerprint(
-    definingClass = "Landroidx/camera/camera2/internal/o1;",
-    name = "B",
+    definingClass = "Lcom/microsoft/office/android/transparencyverification/c;",
+    name = "G",
     returnType = "V",
     parameters = listOf(
         "Landroid/content/Context;",
-        "Lcom/microsoft/office/tsl/b;",
+        "Lcom/microsoft/mobile/hub/orchestrator/impl/g1;",
         "Z",
     ),
     strings = listOf("com.microsoft.android.codetransparencyvalidator"),
@@ -42,11 +42,11 @@ val officeHubBypassCodeTransparencyPatch = bytecodePatch(
                 move-result-object p3
                 invoke-virtual {p1}, Landroid/content/Context;->getPackageName()Ljava/lang/String;
                 move-result-object v0
-                invoke-virtual {p0, p1}, Landroidx/camera/camera2/internal/o1;->A(Landroid/content/Context;)J
+                invoke-virtual {p0, p1}, Lcom/microsoft/office/android/transparencyverification/c;->F(Landroid/content/Context;)J
                 move-result-wide p0
                 invoke-interface {p3, v0, p0, p1}, Landroid/content/SharedPreferences${'$'}Editor;->putLong(Ljava/lang/String;J)Landroid/content/SharedPreferences${'$'}Editor;
                 invoke-interface {p3}, Landroid/content/SharedPreferences${'$'}Editor;->commit()Z
-                invoke-virtual {p2}, Lcom/microsoft/office/tsl/b;->transparencyVerificationSucceeded()V
+                invoke-virtual {p2}, Lcom/microsoft/mobile/hub/orchestrator/impl/g1;->transparencyVerificationSucceeded()V
                 return-void
             """)
             patched++
