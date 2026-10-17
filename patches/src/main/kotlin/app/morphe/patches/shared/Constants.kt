@@ -145,7 +145,7 @@ object Constants {
         targets = listOf(
             AppTarget(
                 version = OFFICEHUB_TARGET_VERSION,
-                description = "Download com.microsoft.office.officehubrow v$OFFICEHUB_TARGET_VERSION (APKM) arm64-v8a 120-480dpi versionCode 45489613 from APKMirror",
+                description = "Download com.microsoft.office.officehubrow v\$OFFICEHUB_TARGET_VERSION (APKM) arm64-v8a 120-480dpi versionCode 45489613 (BUNDLE 27 S) from APKMirror",
             )
         )
     )
