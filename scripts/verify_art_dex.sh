@@ -44,6 +44,8 @@ find_verifier() {
     local candidates=(
         "/apex/com.android.art/bin/dex2oat64"
         "/apex/com.android.art/bin/dex2oat"
+        "/system/bin/dex2oat64"
+        "/system/bin/dex2oat"
     )
     local bin
     for bin in "${candidates[@]}"; do
