@@ -214,6 +214,46 @@ val hevyBlockTelemetryPatch = bytecodePatch(
         )
         hookedMethods.add("AmplitudeReactNativeModule.getLegacyEvents")
 
+        // 7. React Native NetworkingModule telemetry sinkhole (redirects Amplitude, Branch and Sentry JS requests to 127.0.0.1:0)
+        val networkingFp = Fingerprint(
+            definingClass = "Lcom/facebook/react/modules/network/NetworkingModule;",
+            name = "sendRequest",
+            parameters = listOf(
+                "Ljava/lang/String;",
+                "Ljava/lang/String;",
+                "D",
+                "Lcom/facebook/react/bridge/ReadableArray;",
+                "Lcom/facebook/react/bridge/ReadableMap;",
+                "Ljava/lang/String;",
+                "Z",
+                "D",
+                "Z",
+            ),
+        )
+        networkingFp.method.addInstructions(
+            0,
+            """
+                if-eqz p2, :cond_proceed
+                const-string v0, "amplitude.com"
+                invoke-virtual {p2, v0}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
+                move-result v0
+                if-nez v0, :cond_sink
+                const-string v0, "api.branch.io"
+                invoke-virtual {p2, v0}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
+                move-result v0
+                if-nez v0, :cond_sink
+                const-string v0, "sentry.io"
+                invoke-virtual {p2, v0}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
+                move-result v0
+                if-nez v0, :cond_sink
+                goto :cond_proceed
+                :cond_sink
+                const-string p2, "http://127.0.0.1:0"
+                :cond_proceed
+            """.trimIndent(),
+        )
+        hookedMethods.add("NetworkingModule.sendRequest")
+
         println("[Block Trackers] Successfully hooked ${hookedMethods.size} telemetry methods: ${hookedMethods.joinToString(", ")}")
     }
 }
