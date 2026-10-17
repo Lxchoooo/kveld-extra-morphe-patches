@@ -1,3 +1,23 @@
+## [1.21.1](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.21.0...v1.21.1) (2026-10-17)
+
+### Bug Fixes
+
+* **hevy:** disable residual Adjust and Facebook manifest components ([3f3220e](https://github.com/kveld9/kveld-extra-morphe-patches/commit/3f3220e1dd0247db86457fceba26dfee5d0243ec))
+* **hevy:** disable residual background sync components and neutralize WorkManagerInitializer ([800066b](https://github.com/kveld9/kveld-extra-morphe-patches/commit/800066bec6adad4ccaa588b9865ca2671d00ded4))
+* **hevy:** sinkhole React Native telemetry in NetworkingModule ([ef9376f](https://github.com/kveld9/kveld-extra-morphe-patches/commit/ef9376f4c747859281ea4b731d1ed01e66d7731f))
+* **hevy:** use valid 0.0.0.0 sinkhole URL and preserve push messaging components ([c4b2413](https://github.com/kveld9/kveld-extra-morphe-patches/commit/c4b24132c765bd2df4f631634ec0c2b0f932599e))
+* **moovit:** disable residual advertising activities and receiver ([683d692](https://github.com/kveld9/kveld-extra-morphe-patches/commit/683d692597fdfd360c1d280aa91270f628efdc98))
+* **nokoprint:** clear try blocks before replacing instructions in ad dispatch hooks ([1ec5ca5](https://github.com/kveld9/kveld-extra-morphe-patches/commit/1ec5ca5751a79a9b23298405b6d472557069a77e))
+* **nokoprint:** disable residual AdMob, BidMachine and Tappx manifest components ([2137a5d](https://github.com/kveld9/kveld-extra-morphe-patches/commit/2137a5d4b6686be6e5648fac5da6ead795fa2925))
+* **nokoprint:** disable residual FirebaseInitProvider and ComponentDiscoveryService ([4ea7c5a](https://github.com/kveld9/kveld-extra-morphe-patches/commit/4ea7c5a7a42e95b50aa6ab14c646e634c34ce848))
+* **nokoprint:** preserve FirebaseInitProvider and ensure register count in ad dispatch hook ([ac65586](https://github.com/kveld9/kveld-extra-morphe-patches/commit/ac65586e747ef021a92554261c240ce08195c1ed))
+* **officehub:** ensure register count in transparency hook and fix metadata bundle string ([c53e83b](https://github.com/kveld9/kveld-extra-morphe-patches/commit/c53e83b8819050599c68637d17658d7b98bde3e2))
+* **officehub:** escape target version in compatibility description ([010f027](https://github.com/kveld9/kveld-extra-morphe-patches/commit/010f027b2c3982d991cda1876dca004d0dceda44))
+* **officehub:** interpolate package name constant in compatibility description ([e708031](https://github.com/kveld9/kveld-extra-morphe-patches/commit/e70803199922465a52f0ce0d9737ae78c8457db4))
+* **officehub:** neutralize Singular attribution SDK and sinkhole AppCenter/events telemetry ([83c8e0d](https://github.com/kveld9/kveld-extra-morphe-patches/commit/83c8e0d4ef3ac5c3c3c4052d404b977e76537f7c))
+* **officehub:** update code transparency verification hook for 16.0.20604.20012 ([27f1656](https://github.com/kveld9/kveld-extra-morphe-patches/commit/27f1656a66c8a4b2e5ac0c92f60f5e541059f2b5))
+* **officehub:** update supported version to 16.0.20604.20012 ([e38c102](https://github.com/kveld9/kveld-extra-morphe-patches/commit/e38c1026a3c5eca16a2811ab81e5014272b3773c))
+
 ## [1.21.0](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.20.0...v1.21.0) (2026-10-16)
 
 ### Bug Fixes

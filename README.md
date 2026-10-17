@@ -235,12 +235,12 @@ To use them, add `kveld9/kveld-morphe-patches` as a second source in Morphe Mana
 
 **Supported versions:**
 
-| 16.0.20527.20022 |
+| 16.0.20604.20012 |
 | :---: |
 
 | Patch | Description | Options |
 |----------|----------------|-----------|
-| **Block Telemetry & Trackers** | Neutralizes Microsoft OneDS/Aria lifecycle, aggregated-metric and failure-logging dispatch methods, nullifies ad measurement platform identifiers (AIFA, AppSetId), rewrites default telemetry endpoints inside telemetry packages and custom blocked hosts unscoped to 0.0.0.0, disables cross-sell, Floodgate, HockeyApp and DataTransport components, and strips advertising permissions. | • Custom Blocked Hosts |
+| **Block Telemetry & Trackers** | Neutralizes Microsoft OneDS/Aria lifecycle, aggregated-metric and failure-logging dispatch methods, stubs Singular attribution SDK initializers and dispatchers, nullifies ad measurement platform identifiers (AIFA, AppSetId), rewrites default telemetry endpoints inside telemetry packages and custom blocked hosts unscoped to 0.0.0.0, disables cross-sell, Floodgate, HockeyApp and DataTransport components, and strips advertising and preinstall attribution permissions. | • Custom Blocked Hosts |
 | **Bypass Code Transparency** | Skips the code-transparency failure dialog and reports local verification success, unblocking sideloaded installs. |  |
 | **Copilot Companion Native Slimmer** | Strips optional companion native binaries (React Native, Hermes, SlimCV) via in-situ zeroing. WARNING: Hermes and React Native are load-bearing for React Native initialization - enabling this WILL crash Copilot React Native surfaces (Copilot chat host) with UnsatisfiedLinkError. The HockeyApp native exception handler (proven UnsatisfiedLinkError in OfficeApplication.onMAMCreate) and voice/dictation SDKs (libofficevoicesdk, libofficevoicetranscriptionsdk; proven dlopen FATAL on boot path) are load-bearing at startup and are therefore never stripped. |  |
 | **Disable Login Requirement** | Removes login requirement and FTUX paywall screens. Cloud-backed features still require sign-in server-side. |  |
