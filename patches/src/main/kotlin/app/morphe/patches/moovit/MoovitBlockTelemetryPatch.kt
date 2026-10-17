@@ -40,6 +40,24 @@ private val moovitTelemetryResourcePatch = resourcePatch(
         )
 
         val blockedComponents = setOf(
+            // Activities
+            "com.google.android.gms.ads.AdActivity",
+            "com.google.android.libraries.ads.mobile.sdk.common.AdActivity",
+            "com.facebook.ads.AudienceNetworkActivity",
+            "com.vungle.ads.internal.ui.VungleActivity",
+            "com.fyber.inneractive.sdk.activities.InneractiveInternalBrowserActivity",
+            "com.fyber.inneractive.sdk.activities.InneractiveFullscreenAdActivity",
+            "com.fyber.inneractive.sdk.activities.InneractiveRichMediaVideoPlayerActivityCore",
+            "com.fyber.inneractive.sdk.activities.InternalStoreWebpageActivity",
+            "com.fyber.inneractive.sdk.activities.FyberReportAdActivity",
+            "com.moovit.ads.interstitial.html.HtmlInterstitialActivity",
+            "com.moovit.app.ads.targerting.proximity.ProximityTagProxyActivity",
+            "com.moovit.app.ads.reward.adfree.AdFreeRewardOfferActivity",
+            "com.usebutton.sdk.internal.InstallCardActivity",
+            "com.usebutton.sdk.internal.WebViewActivity",
+            "com.usebutton.sdk.internal.widget.FullScreenWidgetActivity",
+            "com.usebutton.sdk.internal.InstallSheetActivity",
+
             // Providers
             "com.facebook.FacebookContentProvider",
             "com.fairtiq.sdk.internal.telemetry.processTime.StartupTimeProvider",
@@ -63,6 +81,7 @@ private val moovitTelemetryResourcePatch = resourcePatch(
             "com.facebook.AuthenticationTokenManager\$CurrentAuthenticationTokenChangedBroadcastReceiver",
             "com.braze.BrazeFlushPushDeliveryReceiver",
             "com.google.android.datatransport.runtime.scheduling.jobscheduling.AlarmManagerSchedulerBroadcastReceiver",
+            "com.moovit.app.ads.MobileAdsFenceReceiver",
         )
 
         val optOutMetadata = listOf(
