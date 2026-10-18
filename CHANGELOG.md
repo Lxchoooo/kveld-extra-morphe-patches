@@ -1,3 +1,10 @@
+## [1.22.2](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.22.1...v1.22.2) (2026-10-18)
+
+### Bug Fixes
+
+* **hevy:** narrow battery-patch manifest edits ([f150d46](https://github.com/kveld9/kveld-extra-morphe-patches/commit/f150d46eb3260b76508a94c5ae0f185f0553bceb))
+* **hevy:** report why a bundle failed the Hermes HBC96 check ([2425a00](https://github.com/kveld9/kveld-extra-morphe-patches/commit/2425a008284cc647a73a4d4ff859182364ab62a6))
+
 ## [1.22.1](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.22.0...v1.22.1) (2026-10-18)
 
 ### Bug Fixes
