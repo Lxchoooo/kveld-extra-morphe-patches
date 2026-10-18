@@ -25,6 +25,8 @@ Technical documentation and patch catalog for SUBE (Sistema Único de Boleto Ele
 | **Bypass SUBE NFC antenna check** | `bytecodePatch` | `false` (Opt-in) | None | Bypasses the com.nxp.mifare system feature check in SUBE so the app runs on devices whose ROM does not declare NXP Mifare support. |
 | **SUBE Telemetry Manifest Purge** | `resourcePatch` | `false` (Opt-in) | None | Strips advertising permissions, disables measurement services, providers, and install receivers, and injects opt-out metadata flags in AndroidManifest.xml. |
 | **Block Telemetry & Trackers** | `bytecodePatch` | `true` (Enabled) | `SUBE Telemetry Manifest Purge` | Neutralizes Google AppMeasurement, Firebase Analytics, and Firebase Crashlytics event dispatchers at bytecode entrypoints. |
+| **Cut Firebase Manifest** | `resourcePatch` | `false` (Opt-in) | None | Disables Firebase Cloud Messaging services and instance ID receivers in AndroidManifest.xml. Breaks push notifications and FCM background delivery. |
+| **Cut Firebase Entirely** | `bytecodePatch` | `false` (Opt-in) | `Cut Firebase Manifest` | Rewrites Firebase Installations API endpoint to 0.0.0.0 in DEX bytecode. WARNING: Breaks push notifications (FCM), FID registration, and token exchange. |
 
 ---
 
@@ -42,11 +44,19 @@ Technical documentation and patch catalog for SUBE (Sistema Único de Boleto Ele
    - **Objective**: Prevent tracker initialization, advertising identifier collection, and background telemetry scheduling.
    - **How**: Strips advertising and attribution permissions (`AD_ID`, `BIND_GET_INSTALL_REFERRER_SERVICE`, `ACCESS_ADSERVICES_ATTRIBUTION`, `ACCESS_ADSERVICES_AD_ID`), sets `android:enabled="false"` on Google AppMeasurement, Firebase Sessions, and DataTransport components (`AppMeasurementService`, `AppMeasurementJobService`, `AppMeasurementReceiver`, `AppMeasurementInstallReferrerReceiver`, `SessionLifecycleService`, `JobInfoSchedulerService`, `TransportBackendDiscovery`), and injects declarative opt-out metadata flags in `<application>`. `FirebaseInitProvider` is intentionally kept enabled because the app invokes R8-obfuscated Firebase Crashlytics synchronously at startup (`FirebaseApp.getInstance`), and disabling its provider causes an `IllegalStateException` fatal startup crash.
 
+2. **Cut Firebase Manifest**:
+   - **Objective**: Sever Firebase Cloud Messaging background entrypoints and instance ID receivers.
+   - **How**: Sets `android:enabled="false"` on `com.google.firebase.messaging.FirebaseMessagingService` and `com.google.firebase.iid.FirebaseInstanceIdReceiver` in `AndroidManifest.xml`. `FirebaseInitProvider` remains enabled to prevent the fatal startup crash.
+
 ### C. Bytecode Dispatcher Neutralization Layer (`bytecodePatch`)
 
 1. **Block Telemetry & Trackers**:
    - **Objective**: Stop runtime telemetry event dispatching across Google Analytics and Crashlytics pipelines.
    - **How**: Injects immediate `return-void` instructions at bytecode entrypoints for Firebase Analytics (`logEvent`, `setUserProperty`), Google Measurement (`logEvent`, `logEventInternal`), and Firebase Crashlytics (`recordException`, `log`, `setCustomKey`).
+
+2. **Cut Firebase Entirely**:
+   - **Objective**: Sever background Firebase Installations (FID) registration and token exchange traffic.
+   - **How**: Rewrites the `firebaseinstallations.googleapis.com` const-string host literal in DEX bytecode to `0.0.0.0` using an indexed string fingerprint.
 
 ---
 
@@ -54,6 +64,9 @@ Technical documentation and patch catalog for SUBE (Sistema Único de Boleto Ele
 
 1. **Bypass SUBE NFC antenna check**:
    Bypassing the `com.nxp.mifare` check allows the application to proceed past startup device compatibility gates on devices where the OEM ROM omitted the NXP Mifare system feature declaration. However, if the physical device hardware lacks an NFC controller or an antenna physically capable of communicating with Mifare Classic or Ultralight contactless card ICs, physical balance reading and accreditation will fail at the hardware RF transceive level.
+
+2. **Cut Firebase Entirely (Opt-in Kill Switch)**:
+   Explicit WARNING: Enabling this patch severs all Firebase background traffic by disabling FCM receivers and rewriting the Firebase Installations API endpoint to `0.0.0.0`. This intentionally breaks push notifications (FCM), Firebase Installations (FID) registration, and token exchange. The app will be unable to receive cloud messages or background push notifications. Crash report delivery may also be delayed or impaired. Cold boot and core app functionality (balance queries, card accreditation, recharges) remain operational.
 
 ---
 
