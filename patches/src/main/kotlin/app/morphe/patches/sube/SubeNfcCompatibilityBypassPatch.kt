@@ -41,7 +41,7 @@ val subeNfcCompatibilityBypassPatch = bytecodePatch(
             val fieldRef = (instruction as? ReferenceInstruction)?.reference as? FieldReference
                 ?: return@mapIndexedNotNull null
             val isTargetEnum = fieldRef.definingClass.startsWith("Lcom/nacionservicios/nssacommons/system/nfc/NfcCompatibility")
-            if (isTargetEnum && fieldRef.name == "b") {
+            if (isTargetEnum && fieldRef.name == "d") {
                 index
             } else {
                 null
@@ -49,21 +49,22 @@ val subeNfcCompatibilityBypassPatch = bytecodePatch(
         }
 
         check(targetIndices.size == 1) {
-            "Expected exactly 1 sget-object instruction for NfcCompatibility.b in gate method ${method.name}, found ${targetIndices.size}."
+            "Expected exactly 1 sget-object instruction for NfcCompatibility.d in gate method ${method.name}, found ${targetIndices.size}."
         }
 
-        val targetIndex = targetIndices.first()
-        val targetInstruction = instructions[targetIndex] as OneRegisterInstruction
-        val register = targetInstruction.registerA
-        val fieldRef = (targetInstruction as ReferenceInstruction).reference as FieldReference
-        val definingClass = fieldRef.definingClass
-        val fieldType = fieldRef.type
+        for (targetIndex in targetIndices) {
+            val targetInstruction = instructions[targetIndex] as OneRegisterInstruction
+            val register = targetInstruction.registerA
+            val fieldRef = (targetInstruction as ReferenceInstruction).reference as FieldReference
+            val definingClass = fieldRef.definingClass
+            val fieldType = fieldRef.type
 
-        method.replaceInstruction(
-            targetIndex,
-            "sget-object v$register, $definingClass->d:$fieldType",
-        )
-        patched++
+            method.replaceInstruction(
+                targetIndex,
+                "sget-object v$register, $definingClass->b:$fieldType",
+            )
+            patched++
+        }
 
         println("[Bypass SUBE NFC antenna check] Applied $patched hooks -> NFC antenna compatibility check bypassed.")
     }
