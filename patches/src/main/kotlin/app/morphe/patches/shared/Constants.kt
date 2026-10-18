@@ -200,4 +200,21 @@ object Constants {
             )
         )
     )
+
+    const val SUBE_PACKAGE_NAME = "com.sube.app"
+    const val SUBE_TARGET_VERSION = "2.7.25"
+    const val SUBE_INPUT_SHA256 = ""
+
+    val COMPATIBILITY_SUBE = Compatibility(
+        name = "SUBE",
+        packageName = SUBE_PACKAGE_NAME,
+        apkFileType = ApkFileType.APKM,
+        appIconColor = 0x00A4E4,
+        targets = listOf(
+            AppTarget(
+                version = SUBE_TARGET_VERSION,
+                description = "Download com.sube.app v\$SUBE_TARGET_VERSION (APKM) arm64-v8a versionCode 212 from APKPure",
+            )
+        )
+    )
 }
