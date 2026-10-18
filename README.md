@@ -113,37 +113,18 @@ To use them, add `kveld9/kveld-morphe-patches` as a second source in Morphe Mana
 </details>
 
 <details>
-<summary>X&nbsp;&nbsp;•&nbsp;&nbsp;<b>21 patches</b></summary>
+<summary>X&nbsp;&nbsp;•&nbsp;&nbsp;<b>2 patches</b></summary>
 <br>
 
 **Supported versions:**
 
-| 12.34.0-prod.01 |
+| 12.35.0-prod.01 |
 | :---: |
 
 | Patch | Description | Options |
 |----------|----------------|-----------|
 | **Background Slimmer** | Disables background periodic jobs, home screen widgets, and companion services to reduce resource usage. |  |
 | **Block Telemetry & Trackers** | Blocks tracking services, analytics collection, and advertising identifiers, redirects Braze and Sentry endpoints to 0.0.0.0, and purges Sentry manifest metadata. | • Block Payments & Anti-Fraud Telemetry |
-| **Block Update Screen** | Blocks the outdated app screen and suppresses in-app update prompts on launch. |  |
-| **Control Video Auto Scroll** | Prevents automatic scrolling to the next video in immersive view. |  |
-| **Custom Deep Links** | Opens supported custom and alternative domain links directly in the app (for shared link domains, see Share Links). | • Custom Link Hosts |
-| **Custom Fonts** | Applies custom typography to post and profile text. | • Custom Font Path<br>• Custom Emoji Font Path |
-| **DM Debloat** | Hides call buttons and composer actions in direct message conversations. | • Hide DM Calls |
-| **Default Reply Sorting** | Opens replies on every post with the selected sort mode instead of Relevance. | • Reply Sort Mode |
-| **Disable Auto Refresh** | Stops the home timeline from automatically jumping to new posts. |  |
-| **Drawer Items** | Hides individual menu items, badges, and sidebar entries in the navigation drawer. | • Hide Profile<br>• Hide Premium<br>• Hide Communities<br>• Hide Bookmarks<br>• Hide Lists<br>• Hide Spaces<br>• Hide Creator Studio<br>• Hide Grok<br>• Hide Help Center |
-| **Navigation UI** | Customizes bottom navigation bar tabs, unread badges, and search surfaces. | • Hide Badges<br>• Hide FAB<br>• Hide FAB Menu<br>• Hide Navigation Bar<br>• Hide Grok Tab<br>• Hide Explore Tabs<br>• Hide Search Tab Items |
-| **No Shortened URL** | Expands t.co shortened URLs, removing the click-tracking intermediary. |  |
-| **Pause Search Suggestions** | Stops persisting search suggestions locally without breaking search. |  |
-| **Post & Profile UI** | Customizes post action buttons, Grok surfaces, and user profile tabs. | • Hide Grok Post Action<br>• Hide Profile Grok Button<br>• Hide Profile Tabs |
-| **Remove Ads** | Removes promoted posts, trends, and ads from timeline feeds. |  |
-| **Remove Premium Upsell** | Removes Premium subscription prompts and verification upsell surfaces across the app (for drawer entry, see Drawer Items). | • Hide Profile Get Verified |
-| **Round Off Numbers** | Displays full metric counts without abbreviation on posts and profiles. | • Show Full Numbers |
-| **Share Links** | Customizes domain and format for shared post links (for opening custom links in app, see Custom Deep Links). | • Custom Sharing Domain<br>• Sharing Domain<br>• Legacy Share Links |
-| **Show Sensitive Media** | Displays sensitive media directly without requiring tap to reveal. |  |
-| **Timeline UI** | Customizes timeline surfaces including banners, recommendation carousels, and action buttons. | • Hide Banner<br>• Hide Promote Button<br>• Hide Nudge Button<br>• Hide Recommendation Items<br>• Hide Discover More<br>• Hide Recommended Users<br>• Hide Live Threads<br>• Hide Community Notes<br>• Hide Post Metrics<br>• Hide View Count<br>• Hide Inline Action Bar<br>• Hide Timeline Add Tab<br>• Hide Timeline Top Bar<br>• Hide Live Banner |
-| **Unlock Video Downloads** | Lets you save videos and GIFs with the app's built-in download option without Premium. |  |
 
 </details>
 

@@ -1,3 +1,14 @@
+## [1.22.0](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.21.1...v1.22.0) (2026-10-18)
+
+### Bug Fixes
+
+* **twitter:** keep comments, profiles and tabs loading with Disable Auto Refresh ([cbecf56](https://github.com/kveld9/kveld-extra-morphe-patches/commit/cbecf56fc00ea3b88f9a957404ae5ec3c140a178))
+
+### New Features
+
+* **twitter:** narrow X patch set to Piko-complementary set ([96ba044](https://github.com/kveld9/kveld-extra-morphe-patches/commit/96ba044265d858a9dffbe2fbd193daaf52d4bb13))
+* **twitter:** update to 12.35.0-prod.01 ([8404802](https://github.com/kveld9/kveld-extra-morphe-patches/commit/8404802f0c13446b870295757c968503315eff43))
+
 ## [1.21.1](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.21.0...v1.21.1) (2026-10-17)
 
 ### Bug Fixes
