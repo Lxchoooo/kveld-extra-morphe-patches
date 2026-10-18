@@ -1,7 +1,7 @@
 {
-  "created_at": "2026-10-18T04:02:03",
-  "description": "## [1.22.0](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.21.1...v1.22.0) (2026-10-18)\n\n### Bug Fixes\n\n* **twitter:** keep comments, profiles and tabs loading with Disable Auto Refresh ([cbecf56](https://github.com/kveld9/kveld-extra-morphe-patches/commit/cbecf56fc00ea3b88f9a957404ae5ec3c140a178))\n\n### New Features\n\n* **twitter:** narrow X patch set to Piko-complementary set ([96ba044](https://github.com/kveld9/kveld-extra-morphe-patches/commit/96ba044265d858a9dffbe2fbd193daaf52d4bb13))\n* **twitter:** update to 12.35.0-prod.01 ([8404802](https://github.com/kveld9/kveld-extra-morphe-patches/commit/8404802f0c13446b870295757c968503315eff43))",
-  "download_url": "https://github.com/kveld9/kveld-extra-morphe-patches/releases/download/v1.22.0/patches-1.22.0.mpp",
+  "created_at": "2026-10-18T05:09:33",
+  "description": "## [1.22.1](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.22.0...v1.22.1) (2026-10-18)\n\n### Bug Fixes\n\n* **nokoprint:** honest label for the network security patch ([711af71](https://github.com/kveld9/kveld-extra-morphe-patches/commit/711af71b510dd427496ea280f48702fde22f3671))",
+  "download_url": "https://github.com/kveld9/kveld-extra-morphe-patches/releases/download/v1.22.1/patches-1.22.1.mpp",
   "signature_download_url": "",
-  "version": "1.22.0"
+  "version": "1.22.1"
 }

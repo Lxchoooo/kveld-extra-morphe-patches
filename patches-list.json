@@ -1,6 +1,6 @@
 {
   "NOTE": "Do NOT manually edit this file. This file is automatically updated when semantic release (release.yml) runs. Manually editing this file can break your releases and break third party tools that use this file.",
-  "version": "1.22.0",
+  "version": "1.22.1",
   "patches": [
     {
       "name": "AR Effects Slimmer",
@@ -838,6 +838,32 @@
       "options": []
     },
     {
+      "name": "Printer-Compatible Connections",
+      "description": "Keeps HTTP cleartext for LAN printers and driver downloads and trusts user certificates. Less strict than stock; on by default because some printers need it, disable for maximum strictness.",
+      "default": true,
+      "dependencies": [],
+      "compatiblePackages": [
+        {
+          "packageName": "com.nokoprint",
+          "name": "NokoPrint - WiFi, Bluetooth, USB",
+          "description": null,
+          "apkFileType": "XAPK",
+          "appIconColor": "#0288D1",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "5.28.6",
+              "versionCodes": null,
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
       "name": "Remove Ads",
       "description": "Hides banner and inline ads and neutralizes ad unit ID lookups.",
       "default": true,
@@ -1009,32 +1035,6 @@
           "targets": [
             {
               "version": "1.38.0i",
-              "versionCodes": null,
-              "isExperimental": false,
-              "minSdk": null,
-              "description": null
-            }
-          ]
-        }
-      ],
-      "options": []
-    },
-    {
-      "name": "Safer Connections",
-      "description": "Uses trusted certificates while keeping printer downloads working.",
-      "default": true,
-      "dependencies": [],
-      "compatiblePackages": [
-        {
-          "packageName": "com.nokoprint",
-          "name": "NokoPrint - WiFi, Bluetooth, USB",
-          "description": null,
-          "apkFileType": "XAPK",
-          "appIconColor": "#0288D1",
-          "signatures": null,
-          "targets": [
-            {
-              "version": "5.28.6",
               "versionCodes": null,
               "isExperimental": false,
               "minSdk": null,

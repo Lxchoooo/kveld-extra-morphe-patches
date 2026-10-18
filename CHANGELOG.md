@@ -1,3 +1,9 @@
+## [1.22.1](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.22.0...v1.22.1) (2026-10-18)
+
+### Bug Fixes
+
+* **nokoprint:** honest label for the network security patch ([711af71](https://github.com/kveld9/kveld-extra-morphe-patches/commit/711af71b510dd427496ea280f48702fde22f3671))
+
 ## [1.22.0](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.21.1...v1.22.0) (2026-10-18)
 
 ### Bug Fixes
