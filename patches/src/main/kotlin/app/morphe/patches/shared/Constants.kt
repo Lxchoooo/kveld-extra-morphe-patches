@@ -208,12 +208,12 @@ object Constants {
     val COMPATIBILITY_SUBE = Compatibility(
         name = "SUBE",
         packageName = SUBE_PACKAGE_NAME,
-        apkFileType = ApkFileType.APKM,
+        apkFileType = ApkFileType.XAPK,
         appIconColor = 0x00A4E4,
         targets = listOf(
             AppTarget(
                 version = SUBE_TARGET_VERSION,
-                description = "Download com.sube.app v\$SUBE_TARGET_VERSION (APKM) arm64-v8a versionCode 212 from APKPure",
+                description = "Download com.sube.app v\$SUBE_TARGET_VERSION (XAPK bundle) from APKPure",
             )
         )
     )

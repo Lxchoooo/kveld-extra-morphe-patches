@@ -1,0 +1,69 @@
+# SUBE Patches Guide
+
+Technical documentation and patch catalog for SUBE (Sistema Único de Boleto Electrónico) on Android.
+
+---
+
+## 1. Target & Compatibility
+
+| Property | Value |
+| :--- | :--- |
+| **Target App** | SUBE |
+| **Package Name** | `com.sube.app` |
+| **Target Version** | `2.7.25` |
+| **Target Package Format** | XAPK bundle |
+| **Primary Architecture** | universal (`arm64-v8a` / `armeabi-v7a`) |
+| **Download Target** | [APKPure](https://d.apkpure.com/b/XAPK/com.sube.app?versionCode=212) |
+| **Authoritative Source** | APKPure |
+
+---
+
+## 2. Applied Patches Catalog
+
+| Patch Name | Typology | Default State | Dependencies | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| **Bypass SUBE NFC antenna check** | `bytecodePatch` | `false` (Opt-in) | None | Bypasses the com.nxp.mifare system feature check in SUBE so the app runs on devices whose ROM does not declare NXP Mifare support. |
+| **SUBE Telemetry Manifest Purge** | `resourcePatch` | `false` (Opt-in) | None | Strips advertising permissions, disables measurement services, providers, and install receivers, and injects opt-out metadata flags in AndroidManifest.xml. |
+| **Block Telemetry & Trackers** | `bytecodePatch` | `true` (Enabled) | `SUBE Telemetry Manifest Purge` | Neutralizes Google AppMeasurement, Firebase Analytics, and Firebase Crashlytics event dispatchers at bytecode entrypoints. |
+
+---
+
+## 3. Deep Technical Breakdown
+
+### A. Compatibility Bypass Layer (`bytecodePatch`)
+
+1. **Bypass SUBE NFC antenna check**:
+   - **Objective**: Allow running card balance queries and accreditation on devices whose firmware does not declare `com.nxp.mifare` system feature support.
+   - **How**: Hooks `com.nacionservicios.nssacommons.system.nfc.NfcCompatibility` gate evaluation method and replaces the static field reference returning `NfcCompatibility.d` (unsupported) with `NfcCompatibility.b` (supported).
+
+### B. Manifest Purge Layer (`resourcePatch`)
+
+1. **SUBE Telemetry Manifest Purge**:
+   - **Objective**: Prevent tracker initialization, advertising identifier collection, and background telemetry scheduling.
+   - **How**: Strips advertising and attribution permissions (`AD_ID`, `BIND_GET_INSTALL_REFERRER_SERVICE`, `ACCESS_ADSERVICES_ATTRIBUTION`, `ACCESS_ADSERVICES_AD_ID`), sets `android:enabled="false"` on Google AppMeasurement, Firebase Sessions, and DataTransport components (`AppMeasurementService`, `AppMeasurementJobService`, `AppMeasurementReceiver`, `AppMeasurementInstallReferrerReceiver`, `SessionLifecycleService`, `JobInfoSchedulerService`, `TransportBackendDiscovery`), and injects declarative opt-out metadata flags in `<application>`. `FirebaseInitProvider` is intentionally kept enabled because the app invokes R8-obfuscated Firebase Crashlytics synchronously at startup (`FirebaseApp.getInstance`), and disabling its provider causes an `IllegalStateException` fatal startup crash.
+
+### C. Bytecode Dispatcher Neutralization Layer (`bytecodePatch`)
+
+1. **Block Telemetry & Trackers**:
+   - **Objective**: Stop runtime telemetry event dispatching across Google Analytics and Crashlytics pipelines.
+   - **How**: Injects immediate `return-void` instructions at bytecode entrypoints for Firebase Analytics (`logEvent`, `setUserProperty`), Google Measurement (`logEvent`, `logEventInternal`), and Firebase Crashlytics (`recordException`, `log`, `setCustomKey`).
+
+---
+
+## 4. Behavioral Hazards Warning
+
+1. **Bypass SUBE NFC antenna check**:
+   Bypassing the `com.nxp.mifare` check allows the application to proceed past startup device compatibility gates on devices where the OEM ROM omitted the NXP Mifare system feature declaration. However, if the physical device hardware lacks an NFC controller or an antenna physically capable of communicating with Mifare Classic or Ultralight contactless card ICs, physical balance reading and accreditation will fail at the hardware RF transceive level.
+
+---
+
+## 5. Known Limitations
+
+- **XAPK Container Format**: Target package is distributed as an XAPK bundle containing base application code and configuration splits.
+- **Backend Server Dependency**: Online card accreditation (`Acreditar`), balance recharges, and payment history require live network connectivity to SUBE / Nación Servicios backend infrastructure. Remote transaction signing and server authorization cannot be mocked or bypassed client-side.
+
+---
+
+## 6. Canonical Universal Patches
+
+Generic resource slimming and device optimization patches are provided by the universal patches in the canonical collection [kveld-morphe-patches](https://github.com/kveld9/kveld-morphe-patches): `Remove Unused Screen Sizes` and `Remove Extra Languages`. For further generic maintenance (packaging leftovers, background sync, image compression, screenshot protections) that collection also provides `Clean App Packaging`, `Shrink PNG Images`, `Shrink WebP Images`, `Allow Screenshots (Universal)`, and `Strip Sensitive Permissions (Universal)`. Add that source in Morphe Manager alongside this one to use them; universal patches apply to any APK, including SUBE.

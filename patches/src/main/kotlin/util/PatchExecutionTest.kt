@@ -172,7 +172,8 @@ enum class TargetApp(
         appName = "SUBE",
         packageName = Constants.SUBE_PACKAGE_NAME,
         candidateFilenames = listOf(
-            "sube_${Constants.SUBE_TARGET_VERSION}.xapk"
+            "sube_${Constants.SUBE_TARGET_VERSION}.xapk",
+            "SUBE_${Constants.SUBE_TARGET_VERSION}_APKPure.xapk",
         ),
         filePattern = Regex("(?i).*(?:sube).*\\.(?:apk|apkm|xapk)$"),
         patchDirectoryPart = "sube",

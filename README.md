@@ -323,6 +323,7 @@ To use them, add `kveld9/kveld-morphe-patches` as a second source in Morphe Mana
 | Hevy | [Guide](docs/apps/hevy.md) |
 | NokoPrint | [Guide](docs/apps/nokoprint.md) |
 | Xiaomi Earbuds | [Guide](docs/apps/xiaomi_earbuds.md) |
+| SUBE | [Guide](docs/apps/sube.md) |
 
 <p align="center"><a href="#top"><b>&uarr; Back to top</b></a></p>
 
