@@ -2,7 +2,7 @@
 """Scheduled upstream app update checker for Morphe Patches (Extra Apps).
 
 Parses target versions from Constants.kt, queries upstream public sources
-(APKMirror and Uptodown), and reports whether updates are available.
+(APKMirror, Uptodown, and APKPure), and reports whether updates are available.
 """
 
 from __future__ import annotations
@@ -22,6 +22,23 @@ USER_AGENT = "Discordbot/2.0; +https://discordapp.com"
 HTTP_TIMEOUT_SECONDS = 15
 
 APP_SPECS: List[Dict[str, Any]] = [
+    # ==============================================================================
+    # ADD NEW APP HERE - TEMPLATE
+    # ==============================================================================
+    # To monitor a new app, copy-paste-fill this template into APP_SPECS below.
+    # A maintainer adding an app touches ONLY this block and adds one fixture test
+    # in TestUpdateChecker (see test_apkpure_extraction_newer_download_version).
+    #
+    # {
+    #     "id": "my-app",                           # 1. Unique runner/issue identifier (matches PatchExecutionTest id)
+    #     "name": "My App",                         # 2. Display name shown in logs, issue titles, and alerts
+    #     "package_name": "com.example.app",        # 3. Android application package name
+    #     "constant_key": "MY_APP_TARGET_VERSION",  # 4. Target version constant defined in Constants.kt
+    #     "source_type": "apkpure",                 # 5. Upstream host type: "apkpure", "uptodown", or "apkmirror"
+    #     "source_url": "https://apkpure.com/slug/com.example.app",  # 6. Canonical listing URL (HTTP 200 verified live)
+    #     "allow_beta": False,                      # Pre-release filter (typically False for stable patch releases)
+    # },
+    # ==============================================================================
     {
         "id": "instagram",
         "name": "Instagram",
@@ -134,6 +151,19 @@ APP_SPECS: List[Dict[str, Any]] = [
         "source_type": "apkpure",
         "source_name": "APKPure",
         "source_url": "https://apkpure.com/xiaomi-earbuds/com.mi.earphone",
+        "allow_beta": False,
+    },
+    # --------------------------------------------------------------------------
+    # SUBE (APKPure) - copy-paste-filled from "ADD NEW APP HERE" template
+    # --------------------------------------------------------------------------
+    {
+        "id": "sube",
+        "name": "SUBE",
+        "package_name": "com.sube.app",
+        "constant_key": "SUBE_TARGET_VERSION",
+        "source_type": "apkpure",
+        "source_name": "APKPure",
+        "source_url": "https://apkpure.com/sube/com.sube.app",
         "allow_beta": False,
     },
 ]
@@ -262,7 +292,13 @@ def extract_apkmirror_version(
     path_prefix: str,
     allow_beta: bool = False,
 ) -> Optional[str]:
-    """Extract latest remote version from APKMirror listing HTML."""
+    """Extract latest remote version from APKMirror listing HTML.
+
+    Host: APKMirror (https://www.apkmirror.com/apk/...)
+    Precedence: Release links matching path_prefix sorted descending by numeric
+    core and suffix, filtering out beta/alpha/preview/rc when allow_beta=False.
+    Fixture test: test_apkmirror_extraction_and_beta_filter
+    """
     candidates: List[Tuple[Tuple[int, ...], str, str, str]] = []
 
     link_pattern = r'<a[^>]*class="[^"]*fontBlack[^"]*"[^>]*href="([^"]+)"[^>]*>(.*?)</a>'
@@ -302,8 +338,12 @@ def extract_apkmirror_version(
 def extract_uptodown_version(html: str) -> Optional[str]:
     """Extract latest remote version from Uptodown page HTML.
 
-    Hard rule: download-link version beats metadata version. If no downloadable
+    Host: Uptodown (https://<slug>.en.uptodown.com/android)
+    Precedence: Download-link version (/download button) beats metadata
+    (div.version) and JSON-LD schema (softwareVersion/version). If no downloadable
     version can be confirmed, returns None (reported as unknown).
+    Fixture tests: test_uptodown_download_link_beats_metadata,
+                   test_uptodown_unknown_when_empty_or_corrupt
     """
     if not html:
         return None
@@ -375,6 +415,75 @@ def extract_uptodown_version(html: str) -> Optional[str]:
     return None
 
 
+def extract_apkpure_version(html: str) -> Optional[str]:
+    """Extract latest remote version from APKPure listing HTML.
+
+    Host: APKPure (https://apkpure.com/<slug>/<package>)
+    Precedence: Download-link version (data-dt-version on download button,
+    version-name header, or title) beats page metadata and JSON-LD. If no
+    downloadable version can be confirmed, returns None (reported as unknown).
+    Fixture tests: test_apkpure_extraction_newer_download_version,
+                   test_apkpure_download_link_beats_metadata,
+                   test_apkpure_unknown_when_empty_or_no_download_link
+    """
+    if not html:
+        return None
+
+    # 1. Download button tags: look for <a> tags with download intent (e.g. dt-main-download-btn,
+    # dt-secondary-download-btn, or href containing /download) having data-dt-version.
+    # Exclude Aegon (APKPure's companion app) and generic downloader tools.
+    for m in re.finditer(r"<a\b([^>]*)>", html, re.I):
+        attrs = m.group(1)
+        if "com.apkpure.aegon" in attrs or "apk-downloader" in attrs:
+            continue
+
+        is_dl = bool(
+            re.search(
+                r'class="[^"]*(?:dt-main-download-btn|normal-download-btn|dt-secondary-download-btn)[^"]*"',
+                attrs,
+                re.I,
+            )
+            or re.search(r'href="[^"]*/download\b', attrs, re.I)
+        )
+        if is_dl:
+            v_match = re.search(r'data-dt-version="([^"]+)"', attrs, re.I)
+            if v_match:
+                v_cand = v_match.group(1).strip()
+                core, _ = parse_version(v_cand)
+                if core:
+                    return v_cand
+
+    # 2. Version name inside download link container (e.g. dt-version-name-link)
+    m_h3 = re.search(
+        r'<a\b[^>]*href="[^"]*/download\b[^"]*"[^>]*>.*?<h3[^>]*class="[^"]*version-name[^"]*"[^>]*>([^<]+)</h3>',
+        html,
+        re.DOTALL | re.I,
+    )
+    if m_h3:
+        v_match = re.search(r"(\d+(?:\.\d+)+(?:[a-zA-Z0-9._-]+)?)", m_h3.group(1))
+        if v_match:
+            v_cand = v_match.group(1).strip()
+            core, _ = parse_version(v_cand)
+            if core:
+                return v_cand
+
+    # 3. Explicit version in download link title attribute
+    m_title = re.search(
+        r'<a\b[^>]*href="[^"]*/download\b[^"]*"[^>]*title="[^"]*?\bv?(\d+(?:\.\d+)+(?:[a-zA-Z0-9._-]+)?)\b[^"]*"',
+        html,
+        re.I,
+    )
+    if m_title:
+        v_cand = m_title.group(1).strip()
+        core, _ = parse_version(v_cand)
+        if core:
+            return v_cand
+
+    # Hard rule 1: If no downloadable version can be confirmed on the page,
+    # report unknown (None) even if metadata / JSON-LD specifies a version.
+    return None
+
+
 def run_update_checks(
     constants_path: Path,
     fetch_fn: Optional[Callable[[str], Optional[str]]] = None,
@@ -391,7 +500,11 @@ def run_update_checks(
         constant_key = spec["constant_key"]
         run_patch_test_id = spec.get("run_patch_test_id", app_id)
         source_type = spec["source_type"]
-        source_name = spec["source_name"]
+        source_name = spec.get("source_name") or {
+            "apkmirror": "APKMirror",
+            "uptodown": "Uptodown",
+            "apkpure": "APKPure",
+        }.get(source_type, source_type.title())
         source_url = spec["source_url"]
         allow_beta = spec.get("allow_beta", False)
 
@@ -414,6 +527,8 @@ def run_update_checks(
                 )
             elif source_type == "uptodown":
                 remote_version = extract_uptodown_version(html)
+            elif source_type == "apkpure":
+                remote_version = extract_apkpure_version(html)
 
         if not remote_version:
             status = "unknown"
@@ -512,6 +627,64 @@ class TestUpdateChecker(unittest.TestCase):
             allow_beta=False,
         )
         self.assertEqual(ver, "5.201.1.1809")
+
+    def test_apkpure_extraction_newer_download_version(self) -> None:
+        """Verify APKPure extracts newer downloadable version from download button."""
+        fixture_html = """
+        <html>
+          <body>
+            <a class="btn normal-download-btn da dt-main-download-btn"
+               data-dt-package_name="com.sube.app"
+               data-dt-version="2.8.0"
+               href="https://apkpure.com/sube/com.sube.app/download"
+               title="Download SUBE latest version apk">
+              <strong class="text one-line">Download APK (45.1 MB)</strong>
+            </a>
+          </body>
+        </html>
+        """
+        ver = extract_apkpure_version(fixture_html)
+        self.assertEqual(ver, "2.8.0")
+
+    def test_apkpure_download_link_beats_metadata(self) -> None:
+        """Download-link version must take precedence over contradictory metadata."""
+        fixture_html = """
+        <html>
+          <head>
+            <script type="application/ld+json">{"@context": "https://schema.org", "@type": "MobileApplication", "name": "SUBE", "version": "3.0.0"}</script>
+          </head>
+          <body>
+            <span class="version one-line">2.9.0</span>
+            <a class="btn normal-download-btn da dt-main-download-btn"
+               data-dt-package_name="com.sube.app"
+               data-dt-version="2.7.25"
+               href="https://apkpure.com/sube/com.sube.app/download"
+               title="Download SUBE latest version apk">
+              <strong class="text one-line">Download APK (45.1 MB)</strong>
+            </a>
+          </body>
+        </html>
+        """
+        ver = extract_apkpure_version(fixture_html)
+        self.assertEqual(ver, "2.7.25")
+        self.assertNotEqual(ver, "3.0.0")
+        self.assertNotEqual(ver, "2.9.0")
+
+    def test_apkpure_unknown_when_empty_or_no_download_link(self) -> None:
+        """Report None (unknown) when no downloadable version can be confirmed."""
+        self.assertIsNone(extract_apkpure_version(""))
+        self.assertIsNone(extract_apkpure_version("<html><body>No version here</body></html>"))
+        metadata_only_html = """
+        <html>
+          <head>
+            <script type="application/ld+json">{"@type": "MobileApplication", "version": "3.0.0"}</script>
+          </head>
+          <body>
+            <span class="version one-line">2.9.0</span>
+          </body>
+        </html>
+        """
+        self.assertIsNone(extract_apkpure_version(metadata_only_html))
 
 
 def main() -> int:
