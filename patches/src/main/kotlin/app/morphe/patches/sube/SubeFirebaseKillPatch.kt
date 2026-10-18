@@ -176,8 +176,7 @@ val subeFirebaseKillPatch = bytecodePatch(
         }
 
         if (totalRewritten == 0) {
-            println("[Cut Firebase Entirely] Warning: $TARGET_HOST not found as rewritable const-string literal in any class.")
-            return@execute
+            error("[Cut Firebase Entirely] No Firebase installations endpoint literals found - failing closed.")
         }
 
         val locationsSummary = touchedLocations.joinToString(", ")
