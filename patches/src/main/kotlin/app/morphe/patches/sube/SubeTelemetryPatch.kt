@@ -252,8 +252,7 @@ val subeTelemetryPatch = bytecodePatch(
         }
 
         if (totalHooked == 0) {
-            println("[Block Telemetry & Trackers] Target APK does not contain targeted SDK classes or methods (0 methods hooked).")
-            return@execute
+            error("[Block Telemetry & Trackers] No telemetry dispatch methods found - failing closed.")
         }
 
         val summary = hookCounts.entries.joinToString(", ") { "${it.key}: ${it.value}" }
