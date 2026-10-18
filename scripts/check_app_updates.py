@@ -35,8 +35,10 @@ APP_SPECS: List[Dict[str, Any]] = [
     #     "package_name": "com.example.app",        # 3. Android application package name
     #     "constant_key": "MY_APP_TARGET_VERSION",  # 4. Target version constant defined in Constants.kt
     #     "source_type": "apkpure",                 # 5. Upstream host type: "apkpure", "uptodown", or "apkmirror"
-    #     "source_url": "https://apkpure.com/slug/com.example.app",  # 6. Canonical listing URL (HTTP 200 verified live)
+    #     "source_name": "APKPure",                 # 6. Display name of upstream host, must match the entry's source
+    #     "source_url": "https://apkpure.com/slug/com.example.app",  # 7. Canonical listing URL (HTTP 200 verified live)
     #     "allow_beta": False,                      # Pre-release filter (typically False for stable patch releases)
+    #     # Optional keys: "path_prefix" (required for apkmirror; release- vs directory-level prefix both work), "run_patch_test_id" (defaults to id); no entry uses require_variant_marker (mechanism absent in this copy)
     # },
     # ==============================================================================
     {
