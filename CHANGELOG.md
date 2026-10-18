@@ -1,3 +1,9 @@
+## [1.23.1](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.23.0...v1.23.1) (2026-10-18)
+
+### Bug Fixes
+
+* **harness:** include source_name and optional keys in update-detector template ([575f284](https://github.com/kveld9/kveld-extra-morphe-patches/commit/575f2843703205863af96794756ab7fa592f5161))
+
 ## [1.23.0](https://github.com/kveld9/kveld-extra-morphe-patches/compare/v1.22.2...v1.23.0) (2026-10-18)
 
 ### Bug Fixes
