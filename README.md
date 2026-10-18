@@ -249,6 +249,25 @@ To use them, add `kveld9/kveld-morphe-patches` as a second source in Morphe Mana
 </details>
 
 <details>
+<summary>SUBE&nbsp;&nbsp;•&nbsp;&nbsp;<b>5 patches</b></summary>
+<br>
+
+**Supported versions:**
+
+| 2.7.25 |
+| :---: |
+
+| Patch | Description | Options |
+|----------|----------------|-----------|
+| **Block Telemetry & Trackers** | Neutralizes Google AppMeasurement, Firebase Analytics, and Firebase Crashlytics event dispatchers at bytecode entrypoints. |  |
+| **Bypass SUBE NFC antenna check** | Bypasses the com.nxp.mifare system feature check in SUBE so the app runs on devices whose ROM does not declare NXP Mifare support. |  |
+| **Cut Firebase Entirely** | Rewrites the Firebase Installations API endpoint (firebaseinstallations.googleapis.com) to 0.0.0.0 in DEX bytecode across all classes, severing background FID registration and installation auth tokens. WARNING: Breaks push notifications (FCM) and cloud messaging. |  |
+| **Cut Firebase Manifest** | Disables Firebase Cloud Messaging services and instance ID receivers in AndroidManifest.xml. Breaks push notifications and FCM background delivery. |  |
+| **SUBE Telemetry Manifest Purge** | Strips advertising permissions, disables measurement services, providers, and install receivers, and injects opt-out metadata flags in AndroidManifest.xml. |  |
+
+</details>
+
+<details>
 <summary>Hevy - Gym Log Workout Tracker&nbsp;&nbsp;•&nbsp;&nbsp;<b>4 patches</b></summary>
 <br>
 
