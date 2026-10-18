@@ -29,7 +29,7 @@ import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 import com.android.tools.smali.dexlib2.iface.reference.StringReference
 
 private val twitterTelemetryResourcePatch = resourcePatch(
-    name = "Block Telemetry Manifest Purge",
+    name = "Block Telemetry & Trackers (Setup)",
     description = "Strips tracking/advertising permissions, disables analytics services and receivers, purges Sentry initialization metadata, and injects opt-out metadata in AndroidManifest.xml.",
     default = false,
 ) {

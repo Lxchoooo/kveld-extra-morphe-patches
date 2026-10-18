@@ -25,7 +25,8 @@ UI and debloating patches were removed because Piko-NewX covers them; this repos
 | Patch Name | Typology | Default State | Dependencies | Description |
 | :--- | :--- | :--- | :--- | :--- |
 | **Background Slimmer** | `resourcePatch` | `false` (Opt-in) | None | Disables background WorkManager tasks, widgets, and Cast/NFC companion services to reduce resource usage. |
-| **Block Telemetry & Trackers** | `bytecodePatch` | `true` (Enabled) | None | Blocks telemetry collection, redirects Braze, Sentry, Google Ads/DoubleClick, and Firebase Crashlytics remote settings endpoints to 0.0.0.0, and purges tracking and Sentry configuration from manifest. Includes opt-in toggle to block X Payments telemetry. |
+| **Block Telemetry & Trackers (Setup)** | `resourcePatch` | `false` (Opt-in) | None | Strips tracking and advertising permissions, disables analytics services and receivers, and purges Sentry initialization metadata from the manifest. |
+| **Block Telemetry & Trackers** | `bytecodePatch` | `true` (Enabled) | `Block Telemetry & Trackers (Setup)` | Blocks telemetry collection, redirects Braze, Sentry, Google Ads/DoubleClick, and Firebase Crashlytics remote settings endpoints to 0.0.0.0. Includes opt-in toggle to block X Payments telemetry. |
 
 ---
 
